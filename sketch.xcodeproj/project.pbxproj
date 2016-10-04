@@ -7,11 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9899B891DA3660500F0A4C1 /* main.cpp */; };
+		F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9899B891DA3660500F0A4C1 /* main.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
+		F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
+		F9899BA01DA36EFA00F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
+		F9899BA11DA36FBA00F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
+		F9899BA21DA36FBE00F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
+		F9899BA31DA36FC500F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		F9899B841DA3660500F0A4C1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		F9899B921DA36D2800F0A4C1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -25,6 +40,10 @@
 /* Begin PBXFileReference section */
 		F9899B861DA3660500F0A4C1 /* sketch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketch; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B891DA3660500F0A4C1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		F9899B941DA36D2800F0A4C1 /* sketcha */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketcha; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +51,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9899BA31DA36FC500F0A4C1 /* OpenGL.framework in Frameworks */,
+				F9899BA21DA36FBE00F0A4C1 /* Cocoa.framework in Frameworks */,
+				F9899BA11DA36FBA00F0A4C1 /* GLUT.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9899B911DA36D2800F0A4C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9899BA01DA36EFA00F0A4C1 /* OpenGL.framework in Frameworks */,
+				F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */,
+				F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +73,9 @@
 		F9899B7D1DA3660500F0A4C1 = {
 			isa = PBXGroup;
 			children = (
+				F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */,
+				F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */,
+				F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */,
 				F9899B881DA3660500F0A4C1 /* sketch */,
 				F9899B871DA3660500F0A4C1 /* Products */,
 			);
@@ -50,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				F9899B861DA3660500F0A4C1 /* sketch */,
+				F9899B941DA36D2800F0A4C1 /* sketcha */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +118,23 @@
 			productReference = F9899B861DA3660500F0A4C1 /* sketch */;
 			productType = "com.apple.product-type.tool";
 		};
+		F9899B931DA36D2800F0A4C1 /* sketcha */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F9899B9A1DA36D2800F0A4C1 /* Build configuration list for PBXNativeTarget "sketcha" */;
+			buildPhases = (
+				F9899B901DA36D2800F0A4C1 /* Sources */,
+				F9899B911DA36D2800F0A4C1 /* Frameworks */,
+				F9899B921DA36D2800F0A4C1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = sketcha;
+			productName = sketcha;
+			productReference = F9899B941DA36D2800F0A4C1 /* sketcha */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +145,9 @@
 				ORGANIZATIONNAME = "Pranjal Sahu";
 				TargetAttributes = {
 					F9899B851DA3660500F0A4C1 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					F9899B931DA36D2800F0A4C1 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
@@ -109,6 +165,7 @@
 			projectRoot = "";
 			targets = (
 				F9899B851DA3660500F0A4C1 /* sketch */,
+				F9899B931DA36D2800F0A4C1 /* sketcha */,
 			);
 		};
 /* End PBXProject section */
@@ -119,6 +176,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F9899B901DA36D2800F0A4C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,11 +273,27 @@
 		F9899B8E1DA3660500F0A4C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
 		F9899B8F1DA3660500F0A4C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F9899B981DA36D2800F0A4C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F9899B991DA36D2800F0A4C1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -237,6 +317,15 @@
 			buildConfigurations = (
 				F9899B8E1DA3660500F0A4C1 /* Debug */,
 				F9899B8F1DA3660500F0A4C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F9899B9A1DA36D2800F0A4C1 /* Build configuration list for PBXNativeTarget "sketcha" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9899B981DA36D2800F0A4C1 /* Debug */,
+				F9899B991DA36D2800F0A4C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
