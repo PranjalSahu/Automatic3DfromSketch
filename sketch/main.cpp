@@ -188,6 +188,25 @@ void drawcuboid(){
     glVertex3f(-2.0f, 6.0f, -4.0f);
     glVertex3f(0.0f, 6.0f, -4.0f);
     
+    // SHIFT TOP BY -6 IN Y TO GET BOTTOM
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-2.0f, 0.0f, 0.0f);
+    glVertex3f(-2.0f, 0.0f, -4.0f);
+    glVertex3f(0.0f, 0.0f, -4.0f);
+
+    // OPPOSITE HIDDEN
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 6.0f, 0.0f);
+    glVertex3f(-2.0f, 6.0f, 0.0f);
+    glVertex3f(-2.0f, 0.0f, 0.0f);
+
+    // HIDDEN
+    glVertex3f(0.0f, 0.0f, -4.0f);
+    glVertex3f(0.0f, 6.0f, -4.0f);
+    glVertex3f(-2.0f, 6.0f, -4.0f);
+    glVertex3f(-2.0f, 0.0f, -4.0f);
+    
     
     
     glEnd();
@@ -243,17 +262,17 @@ void drawScene() {
     //glutSolidCube(5);
     
     // Drawing points at corners of the cuboid
-    glPointSize( 6.0 );
-    glBegin( GL_POINTS );
-    glColor3f( 0.95f, 0.207, 0.031f );
-    GLfloat mycolors[5][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} };
-    GLfloat mypoints[5][3] = { { -2.0f, -1.0f, 2.0f}, {2.0f, -1.0f, 2.0f}, {2.0f, 1.0f, 2.0f}, {-2.0f, 1.0f, 2.0f}, {2.0f, -1.0f, -2.0f} };
-    
-    for ( int i = 0; i < 5; ++i ){
-        glColor3f( mycolors[i][0], mycolors[i][1], mycolors[i][2]);
-        glVertex3f(mypoints[i][0], mypoints[i][1], mypoints[i][2]);
-    }
-    glEnd();
+//    glPointSize( 6.0 );
+//    glBegin( GL_POINTS );
+//    glColor3f( 0.95f, 0.207, 0.031f );
+//    GLfloat mycolors[5][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} };
+//    GLfloat mypoints[5][3] = { { -2.0f, -1.0f, 2.0f}, {2.0f, -1.0f, 2.0f}, {2.0f, 1.0f, 2.0f}, {-2.0f, 1.0f, 2.0f}, {2.0f, -1.0f, -2.0f} };
+//    
+//    for ( int i = 0; i < 5; ++i ){
+//        glColor3f( mycolors[i][0], mycolors[i][1], mycolors[i][2]);
+//        glVertex3f(mypoints[i][0], mypoints[i][1], mypoints[i][2]);
+//    }
+//    glEnd();
     
     
     
