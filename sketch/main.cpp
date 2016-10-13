@@ -6,6 +6,10 @@
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
+// ENTER ALL REFERENCES HERE
+//https://henry416.wordpress.com/2013/11/09/open-gl-3d-cuboid-transformation-example/
+//
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -76,6 +80,49 @@
 //}
 
 
+// Use it for loading texture to show in background for taking user input
+//void display (void) {
+//    
+//    glClearColor (0.0,0.0,0.0,1.0);
+//    glClear (GL_COLOR_BUFFER_BIT);
+//    
+//    // background render
+//    
+//    glOrtho(0.0f, 1024.0, 512.0, 0.0, 0.0, 1.f);
+//    
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    
+//    glEnable( GL_TEXTURE_2D );
+//    
+//    glBindTexture( GL_TEXTURE_2D, texture );
+//    
+//    glBegin (GL_QUADS);
+//    glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+//    glTexCoord2d(1.0,0.0); glVertex2d(1024.0,0.0);
+//    glTexCoord2d(1.0,1.0); glVertex2d(1024.0,512.0);
+//    glTexCoord2d(0.0,1.0); glVertex2d(0.0,512.0);
+//    glEnd();
+//    
+//    // foreground render - added code, not working
+//    
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
+//    
+//    glColor3f(0.0f, 0.0f, 1.0f);
+//    
+//    glBegin (GL_QUADS);
+//    glVertex2d(500.0,400.0);
+//    glVertex2d(500.0,500.0);
+//    glVertex2d(600.0,400.0);
+//    glVertex2d(600.0,500.0);
+//    glEnd();
+//    
+//    glutSwapBuffers();
+//}
+//
+
+
 using namespace std;
 
 
@@ -108,8 +155,17 @@ void handleResize(int w, int h) {
 
 float _angle = -70.0f;
 
+// TODO: function to add an arbitrary cuboid to the scene
+void addcuboid(){
+    
+}
+
 //Draws the 3D scene
 void drawScene() {
+    int back = 1;
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
+    glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f);
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glMatrixMode(GL_MODELVIEW);
@@ -134,9 +190,11 @@ void drawScene() {
     glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
     glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
     
-    glRotatef(_angle, 0.0f, 1.0f, 1.0f);
-    //Set the colour here
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glRotatef(_angle, 1.0f, 0.0f, 0.0f);
+    
+    
+    //Colour of the object
+    glColor3f(0.9f, 0.9f, 0.9f);
     glBegin(GL_QUADS);
     
     //Front
