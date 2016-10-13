@@ -154,6 +154,7 @@ void handleResize(int w, int h) {
 }
 
 float _angle = -70.0f;
+float yangle = 0;
 
 // TODO: function to add an arbitrary cuboid to the scene
 void addcuboid(){
@@ -178,8 +179,8 @@ void drawScene() {
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
     
     //Add positioned light
-    GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; //Color (0.5, 0.5, 0.5)
-    GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f}; //Positioned at (4, 0, 8)
+    GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Color (0.5, 0.5, 0.5)
+    GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f};   // Positioned at (4, 0, 8)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
     
@@ -190,8 +191,8 @@ void drawScene() {
     glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
     glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
     
-    glRotatef(_angle, 1.0f, 0.0f, 0.0f);
-    
+    //glRotatef(_angle, 1.0f, 1.0f, 0.0f);
+    gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
     
     //Colour of the object
     glColor3f(0.9f, 0.9f, 0.9f);
@@ -200,46 +201,46 @@ void drawScene() {
     //Front
     glNormal3f(0.0f, 0.0f, 1.0f);
     //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, -1.0f, 1.5f);
+    glVertex3f(-2.0f, -1.0f, 2.0f);
     //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, -1.0f, 1.5f);
+    glVertex3f(2.0f, -1.0f, 2.0f);
     //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, 1.0f, 1.5f);
+    glVertex3f(2.0f, 1.0f, 2.0f);
     //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, 1.0f, 1.5f);
+    glVertex3f(-2.0f, 1.0f, 2.0f);
     
     //Right
     glNormal3f(1.0f, 0.0f, 0.0f);
     //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, -1.0f, -1.5f);
+    glVertex3f(2.0f, -1.0f, -2.0f);
     //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, 1.0f, -1.5f);
+    glVertex3f(2.0f, 1.0f, -2.0f);
     //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, 1.0f, 1.5f);
+    glVertex3f(2.0f, 1.0f, 2.0f);
     //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, -1.0f, 1.5f);
+    glVertex3f(2.0f, -1.0f, 2.0f);
     
     //Back
     glNormal3f(0.0f, 0.0f, -1.0f);
     //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, -1.0f, -1.5f);
+    glVertex3f(-2.0f, -1.0f, -2.0f);
     //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, 1.0f, -1.5f);
+    glVertex3f(-2.0f, 1.0f, -2.0f);
     //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, 1.0f, -1.5f);
+    glVertex3f(2.0f, 1.0f, -2.0f);
     //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, -1.0f, -1.5f);
+    glVertex3f(2.0f, -1.0f, -2.0f);
     
     //Left
     glNormal3f(-1.0f, 0.0f, 0.0f);
     //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, -1.0f, -1.5f);
+    glVertex3f(-2.0f, -1.0f, -2.0f);
     //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, -1.0f, 1.5f);
+    glVertex3f(-2.0f, -1.0f, 2.0f);
     //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, 1.0f, 1.5f);
+    glVertex3f(-2.0f, 1.0f, 2.0f);
     //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, 1.0f, -1.5f);
+    glVertex3f(-2.0f, 1.0f, -2.0f);
     
     glEnd();
     
@@ -247,10 +248,15 @@ void drawScene() {
 }
 
 void update(int value) {
-    _angle += 1.5f;
+    _angle += 2.0f;
     if (_angle > 360) {
         _angle -= 360;
     }
+    
+    yangle += 0.1;
+    //if (yangle > 20){
+    //    yangle -=20;
+    //}
     
     glutPostRedisplay();
     glutTimerFunc(25, update, 0);
