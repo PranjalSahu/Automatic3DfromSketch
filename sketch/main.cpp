@@ -195,9 +195,9 @@ void drawScene() {
     
     // Rotating The cuboid
     glPushMatrix();
-    glTranslatef(-2.0f,2.0f, 0.0f);
+    //glTranslatef(2.0f,-2.0f, 0.0f);
     glRotatef(-1*_angle*0.5, 0.0f, 0.0f, 1.0f);
-    glTranslatef(2.0f,-2.0f, 0.0f);
+    glTranslatef(-2.0f, 2.0f, 0.0f);
     //Colour of the object
     glColor3f(0.9f, 0.9f, 0.9f);
     glutSolidCube(4);
