@@ -160,6 +160,41 @@ void addcuboid(GLfloat dimensions[][3] , GLfloat corner[]){
     
 }
 
+
+void drawcuboid(){
+    glBegin(GL_QUADS);
+    
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    
+    
+    // FRONT
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 6.0f, 0.0f);
+    glVertex3f(0.0f, 6.0f, -4.0f);
+    glVertex3f(0.0f, 0.0f, -4.0f);
+    
+    // SHIFT FRONT BY 2 IN -X TO GET BACK
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glVertex3f(-2.0f, 0.0f, 0.0f);
+    glVertex3f(-2.0f, 6.0f, 0.0f);
+    glVertex3f(-2.0f, 6.0f, -4.0f);
+    glVertex3f(-2.0f, 0.0f, -4.0f);
+    
+    // TOP
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 6.0f, 0.0f);
+    glVertex3f(-2.0f, 6.0f, 0.0f);
+    glVertex3f(-2.0f, 6.0f, -4.0f);
+    glVertex3f(0.0f, 6.0f, -4.0f);
+    
+    
+    
+    glEnd();
+    return;
+}
+
+
 //Draws the 3D scene
 void drawScene() {
     int back = 1;
@@ -171,7 +206,7 @@ void drawScene() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    glTranslatef(0.0f, 0.0f, -8.0f);
+    glTranslatef(0.0f, 0.0f, -2.0f);
     
     //Add ambient light
     //GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
@@ -179,7 +214,7 @@ void drawScene() {
     
     //Add positioned light
     //GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Color (0.5, 0.5, 0.5)
-    //GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f};   // Positioned at (4, 0, 8)
+    //GLfloat lightPos0[] = {4.0f, 0.0f, 2.0f, 1.0f};   // Positioned at (4, 0, 8)
     //glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
     //glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
     
@@ -195,12 +230,10 @@ void drawScene() {
     
     // Rotating The cuboid
     glPushMatrix();
-    //glTranslatef(2.0f,-2.0f, 0.0f);
     glRotatef(-1*_angle*0.5, 0.0f, 0.0f, 1.0f);
-    glTranslatef(-2.0f, 2.0f, 0.0f);
-    //Colour of the object
+    //glTranslatef(2.0f, -4.0f, 0.0f);
     glColor3f(0.9f, 0.9f, 0.9f);
-    glutSolidCube(4);
+    drawcuboid();
     glPopMatrix();
     
     
