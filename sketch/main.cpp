@@ -6,9 +6,6 @@
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
-// ENTER ALL REFERENCES HERE
-//https://henry416.wordpress.com/2013/11/09/open-gl-3d-cuboid-transformation-example/
-//
 
 #ifdef WIN32
 #include <windows.h>
@@ -136,12 +133,14 @@ void handleKeypress(unsigned char key, int x, int y) {
 
 //Initializes 3D rendering
 void initRendering() {
+    glEnable( GL_POINT_SMOOTH );
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING); //Enable lighting
     glEnable(GL_LIGHT0); //Enable light #0
     glEnable(GL_LIGHT1); //Enable light #1
     glEnable(GL_NORMALIZE); //Automatically normalize normals
+    
     //glShadeModel(GL_SMOOTH); //Enable smooth shading
 }
 
@@ -153,11 +152,11 @@ void handleResize(int w, int h) {
     gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-float _angle = -70.0f;
+float _angle = 0.0f;
 float yangle = 0;
 
 // TODO: function to add an arbitrary cuboid to the scene
-void addcuboid(){
+void addcuboid(GLfloat dimensions[][3] , GLfloat corner[]){
     
 }
 
@@ -175,83 +174,87 @@ void drawScene() {
     glTranslatef(0.0f, 0.0f, -8.0f);
     
     //Add ambient light
-    GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    //GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+    //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
     
     //Add positioned light
-    GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Color (0.5, 0.5, 0.5)
-    GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f};   // Positioned at (4, 0, 8)
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+    //GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; // Color (0.5, 0.5, 0.5)
+    //GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f};   // Positioned at (4, 0, 8)
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+    //glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
     
     //Add directed light
-    GLfloat lightColor1[] = {0.5f, 0.2f, 0.2f, 1.0f}; //Color (0.5, 0.2, 0.2)
+    //GLfloat lightColor1[] = {0.5f, 0.2f, 0.2f, 1.0f}; //Color (0.5, 0.2, 0.2)
     //Coming from the direction (-1, 0.5, 0.5)
-    GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
-    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+    //GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+    //glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+    //glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
     
-    //glRotatef(_angle, 1.0f, 1.0f, 0.0f);
     gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
+
     
+    // Rotating The cuboid
+    glPushMatrix();
+    glTranslatef(-2.0f,2.0f, 0.0f);
+    glRotatef(-1*_angle*0.5, 0.0f, 0.0f, 1.0f);
+    glTranslatef(2.0f,-2.0f, 0.0f);
     //Colour of the object
     glColor3f(0.9f, 0.9f, 0.9f);
-    glBegin(GL_QUADS);
+    glutSolidCube(4);
+    glPopMatrix();
     
-    //Front
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-2.0f, -1.0f, 2.0f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(2.0f, -1.0f, 2.0f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(2.0f, 1.0f, 2.0f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-2.0f, 1.0f, 2.0f);
     
-    //Right
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(2.0f, -1.0f, -2.0f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(2.0f, 1.0f, -2.0f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(2.0f, 1.0f, 2.0f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(2.0f, -1.0f, 2.0f);
     
-    //Back
-    glNormal3f(0.0f, 0.0f, -1.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-2.0f, -1.0f, -2.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-2.0f, 1.0f, -2.0f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(2.0f, 1.0f, -2.0f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(2.0f, -1.0f, -2.0f);
     
-    //Left
-    glNormal3f(-1.0f, 0.0f, 0.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-2.0f, -1.0f, -2.0f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-2.0f, -1.0f, 2.0f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-2.0f, 1.0f, 2.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-2.0f, 1.0f, -2.0f);
     
+    //glutSolidCube(5);
+    
+    // Drawing points at corners of the cuboid
+    glPointSize( 6.0 );
+    glBegin( GL_POINTS );
+    glColor3f( 0.95f, 0.207, 0.031f );
+    GLfloat mycolors[5][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} };
+    GLfloat mypoints[5][3] = { { -2.0f, -1.0f, 2.0f}, {2.0f, -1.0f, 2.0f}, {2.0f, 1.0f, 2.0f}, {-2.0f, 1.0f, 2.0f}, {2.0f, -1.0f, -2.0f} };
+    
+    for ( int i = 0; i < 5; ++i ){
+        glColor3f( mycolors[i][0], mycolors[i][1], mycolors[i][2]);
+        glVertex3f(mypoints[i][0], mypoints[i][1], mypoints[i][2]);
+    }
     glEnd();
+    
+    
+    
+    // Drawing coordinate axes
+    glLineWidth(2.5);
+    glColor3f(1.0, 1.0, 0.0);
+    
+    glBegin(GL_LINES);
+//    glColor3f(1, 0, 0);
+//    glVertex3f(-10, -2, -20);
+//    glVertex3f(10, -2, -20);
+//    
+//    glColor3f(0, 1, 0);
+//    glVertex3f(0, -10, -20);
+//    glVertex3f(0, 10, -20);
+
+    glColor3f(0, 0, 1);
+    glVertex3f(0, 0, -10);
+    glVertex3f(0, 0, 10);
+    glEnd();
+    
+    
+    
+    
+    
     
     glutSwapBuffers();
 }
 
 void update(int value) {
     _angle += 2.0f;
-    if (_angle > 360) {
-        _angle -= 360;
-    }
+//    if (_angle > 360) {
+//        _angle -= 360;
+//    }
     
     yangle += 0.1;
     //if (yangle > 20){
@@ -282,6 +285,100 @@ int main(int argc, char** argv) {
     
     glutMainLoop();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//bool* keyStates = new bool[256]; // Create an array of boolean values of length 256 (0-255)
+//
+//bool movingUp = false; // Whether or not we are moving up or down
+//float yLocation = 0.0f; // Keep track of our position on the y axis.
+//
+//float yRotationAngle = 0.0f; // The angle of rotation for our object
+//
+//void keyOperations (void) {
+//    if (keyStates[GLUT_KEY_LEFT]) { // If the left arrow key has been pressed
+//        // Perform left arrow key operations
+//    }
+//}
+//
+//void display (void) {
+//    keyOperations();
+//    
+//    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Clear the background of our window to red
+//    glClear(GL_COLOR_BUFFER_BIT); //Clear the colour buffer (more buffers later on)
+//    glLoadIdentity(); // Load the Identity Matrix to reset our drawing locations
+//    
+//    glTranslatef(0.0f, 0.0f, -5.0f); // Push eveything 5 units back into the scene, otherwise we won't see the primitive
+//    
+//    glTranslatef(0.0f, yLocation, 0.0f); // Translate our object along the y axis
+//    
+//    glRotatef(yRotationAngle, 0.0f, 1.0f, 0.0f); // Rotate our object around the y axis
+//    
+//    glutWireCube(2.0f); // Render the primitive
+//    
+//    glFlush(); // Flush the OpenGL buffers to the window
+//    
+//    if (movingUp) // If we are moving up
+//        yLocation -= 0.005f; // Move up along our yLocation
+//    else  // Otherwise
+//        yLocation += 0.005f; // Move down along our yLocation
+//    
+//    if (yLocation < -3.0f) // If we have gone up too far
+//        movingUp = false; // Reverse our direction so we are moving down
+//    else if (yLocation > 3.0f) // Else if we have gone down too far
+//        movingUp = true; // Reverse our direction so we are moving up
+//    
+//    yRotationAngle += 0.005f; // Increment our rotation value
+//    
+//    if (yRotationAngle > 360.0f) // If we have rotated beyond 360 degrees (a full rotation)
+//        yRotationAngle -= 360.0f; // Subtract 360 degrees off of our rotation
+//}
+//
+//void reshape (int width, int height) {
+//    glViewport(0, 0, (GLsizei)width, (GLsizei)height); // Set our viewport to the size of our window
+//    glMatrixMode(GL_PROJECTION); // Switch to the projection matrix so that we can manipulate how our scene is viewed
+//    glLoadIdentity(); // Reset the projection matrix to the identity matrix so that we don't get any artifacts (cleaning up)
+//    
+//    gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 100.0); // Set the Field of view angle (in degrees), the aspect ratio of our window, and the new and far planes
+//    
+//    glMatrixMode(GL_MODELVIEW); // Switch back to the model view matrix, so that we can start drawing shapes correctly
+//}
+//
+//void keyPressed (unsigned char key, int x, int y) {
+//    keyStates[key] = true; // Set the state of the current key to pressed
+//}
+//
+//void keyUp (unsigned char key, int x, int y) {
+//    keyStates[key] = false; // Set the state of the current key to not pressed
+//}
+//
+//int main (int argc, char **argv) {
+//    glutInit(&argc, argv); // Initialize GLUT
+//    glutInitDisplayMode (GLUT_SINGLE); // Set up a basic display buffer (only single buffered for now)
+//    glutInitWindowSize (500, 500); // Set the width and height of the window
+//    glutInitWindowPosition (100, 100); // Set the position of the window
+//    glutCreateWindow ("Your first OpenGL Window"); // Set the title for the window
+//    
+//    glutDisplayFunc(display); // Tell GLUT to use the method "display" for rendering
+//    
+//    glutIdleFunc(display); // Tell GLUT to use the method "display" as our idle method as well
+//    
+//    glutReshapeFunc(reshape); // Tell GLUT to use the method "reshape" for reshaping
+//    
+//    glutKeyboardFunc(keyPressed); // Tell GLUT to use the method "keyPressed" for key presses
+//    glutKeyboardUpFunc(keyUp); // Tell GLUT to use the method "keyUp" for key up events  
+//    
+//    glutMainLoop(); // Enter GLUT's main loop  
+//}
 
 
 
