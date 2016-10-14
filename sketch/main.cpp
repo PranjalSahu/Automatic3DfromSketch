@@ -324,7 +324,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize(400, 400);
     
     //Create the window
-    glutCreateWindow("Rotating 3D Cuboid");
+    glutCreateWindow("Sketch");
     initRendering();
     
     //Set handler functions
