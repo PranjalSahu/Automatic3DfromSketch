@@ -216,6 +216,28 @@ int facetaken = 0;        // flag to denote if one face input has been taken or 
 
 
 
+// stores the length, breadth and height of the cuboid obtained after taking input
+int cuboid_dimensions[3];
+
+
+int get_distance(int x1, int x2, int y1, int y2){
+    return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+
+//              x        y
+// returns the length breadth and height of the cuboid given the 5 points
+void get_height_width_depth_of_cuboid(){
+    int length  = get_distance(allpoints_x[0], allpoints_x[1], allpoints_y[0], allpoints_y[1]);
+    int breadth = get_distance(allpoints_x[1], allpoints_x[2], allpoints_y[1], allpoints_y[2]);
+    int height  = get_distance(allpoints_x[1], allpoints_x[4], allpoints_y[1], allpoints_y[4]);
+    
+    cuboid_dimensions[0] = length;
+    cuboid_dimensions[1] = breadth;
+    cuboid_dimensions[2] = height;
+    
+    printf("Cuboid lbh %d %d %d\n", length, breadth, height);
+}
+
 
 void get_3d_from_2d(std::list<mypoint*> allpoints){
     
@@ -247,6 +269,11 @@ void mousemotion(int button, int state, int x, int y){
         allpoints_x[countfacepoint] = x;
         allpoints_y[countfacepoint] = y;
         ++countfacepoint;
+        if(countfacepoint >= 5){
+            get_height_width_depth_of_cuboid();
+        }
+        
+        
         //debugmessage();
     }
 //    else{
@@ -300,12 +327,65 @@ void drawinputlines(int point_x[], int point_y[], int start, int count){
 }
 
 
+
+void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
+    glBegin(GL_QUADS);
+    
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    
+    // THIS CUBOID IS OF DIMENSION 6 x 4 x 2
+    // FRONT
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(0.0f, l, -1*b);
+    glVertex3f(0.0f, 0.0f, -b);
+    
+    // SHIFT FRONT BY 2 IN -X TO GET BACK
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    
+    // TOP
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(0.0f, l, -1*b);
+    
+    // SHIFT TOP BY -6 IN Y TO GET BOTTOM
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    glVertex3f(0.0f, 0.0f, -1*b);
+    
+    // OPPOSITE HIDDEN
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    
+    // HIDDEN
+    glVertex3f(0.0f, 0.0f, -1*b);
+    glVertex3f(0.0f, l, -1*b);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    
+    glEnd();
+    return;
+}
+
+
 void drawcuboid(){
     glBegin(GL_QUADS);
     
     glNormal3f(0.0f, 0.0f, 1.0f);
     
     
+    // THIS CUBOID IS OF DIMENSION 6 x 4 x 2
     // FRONT
     glNormal3f(1.0f, 0.0f, 0.0f);
     glVertex3f(0.0f, 0.0f, 0.0f);
@@ -417,7 +497,8 @@ void drawScene() {
     glRotatef(-1*_angle*0.5, 0.0f, 0.0f, 1.0f);
     //glTranslatef(2.0f, -4.0f, 0.0f);
     glColor3f(0.9f, 0.9f, 0.9f);
-    drawcuboid();
+    drawmycuboid(6, 4, 1);
+    //drawcuboid();
     glPopMatrix();
     
     // Drawing coordinate axes
