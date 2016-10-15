@@ -206,6 +206,11 @@ std::list<mypoint*> face1;
 int countfacepoint = 0;
 int allpoints_x[8];
 int allpoints_y[8];
+
+// for taking points for width part
+int allpoints_x2[8];
+int allpoints_y2[8];
+
 int cuboid_taken = 0;     // flag to denote if cuboid's input has been taken or not
 int facetaken = 0;        // flag to denote if one face input has been taken or not
 
@@ -223,13 +228,26 @@ void debugmessage(){
     }
 }
 
+
+// stores the point in allpoints_x2 for drawing the back face of cuboid
+void get_2nd_face_points(){
+    allpoints_x2[0] = allpoints_x[1];
+    allpoints_y2[0] = allpoints_y[1];
+    
+    if(countfacepoint >= 5){
+        allpoints_x2[1] = allpoints_x[4];
+        allpoints_y2[1] = allpoints_y[4];
+    }
+    return;
+}
+
 void mousemotion(int button, int state, int x, int y){
     //printf("%d %d %d %d %d\n", button, state, x, y, x);
     if(state == GLUT_DOWN){
         allpoints_x[countfacepoint] = x;
         allpoints_y[countfacepoint] = y;
         ++countfacepoint;
-        debugmessage();
+        //debugmessage();
     }
 //    else{
 //        if(drawpoly && button == 0){
@@ -271,17 +289,12 @@ void mousemotion(int button, int state, int x, int y){
 }
 
 
-void drawinputlines(){
+// given the count it draws the points taken from array point_x and point_y
+// takes the starting index from where to start taking points from array
+void drawinputlines(int point_x[], int point_y[], int start, int count){
     glBegin(GL_LINE_LOOP);
-//    for(int i=0;i<countfacepoint;++i){
-//        glVertex2f(-1+2*allpoints_x[i]/(s_width+0.0), -1+2*(s_height-allpoints_y[i])/(s_height+0.0));
-//    }
-//    glVertex2f(0, 0);
-//    glVertex2f(200, 200);
-//    glVertex2f(200, 0);
-//    glVertex2f(0, 200);
-    for(int i=0;i<countfacepoint;++i){
-        glVertex2f(allpoints_x[i], allpoints_y[i]);
+    for(int i=start;i<count;++i){
+        glVertex2f(point_x[i], point_y[i]);
     }
     glEnd();
 }
@@ -445,13 +458,22 @@ void drawScene() {
     glLoadIdentity();
     glOrtho(0.0, s_width, s_height, 0.0, -1.0, 10.0);
     glMatrixMode(GL_MODELVIEW);
-    //glPushMatrix();        ----Not sure if I need this
+    //glPushMatrix();
     glLoadIdentity();
     glDisable(GL_CULL_FACE);
     
     glClear(GL_DEPTH_BUFFER_BIT);
     
-    drawinputlines();
+    if(countfacepoint <= 4){
+      drawinputlines(allpoints_x, allpoints_y, 0, countfacepoint);
+    }
+    else{
+      drawinputlines(allpoints_x, allpoints_y, 0, 4);
+      get_2nd_face_points();
+      drawinputlines(allpoints_x2, allpoints_y2, 0, countfacepoint-4+1);
+    }
+    
+    
     
     // Making sure we can render 3d again
     glMatrixMode(GL_PROJECTION);
