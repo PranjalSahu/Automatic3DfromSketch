@@ -38,6 +38,12 @@
 #include <fstream>
 
 
+// screen height and width
+int s_width  = 400;
+int s_height = 400;
+
+void mylinefun(int x1, int y1,int x2,int y2, int flag);
+
 
 //void renderScene(void) {
 //    
@@ -146,6 +152,9 @@ void initRendering() {
 
 //Called when the window is resized
 void handleResize(int w, int h) {
+    s_width  = w;
+    s_height = h;
+    
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -158,6 +167,123 @@ float yangle = 0;
 // TODO: function to add an arbitrary cuboid to the scene
 void addcuboid(GLfloat dimensions[][3] , GLfloat corner[]){
     
+}
+
+
+int allpoints = 0;
+
+class mypoint{
+public:
+    int x, y, z;
+    mypoint(int a, int b, int c);
+    mypoint(mypoint *t);
+    mypoint();
+};
+
+
+mypoint::mypoint(int a,int b, int c){
+    x = a;
+    y = b;
+    z = c;
+}
+mypoint::mypoint(mypoint *t){
+    x = t->x;
+    y = t->y;
+    z = t->z;
+}
+mypoint::mypoint(){
+    x = 0;
+    y = 0;
+    z = 0;
+}
+
+
+std::list<mypoint*> face1;
+
+
+// for storing the input given by user
+// These points will be used to get 3d points and a 3d object will be drawn on screen
+int countfacepoint = 0;
+int allpoints_x[8];
+int allpoints_y[8];
+int cuboid_taken = 0;     // flag to denote if cuboid's input has been taken or not
+int facetaken = 0;        // flag to denote if one face input has been taken or not
+
+
+
+
+void get_3d_from_2d(std::list<mypoint*> allpoints){
+    
+}
+
+
+void debugmessage(){
+    for (int i=0;i<8;++i){
+        printf("%d %d %d\n", countfacepoint, allpoints_x[i], allpoints_y[i]);
+    }
+}
+
+void mousemotion(int button, int state, int x, int y){
+    //printf("%d %d %d %d %d\n", button, state, x, y, x);
+    if(state == GLUT_DOWN){
+        allpoints_x[countfacepoint] = x;
+        allpoints_y[countfacepoint] = y;
+        ++countfacepoint;
+        debugmessage();
+    }
+//    else{
+//        if(drawpoly && button == 0){
+//            if(drawpoly == 1){					// taking points of polygon
+//                drawpoly = 2;					// ignore the point
+//                starmean.x=0;
+//                starmean.y=0;
+//                return;
+//            }
+//            printf("taking point\n");
+//            if(drawpoly == 2){
+//                drawpoint(x, y, 1);
+//                poly1.push_back(new mypoint(x, y));
+//                starmean.x = starmean.x+x;
+//                starmean.y = starmean.y+y;
+//            }
+//            return;
+//        }
+//        
+//        if(count>=2){
+//            count = 0;
+//            if(drawline){
+//                int tx[2], ty[2];
+//                if(px[0]<px[1]){
+//                    tx[0] = px[0];	ty[0] = py[0];
+//                    tx[1] = px[1];	ty[1] = py[1];
+//                }
+//                else{
+//                    tx[0] = px[1];	ty[0] = py[1];
+//                    tx[1] = px[0];	ty[1] = py[0];
+//                }			   	
+//                mylinefun(tx[0], h-ty[0], tx[1], h-ty[1], 1);		// change it to support other slopes
+//            }
+//            else if(cropimage){
+//                drawrectangle();
+//            }			
+//        }
+//    }
+}
+
+
+void drawinputlines(){
+    glBegin(GL_LINE_LOOP);
+//    for(int i=0;i<countfacepoint;++i){
+//        glVertex2f(-1+2*allpoints_x[i]/(s_width+0.0), -1+2*(s_height-allpoints_y[i])/(s_height+0.0));
+//    }
+//    glVertex2f(0, 0);
+//    glVertex2f(200, 200);
+//    glVertex2f(200, 0);
+//    glVertex2f(0, 200);
+    for(int i=0;i<countfacepoint;++i){
+        glVertex2f(allpoints_x[i], allpoints_y[i]);
+    }
+    glEnd();
 }
 
 
@@ -216,6 +342,32 @@ void drawcuboid(){
 
 //Draws the 3D scene
 void drawScene() {
+    
+    // clear color/depth buffer
+    
+    // orthographic projection for background
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
+//    
+//    
+//    glDepthMask(GL_FALSE);      // disable depth writes
+//    glEnable( GL_TEXTURE_2D );  // draw background
+//    glBindTexture( GL_TEXTURE_2D, texture );
+//    
+//    glBegin (GL_QUADS);
+//    glTexCoord2d(0.0,0.0); glVertex2d(0.0, 0.0);
+//    glTexCoord2d(1.0,0.0); glVertex2d(400.0, 0.0);
+//    glTexCoord2d(1.0,1.0); glVertex2d(400.0, 400.0);
+//    glTexCoord2d(0.0,1.0); glVertex2d(0.0, 400.0);
+//    glEnd();
+//    
+//    // re-enable depth writes
+//    glDepthMask(GL_TRUE);
+//    
+//    // perspective projection for foreground
+//    glLoadIdentity();
+    
     int back = 1;
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
     glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f);
@@ -255,8 +407,56 @@ void drawScene() {
     drawcuboid();
     glPopMatrix();
     
+    // Drawing coordinate axes
+    glLineWidth(2.5);
+    glColor3f(1.0, 1.0, 0.0);
+    
+    glBegin(GL_LINES);
+    //    glColor3f(1, 0, 0);
+    //    glVertex3f(-10, -2, -20);
+    //    glVertex3f(10, -2, -20);
+    //
+    //    glColor3f(0, 1, 0);
+    //    glVertex3f(0, -10, -20);
+    //    glVertex3f(0, 10, -20);
+    
+    glColor3f(0, 0, 1);
+    glVertex3f(0, 0, -10);
+    glVertex3f(0, 0, 10);
+    glEnd();
+
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //Setup for 2D
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0.0, s_width, s_height, 0.0, -1.0, 10.0);
+    glMatrixMode(GL_MODELVIEW);
+    //glPushMatrix();        ----Not sure if I need this
+    glLoadIdentity();
+    glDisable(GL_CULL_FACE);
+    
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
+    drawinputlines();
+    
+    // Making sure we can render 3d again
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
     
     
     //glutSolidCube(5);
@@ -276,23 +476,6 @@ void drawScene() {
     
     
     
-    // Drawing coordinate axes
-    glLineWidth(2.5);
-    glColor3f(1.0, 1.0, 0.0);
-    
-    glBegin(GL_LINES);
-//    glColor3f(1, 0, 0);
-//    glVertex3f(-10, -2, -20);
-//    glVertex3f(10, -2, -20);
-//    
-//    glColor3f(0, 1, 0);
-//    glVertex3f(0, -10, -20);
-//    glVertex3f(0, 10, -20);
-
-    glColor3f(0, 0, 1);
-    glVertex3f(0, 0, -10);
-    glVertex3f(0, 0, 10);
-    glEnd();
     
     
     
@@ -303,7 +486,7 @@ void drawScene() {
 }
 
 void update(int value) {
-    _angle += 2.0f;
+    //_angle += 2.0f;
 //    if (_angle > 360) {
 //        _angle -= 360;
 //    }
@@ -331,10 +514,10 @@ int main(int argc, char** argv) {
     glutDisplayFunc(drawScene);
     glutKeyboardFunc(handleKeypress);
     glutReshapeFunc(handleResize);
+    glutMouseFunc(mousemotion);
     
     //Add a timer
     glutTimerFunc(25, update, 0);
-    
     glutMainLoop();
 }
 
