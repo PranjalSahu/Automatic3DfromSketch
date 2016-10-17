@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1696DFE1FA3D1C55AA4A07A348695149BD509595",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "1696DFE1FA3D1C55AA4A07A348695149BD509595" : 0,
+    "9F5B223C26116C39F896D1F7B00D921392C1E930" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "B9130A63-9024-4AEE-B2E7-E3CF1F503A68",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "1696DFE1FA3D1C55AA4A07A348695149BD509595" : "sketch\/",
+    "9F5B223C26116C39F896D1F7B00D921392C1E930" : "camera\/OpenGL-CameraCalibration\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "sketch",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "sketch.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/pranjalsahu\/sketch.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1696DFE1FA3D1C55AA4A07A348695149BD509595"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CarloNicolini\/OpenGL-CameraCalibration.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9F5B223C26116C39F896D1F7B00D921392C1E930"
+    }
+  ]
+}

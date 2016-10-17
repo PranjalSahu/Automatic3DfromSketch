@@ -38,92 +38,15 @@
 #include <fstream>
 
 
+static int win_menu;
+
 // screen height and width
 int s_width  = 400;
 int s_height = 400;
 
 void mylinefun(int x1, int y1,int x2,int y2, int flag);
+void createmymenu(void);
 
-
-//void renderScene(void) {
-//    
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    
-//    glBegin(GL_TRIANGLES);
-//    glVertex3f(-0.5,-0.5,0.0);
-//    glVertex3f(0.5,0.0,0.0);
-//    glVertex3f(0.0,0.5,0.0);
-//    glEnd();
-//    
-//    glutSwapBuffers();
-//}
-//
-//int main(int argc, char **argv) {
-//    
-//    
-//
-//    // init GLUT and create Window
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-//    glutInitWindowPosition(100,100);
-//    glutInitWindowSize(320,320);
-//    glutCreateWindow("Lighthouse3D - GLUT Tutorial");
-//    
-//    // register callbacks
-//    glutDisplayFunc(renderScene);
-//    
-//    
-//    // get opengl version
-//    // printf("%s", glGetString(GL_VERSION));
-//
-//    // enter GLUT event processing cycle
-//    glutMainLoop();
-//    
-//    return 1;
-//}
-
-
-// Use it for loading texture to show in background for taking user input
-//void display (void) {
-//    
-//    glClearColor (0.0,0.0,0.0,1.0);
-//    glClear (GL_COLOR_BUFFER_BIT);
-//    
-//    // background render
-//    
-//    glOrtho(0.0f, 1024.0, 512.0, 0.0, 0.0, 1.f);
-//    
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    
-//    glEnable( GL_TEXTURE_2D );
-//    
-//    glBindTexture( GL_TEXTURE_2D, texture );
-//    
-//    glBegin (GL_QUADS);
-//    glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
-//    glTexCoord2d(1.0,0.0); glVertex2d(1024.0,0.0);
-//    glTexCoord2d(1.0,1.0); glVertex2d(1024.0,512.0);
-//    glTexCoord2d(0.0,1.0); glVertex2d(0.0,512.0);
-//    glEnd();
-//    
-//    // foreground render - added code, not working
-//    
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
-//    
-//    glColor3f(0.0f, 0.0f, 1.0f);
-//    
-//    glBegin (GL_QUADS);
-//    glVertex2d(500.0,400.0);
-//    glVertex2d(500.0,500.0);
-//    glVertex2d(600.0,400.0);
-//    glVertex2d(600.0,500.0);
-//    glEnd();
-//    
-//    glutSwapBuffers();
-//}
-//
 
 
 using namespace std;
@@ -162,12 +85,9 @@ void handleResize(int w, int h) {
 }
 
 float _angle = 0.0f;
+float _zview = 10.0f;
 float yangle = 0;
 
-// TODO: function to add an arbitrary cuboid to the scene
-void addcuboid(GLfloat dimensions[][3] , GLfloat corner[]){
-    
-}
 
 
 int allpoints = 0;
@@ -196,6 +116,26 @@ mypoint::mypoint(){
     y = 0;
     z = 0;
 }
+
+
+class cuboid{
+public:
+    GLfloat length, breadth, height, shortest, largest;
+};
+
+class view{
+public:
+    int num_cuboid = 2;     // we are starting with only 2 cuboids as input
+    int joint_type = 1;     // starting with rotation joint
+    
+    int cuboid_one[3];
+    int cuboid_two[3];
+    
+    
+    view();
+};
+
+
 
 
 std::list<mypoint*> face1;
@@ -235,6 +175,8 @@ void get_height_width_depth_of_cuboid(){
     cuboid_dimensions[1] = breadth;
     cuboid_dimensions[2] = height;
     
+    // flag to denote that cuboid input has been taken
+    cuboid_taken = 1;
     printf("Cuboid lbh %d %d %d\n", length, breadth, height);
 }
 
@@ -264,7 +206,7 @@ void get_2nd_face_points(){
 }
 
 void mousemotion(int button, int state, int x, int y){
-    //printf("%d %d %d %d %d\n", button, state, x, y, x);
+    printf("%d %d\n", x, y);
     if(state == GLUT_DOWN){
         allpoints_x[countfacepoint] = x;
         allpoints_y[countfacepoint] = y;
@@ -276,44 +218,7 @@ void mousemotion(int button, int state, int x, int y){
         
         //debugmessage();
     }
-//    else{
-//        if(drawpoly && button == 0){
-//            if(drawpoly == 1){					// taking points of polygon
-//                drawpoly = 2;					// ignore the point
-//                starmean.x=0;
-//                starmean.y=0;
-//                return;
-//            }
-//            printf("taking point\n");
-//            if(drawpoly == 2){
-//                drawpoint(x, y, 1);
-//                poly1.push_back(new mypoint(x, y));
-//                starmean.x = starmean.x+x;
-//                starmean.y = starmean.y+y;
-//            }
-//            return;
-//        }
-//        
-//        if(count>=2){
-//            count = 0;
-//            if(drawline){
-//                int tx[2], ty[2];
-//                if(px[0]<px[1]){
-//                    tx[0] = px[0];	ty[0] = py[0];
-//                    tx[1] = px[1];	ty[1] = py[1];
-//                }
-//                else{
-//                    tx[0] = px[1];	ty[0] = py[1];
-//                    tx[1] = px[0];	ty[1] = py[0];
-//                }			   	
-//                mylinefun(tx[0], h-ty[0], tx[1], h-ty[1], 1);		// change it to support other slopes
-//            }
-//            else if(cropimage){
-//                drawrectangle();
-//            }			
-//        }
-//    }
-}
+  }
 
 
 // given the count it draws the points taken from array point_x and point_y
@@ -379,60 +284,6 @@ void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
 }
 
 
-void drawcuboid(){
-    glBegin(GL_QUADS);
-    
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    
-    
-    // THIS CUBOID IS OF DIMENSION 6 x 4 x 2
-    // FRONT
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 6.0f, 0.0f);
-    glVertex3f(0.0f, 6.0f, -4.0f);
-    glVertex3f(0.0f, 0.0f, -4.0f);
-    
-    // SHIFT FRONT BY 2 IN -X TO GET BACK
-    glNormal3f(-1.0f, 0.0f, 0.0f);
-    glVertex3f(-2.0f, 0.0f, 0.0f);
-    glVertex3f(-2.0f, 6.0f, 0.0f);
-    glVertex3f(-2.0f, 6.0f, -4.0f);
-    glVertex3f(-2.0f, 0.0f, -4.0f);
-    
-    // TOP
-    glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, 6.0f, 0.0f);
-    glVertex3f(-2.0f, 6.0f, 0.0f);
-    glVertex3f(-2.0f, 6.0f, -4.0f);
-    glVertex3f(0.0f, 6.0f, -4.0f);
-    
-    // SHIFT TOP BY -6 IN Y TO GET BOTTOM
-    glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(-2.0f, 0.0f, 0.0f);
-    glVertex3f(-2.0f, 0.0f, -4.0f);
-    glVertex3f(0.0f, 0.0f, -4.0f);
-
-    // OPPOSITE HIDDEN
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 6.0f, 0.0f);
-    glVertex3f(-2.0f, 6.0f, 0.0f);
-    glVertex3f(-2.0f, 0.0f, 0.0f);
-
-    // HIDDEN
-    glVertex3f(0.0f, 0.0f, -4.0f);
-    glVertex3f(0.0f, 6.0f, -4.0f);
-    glVertex3f(-2.0f, 6.0f, -4.0f);
-    glVertex3f(-2.0f, 0.0f, -4.0f);
-    
-    
-    
-    glEnd();
-    return;
-}
-
-
 //Draws the 3D scene
 void drawScene() {
     
@@ -489,7 +340,9 @@ void drawScene() {
     //glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
     //glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
     
-    gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
+    //gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
+    //_zview = _zview-0.05;
+    gluLookAt(10, 10, _zview, 0, 0, 0, 0, 1, 0);
 
     
     // Rotating The cuboid
@@ -497,7 +350,15 @@ void drawScene() {
     glRotatef(-1*_angle*0.5, 0.0f, 0.0f, 1.0f);
     //glTranslatef(2.0f, -4.0f, 0.0f);
     glColor3f(0.9f, 0.9f, 0.9f);
-    drawmycuboid(6, 4, 1);
+    
+    //cuboid_dimensions
+    if(cuboid_taken != 1){
+        drawmycuboid(6, 4, 1);
+    }
+    else{
+        drawmycuboid(cuboid_dimensions[0]/20.0, cuboid_dimensions[1]/20.0, cuboid_dimensions[2]/20.0);
+    }
+    
     //drawcuboid();
     glPopMatrix();
     
@@ -518,15 +379,6 @@ void drawScene() {
     glVertex3f(0, 0, -10);
     glVertex3f(0, 0, 10);
     glEnd();
-
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -588,6 +440,31 @@ void drawScene() {
     glutSwapBuffers();
 }
 
+void reset_view(){
+    
+}
+
+void menufun(int value){
+    int count = 0;
+    
+    if(value == 0){
+        glutDestroyWindow(win_menu);
+        exit(0);
+    }
+    else if(value == 1){		// take new view from user
+        reset_view();
+    }
+}
+
+
+void createmymenu(void){
+    int polygonmenu = glutCreateMenu(menufun);
+    glutAddMenuEntry("Add New View", 1);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
+
 void update(int value) {
     //_angle += 2.0f;
 //    if (_angle > 360) {
@@ -603,26 +480,29 @@ void update(int value) {
     glutTimerFunc(25, update, 0);
 }
 
-int main(int argc, char** argv) {
-    //Initialize GLUT
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(400, 400);
-    
-    //Create the window
-    glutCreateWindow("Sketch");
-    initRendering();
-    
-    //Set handler functions
-    glutDisplayFunc(drawScene);
-    glutKeyboardFunc(handleKeypress);
-    glutReshapeFunc(handleResize);
-    glutMouseFunc(mousemotion);
-    
-    //Add a timer
-    glutTimerFunc(25, update, 0);
-    glutMainLoop();
-}
+//int main(int argc, char** argv) {
+//    //Initialize GLUT
+//    glutInit(&argc, argv);
+//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+//    glutInitWindowSize(400, 400);
+//    
+//    //Create the window
+//    win_menu = glutCreateWindow("Sketch");
+//    createmymenu();
+//    
+//    
+//    initRendering();
+//    
+//    //Set handler functions
+//    glutDisplayFunc(drawScene);
+//    glutKeyboardFunc(handleKeypress);
+//    glutReshapeFunc(handleResize);
+//    glutMouseFunc(mousemotion);
+//    
+//    //Add a timer
+//    glutTimerFunc(25, update, 0);
+//    glutMainLoop();
+//}
 
 
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F9074DCE1DB480AF0023CF9A /* deviltest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DCD1DB480AF0023CF9A /* deviltest.cpp */; };
 		F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9899B891DA3660500F0A4C1 /* main.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
 		F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
@@ -38,6 +39,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F9074DCD1DB480AF0023CF9A /* deviltest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = deviltest.cpp; sourceTree = "<group>"; };
 		F9899B861DA3660500F0A4C1 /* sketch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketch; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B891DA3660500F0A4C1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F9899B941DA36D2800F0A4C1 /* sketcha */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketcha; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				F9899B891DA3660500F0A4C1 /* main.cpp */,
+				F9074DCD1DB480AF0023CF9A /* deviltest.cpp */,
 			);
 			path = sketch;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9074DCE1DB480AF0023CF9A /* deviltest.cpp in Sources */,
 				F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +277,13 @@
 		F9899B8E1DA3660500F0A4C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/devil/1.7.8_3/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/devil/1.7.8_3/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_LDFLAGS = (
+					"-lIL",
+					"-lILU",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -281,7 +291,13 @@
 		F9899B8F1DA3660500F0A4C1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/devil/1.7.8_3/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/devil/1.7.8_3/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_LDFLAGS = (
+					"-lIL",
+					"-lILU",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -328,6 +344,7 @@
 				F9899B991DA36D2800F0A4C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
