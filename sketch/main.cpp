@@ -37,12 +37,16 @@
 #include <vector>
 #include <fstream>
 
+#include <IL/il.h>
+#include <GLUT/glut.h>
+
 
 static int win_menu;
 
 // screen height and width
 int s_width  = 400;
 int s_height = 400;
+GLuint texid;
 
 void mylinefun(int x1, int y1,int x2,int y2, int flag);
 void createmymenu(void);
@@ -79,6 +83,8 @@ void handleResize(int w, int h) {
     s_height = h;
     
     glViewport(0, 0, w, h);
+    glEnable(GL_TEXTURE_2D);
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
@@ -218,7 +224,7 @@ void mousemotion(int button, int state, int x, int y){
         
         //debugmessage();
     }
-  }
+}
 
 
 // given the count it draws the points taken from array point_x and point_y
@@ -290,27 +296,27 @@ void drawScene() {
     // clear color/depth buffer
     
     // orthographic projection for background
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
+//        glMatrixMode(GL_PROJECTION);
+//        glLoadIdentity();
+//        glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
 //    
 //    
-//    glDepthMask(GL_FALSE);      // disable depth writes
-//    glEnable( GL_TEXTURE_2D );  // draw background
-//    glBindTexture( GL_TEXTURE_2D, texture );
+//        glDepthMask(GL_FALSE);      // disable depth writes
+//        glEnable( GL_TEXTURE_2D );  // draw background
+//        glBindTexture( GL_TEXTURE_2D, texid );
 //    
-//    glBegin (GL_QUADS);
-//    glTexCoord2d(0.0,0.0); glVertex2d(0.0, 0.0);
-//    glTexCoord2d(1.0,0.0); glVertex2d(400.0, 0.0);
-//    glTexCoord2d(1.0,1.0); glVertex2d(400.0, 400.0);
-//    glTexCoord2d(0.0,1.0); glVertex2d(0.0, 400.0);
-//    glEnd();
+//        glBegin (GL_QUADS);
+//        glTexCoord2d(0.0,0.0); glVertex2d(0.0, 0.0);
+//        glTexCoord2d(1.0,0.0); glVertex2d(400.0, 0.0);
+//        glTexCoord2d(1.0,1.0); glVertex2d(400.0, 400.0);
+//        glTexCoord2d(0.0,1.0); glVertex2d(0.0, 400.0);
+//        glEnd();
 //    
-//    // re-enable depth writes
-//    glDepthMask(GL_TRUE);
+//        // re-enable depth writes
+//        glDepthMask(GL_TRUE);
 //    
-//    // perspective projection for foreground
-//    glLoadIdentity();
+//        // perspective projection for foreground
+//        glLoadIdentity();
     
     int back = 1;
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
@@ -318,6 +324,9 @@ void drawScene() {
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, 400.0 / 400.0, 1.0, 200.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
@@ -343,7 +352,7 @@ void drawScene() {
     //gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
     //_zview = _zview-0.05;
     gluLookAt(10, 10, _zview, 0, 0, 0, 0, 1, 0);
-
+    
     
     // Rotating The cuboid
     glPushMatrix();
@@ -396,14 +405,26 @@ void drawScene() {
     glDisable(GL_CULL_FACE);
     
     glClear(GL_DEPTH_BUFFER_BIT);
+    glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f);
+    
+    
+    /* Draw a quad */
+//    glBegin(GL_QUADS);
+//    glTexCoord2i(0, 0); glVertex2i(0,   0);
+//    glTexCoord2i(0, 1); glVertex2i(0,   200);
+//    glTexCoord2i(1, 1); glVertex2i(200, 200);
+//    glTexCoord2i(1, 0); glVertex2i(200, 0);
+//    glEnd();
+    
+    
     
     if(countfacepoint <= 4){
-      drawinputlines(allpoints_x, allpoints_y, 0, countfacepoint);
+        drawinputlines(allpoints_x, allpoints_y, 0, countfacepoint);
     }
     else{
-      drawinputlines(allpoints_x, allpoints_y, 0, 4);
-      get_2nd_face_points();
-      drawinputlines(allpoints_x2, allpoints_y2, 0, countfacepoint-4+1);
+        drawinputlines(allpoints_x, allpoints_y, 0, 4);
+        get_2nd_face_points();
+        drawinputlines(allpoints_x2, allpoints_y2, 0, countfacepoint-4+1);
     }
     
     
@@ -417,17 +438,17 @@ void drawScene() {
     //glutSolidCube(5);
     
     // Drawing points at corners of the cuboid
-//    glPointSize( 6.0 );
-//    glBegin( GL_POINTS );
-//    glColor3f( 0.95f, 0.207, 0.031f );
-//    GLfloat mycolors[5][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} };
-//    GLfloat mypoints[5][3] = { { -2.0f, -1.0f, 2.0f}, {2.0f, -1.0f, 2.0f}, {2.0f, 1.0f, 2.0f}, {-2.0f, 1.0f, 2.0f}, {2.0f, -1.0f, -2.0f} };
-//    
-//    for ( int i = 0; i < 5; ++i ){
-//        glColor3f( mycolors[i][0], mycolors[i][1], mycolors[i][2]);
-//        glVertex3f(mypoints[i][0], mypoints[i][1], mypoints[i][2]);
-//    }
-//    glEnd();
+    //    glPointSize( 6.0 );
+    //    glBegin( GL_POINTS );
+    //    glColor3f( 0.95f, 0.207, 0.031f );
+    //    GLfloat mycolors[5][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f} };
+    //    GLfloat mypoints[5][3] = { { -2.0f, -1.0f, 2.0f}, {2.0f, -1.0f, 2.0f}, {2.0f, 1.0f, 2.0f}, {-2.0f, 1.0f, 2.0f}, {2.0f, -1.0f, -2.0f} };
+    //
+    //    for ( int i = 0; i < 5; ++i ){
+    //        glColor3f( mycolors[i][0], mycolors[i][1], mycolors[i][2]);
+    //        glVertex3f(mypoints[i][0], mypoints[i][1], mypoints[i][2]);
+    //    }
+    //    glEnd();
     
     
     
@@ -467,9 +488,9 @@ void createmymenu(void){
 
 void update(int value) {
     //_angle += 2.0f;
-//    if (_angle > 360) {
-//        _angle -= 360;
-//    }
+    //    if (_angle > 360) {
+    //        _angle -= 360;
+    //    }
     
     yangle += 0.1;
     //if (yangle > 20){
@@ -480,29 +501,136 @@ void update(int value) {
     glutTimerFunc(25, update, 0);
 }
 
-//int main(int argc, char** argv) {
-//    //Initialize GLUT
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-//    glutInitWindowSize(400, 400);
-//    
-//    //Create the window
-//    win_menu = glutCreateWindow("Sketch");
-//    createmymenu();
-//    
-//    
-//    initRendering();
-//    
-//    //Set handler functions
-//    glutDisplayFunc(drawScene);
-//    glutKeyboardFunc(handleKeypress);
-//    glutReshapeFunc(handleResize);
-//    glutMouseFunc(mousemotion);
-//    
-//    //Add a timer
-//    glutTimerFunc(25, update, 0);
-//    glutMainLoop();
-//}
+
+/* Load an image using DevIL and return the devIL handle (-1 if failure) */
+int LoadImagea(char *filename)
+{
+    ILboolean success;
+    ILuint image;
+    
+    ilGenImages(1, &image); /* Generation of one image name */
+    ilBindImage(image); /* Binding of image name */
+    success = ilLoadImage(filename); /* Loading of the image filename by DevIL */
+    
+    if (success) /* If no error occured: */
+    {
+        /* Convert every colour component into unsigned byte. If your image contains alpha channel you can replace IL_RGB with IL_RGBA */
+        success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+        
+        if (!success)
+        {
+            return -1;
+        }
+    }
+    else
+        return -1;
+    
+    return image;
+}
+
+
+int main(int argc, char** argv) {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //Initialize GLUT
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(400, 400);
+    
+    //Create the window
+    win_menu = glutCreateWindow("Sketch");
+    createmymenu();
+    
+    
+    initRendering();
+    
+    //Set handler functions
+    glutDisplayFunc(drawScene);
+    glutKeyboardFunc(handleKeypress);
+    glutReshapeFunc(handleResize);
+    glutMouseFunc(mousemotion);
+    
+    //Add a timer
+    glutTimerFunc(25, update, 0);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    int    image;
+    
+    /* Initialization of DevIL */
+    if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION){
+        printf("wrong DevIL version \n");
+        return -1;
+    }
+    ilInit();
+    /* load the file picture with DevIL */
+    image = LoadImagea("/Users/pranjal/Downloads/oven.png");
+    if ( image == -1 )
+    {
+        printf("Can't load picture file %s by DevIL \n", argv[1]);
+        return -1;
+    }
+    
+    /* OpenGL texture binding of the image loaded by DevIL  */
+    glGenTextures(1, &texid); /* Texture name generation */
+    glBindTexture(GL_TEXTURE_2D, texid); /* Binding of texture name */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear interpolation for magnification filter */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear interpolation for minifying filter */
+    glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+                 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData()); /* Texture specification */
+    
+    
+
+    
+    glutMainLoop();
+    
+    
+    
+    
+        
+    
+
+    
+    
+    
+    glDeleteTextures(1, &texid);
+    return 0;
+}
 
 
 
