@@ -40,13 +40,17 @@
 #include <IL/il.h>
 #include <GLUT/glut.h>
 
+#include "cuboid.h"
+#include "view.h"
 
 static int win_menu;
 
 // screen height and width
-int s_width  = 400;
-int s_height = 400;
+int s_width  = 600;
+int s_height = 600;
 GLuint texid;
+float cuboid_ratio = 107.0;
+
 
 void mylinefun(int x1, int y1,int x2,int y2, int flag);
 void createmymenu(void);
@@ -54,6 +58,7 @@ void createmymenu(void);
 
 
 using namespace std;
+
 
 
 //Called when a key is pressed
@@ -91,56 +96,17 @@ void handleResize(int w, int h) {
 }
 
 float _angle = 0.0f;
-float _zview = 10.0f;
+float _zview = 2.0f;
 float yangle = 0;
 
 
 
 int allpoints = 0;
 
-class mypoint{
-public:
-    int x, y, z;
-    mypoint(int a, int b, int c);
-    mypoint(mypoint *t);
-    mypoint();
-};
 
-
-mypoint::mypoint(int a,int b, int c){
-    x = a;
-    y = b;
-    z = c;
-}
-mypoint::mypoint(mypoint *t){
-    x = t->x;
-    y = t->y;
-    z = t->z;
-}
-mypoint::mypoint(){
-    x = 0;
-    y = 0;
-    z = 0;
-}
-
-
-class cuboid{
-public:
-    GLfloat length, breadth, height, shortest, largest;
-};
-
-class view{
-public:
-    int num_cuboid = 2;     // we are starting with only 2 cuboids as input
-    int joint_type = 1;     // starting with rotation joint
-    
-    int cuboid_one[3];
-    int cuboid_two[3];
-    
-    
-    view();
-};
-
+// the current view whose input is being taken
+view* current_view;
+int view_index = 0;
 
 
 
@@ -166,26 +132,6 @@ int facetaken = 0;        // flag to denote if one face input has been taken or 
 int cuboid_dimensions[3];
 
 
-int get_distance(int x1, int x2, int y1, int y2){
-    return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-}
-
-//              x        y
-// returns the length breadth and height of the cuboid given the 5 points
-void get_height_width_depth_of_cuboid(){
-    int length  = get_distance(allpoints_x[0], allpoints_x[1], allpoints_y[0], allpoints_y[1]);
-    int breadth = get_distance(allpoints_x[1], allpoints_x[2], allpoints_y[1], allpoints_y[2]);
-    int height  = get_distance(allpoints_x[1], allpoints_x[4], allpoints_y[1], allpoints_y[4]);
-    
-    cuboid_dimensions[0] = length;
-    cuboid_dimensions[1] = breadth;
-    cuboid_dimensions[2] = height;
-    
-    // flag to denote that cuboid input has been taken
-    cuboid_taken = 1;
-    printf("Cuboid lbh %d %d %d\n", length, breadth, height);
-}
-
 
 void get_3d_from_2d(std::list<mypoint*> allpoints){
     
@@ -199,28 +145,20 @@ void debugmessage(){
 }
 
 
-// stores the point in allpoints_x2 for drawing the back face of cuboid
-void get_2nd_face_points(){
-    allpoints_x2[0] = allpoints_x[1];
-    allpoints_y2[0] = allpoints_y[1];
-    
-    if(countfacepoint >= 5){
-        allpoints_x2[1] = allpoints_x[4];
-        allpoints_y2[1] = allpoints_y[4];
-    }
-    return;
-}
-
 void mousemotion(int button, int state, int x, int y){
     printf("%d %d\n", x, y);
     if(state == GLUT_DOWN){
-        allpoints_x[countfacepoint] = x;
-        allpoints_y[countfacepoint] = y;
-        ++countfacepoint;
-        if(countfacepoint >= 5){
-            get_height_width_depth_of_cuboid();
+        // create a cuboid if currently no cuboid is present
+        cuboid* c = NULL;
+        if(current_view->num_cuboid == 0){
+            c = current_view->create_cuboid();
+        }
+        else{
+            c = current_view->get_current_cuboid();
         }
         
+        // insert the point for that cuboid
+        c->insert_mouse_point(x, y);
         
         //debugmessage();
     }
@@ -351,7 +289,7 @@ void drawScene() {
     
     //gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
     //_zview = _zview-0.05;
-    gluLookAt(10, 10, _zview, 0, 0, 0, 0, 1, 0);
+    gluLookAt(2, 2, _zview, 0, 0, 0, 0, 1, 0);
     
     
     // Rotating The cuboid
@@ -362,10 +300,11 @@ void drawScene() {
     
     //cuboid_dimensions
     if(cuboid_taken != 1){
-        drawmycuboid(6, 4, 1);
+        drawmycuboid(100/cuboid_ratio, 80/cuboid_ratio, 20/cuboid_ratio);
     }
     else{
-        drawmycuboid(cuboid_dimensions[0]/20.0, cuboid_dimensions[1]/20.0, cuboid_dimensions[2]/20.0);
+        cuboid *current_cuboid = current_view->get_current_cuboid();
+        drawmycuboid(current_cuboid->dimen[0]/cuboid_ratio, current_cuboid->dimen[1]/cuboid_ratio, current_cuboid->dimen[2]/cuboid_ratio);
     }
     
     //drawcuboid();
@@ -388,9 +327,6 @@ void drawScene() {
     glVertex3f(0, 0, -10);
     glVertex3f(0, 0, 10);
     glEnd();
-    
-    
-    
     
     
     
@@ -417,16 +353,7 @@ void drawScene() {
 //    glEnd();
     
     
-    
-    if(countfacepoint <= 4){
-        drawinputlines(allpoints_x, allpoints_y, 0, countfacepoint);
-    }
-    else{
-        drawinputlines(allpoints_x, allpoints_y, 0, 4);
-        get_2nd_face_points();
-        drawinputlines(allpoints_x2, allpoints_y2, 0, countfacepoint-4+1);
-    }
-    
+    current_view->drawinputlinesforaview();
     
     
     // Making sure we can render 3d again
@@ -529,35 +456,24 @@ int LoadImagea(char *filename)
 }
 
 
+void setup_view(){
+    // instantiate a new view
+    current_view = new view();
+}
+
 int main(int argc, char** argv) {
     
     
     
+    setup_view();
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        
     
     
     //Initialize GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(400, 400);
+    glutInitWindowSize(600, 600);
     
     //Create the window
     win_menu = glutCreateWindow("Sketch");
@@ -574,18 +490,6 @@ int main(int argc, char** argv) {
     
     //Add a timer
     glutTimerFunc(25, update, 0);
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -619,12 +523,6 @@ int main(int argc, char** argv) {
     
     glutMainLoop();
     
-    
-    
-    
-        
-    
-
     
     
     
