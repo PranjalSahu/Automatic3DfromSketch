@@ -96,7 +96,7 @@ void handleResize(int w, int h) {
 }
 
 float _angle = 0.0f;
-float _zview = 2.0f;
+float _zview = 2.5f;
 float yangle = 0;
 
 
@@ -151,10 +151,13 @@ void mousemotion(int button, int state, int x, int y){
         // create a cuboid if currently no cuboid is present
         cuboid* c = NULL;
         if(current_view->num_cuboid == 0){
-            c = current_view->create_cuboid();
+            c = current_view->create_cuboid(1);
         }
         else{
             c = current_view->get_current_cuboid();
+            if(c->input_done == 1){                     // create a new cuboid after the 7th click
+                c = current_view->create_cuboid(0);      // later we will provide GUI to take user option to create a new cuboid
+            }
         }
         
         // insert the point for that cuboid
@@ -228,6 +231,7 @@ void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
 }
 
 
+
 //Draws the 3D scene
 void drawScene() {
     
@@ -299,12 +303,22 @@ void drawScene() {
     glColor3f(0.9f, 0.9f, 0.9f);
     
     //cuboid_dimensions
-    if(cuboid_taken != 1){
+    //
+    cuboid *current_cuboid = current_view->get_current_cuboid();
+    
+    if(current_cuboid == NULL || current_view->get_done_cuboids() <= 0){
         drawmycuboid(100/cuboid_ratio, 80/cuboid_ratio, 20/cuboid_ratio);
     }
     else{
-        cuboid *current_cuboid = current_view->get_current_cuboid();
-        drawmycuboid(current_cuboid->dimen[0]/cuboid_ratio, current_cuboid->dimen[1]/cuboid_ratio, current_cuboid->dimen[2]/cuboid_ratio);
+        for (int i=0;i<current_view->num_cuboid;++i){
+            cuboid* cs = current_view->cuboids[i];
+            if(cs->input_done == 1){
+                current_cuboid = cs;
+                current_cuboid->drawmycuboid(cuboid_ratio);
+            }
+        }
+        //cuboid *current_cuboid = current_view->get_current_cuboid();
+        //drawmycuboid(6, 4, 2);
     }
     
     //drawcuboid();

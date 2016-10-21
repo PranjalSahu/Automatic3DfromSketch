@@ -42,8 +42,17 @@ cuboid* view::get_current_cuboid(){
     }
 }
 
-cuboid* view::create_cuboid(){
+// parent_flag = 1 means the current cuboid is the parent cuboid and is used for estimating
+// the vanishing points
+cuboid* view::create_cuboid(int parent_flag){
     cuboid *c = new cuboid();
+    if(parent_flag == 1){
+        c->parent_cuboid = NULL;            // parent cuboid is null if parent_flag is 1
+    }
+    else{
+        c->parent_cuboid = this->cuboids[0];    // hardcoding at present
+                                                // will change it later to incorporate multiple cuboids
+    }
     this->cuboids[num_cuboid] = c;
     this->current_cuboid = this->num_cuboid;
     this->num_cuboid = this->num_cuboid+1;
@@ -112,14 +121,27 @@ void view::get_vanishing_points(){
 
     
     if(parent_cuboid->input_done){
-        mypoint* mpa = get_intersection(parent_cuboid->mouse_xs[1], parent_cuboid->mouse_xs[4], parent_cuboid->mouse_xs[2], parent_cuboid->mouse_xs[5],
-                                       parent_cuboid->mouse_ys[1], parent_cuboid->mouse_ys[4], parent_cuboid->mouse_ys[2], parent_cuboid->mouse_ys[5]);
+        mypoint* mpa = get_intersection(parent_cuboid->mouse_xs[3], parent_cuboid->mouse_xs[6], parent_cuboid->mouse_xs[2], parent_cuboid->mouse_xs[5],
+                                       parent_cuboid->mouse_ys[3], parent_cuboid->mouse_ys[6], parent_cuboid->mouse_ys[2], parent_cuboid->mouse_ys[5]);
         
         this->vanishing_point[1] = mpa;
         
-        drawline(parent_cuboid->mouse_xs[1], parent_cuboid->mouse_ys[1], mpa->x, mpa->y);
         drawline(parent_cuboid->mouse_xs[2], parent_cuboid->mouse_ys[2], mpa->x, mpa->y);
+        drawline(parent_cuboid->mouse_xs[3], parent_cuboid->mouse_ys[3], mpa->x, mpa->y);
     }
     
     return;
+}
+
+int view::get_done_cuboids(){
+    int count = 0;
+    
+    for (int i=0;i<this->num_cuboid;++i){
+        cuboid* cs = this->cuboids[i];
+        if(cs->input_done == 1){
+            count = count+1;
+        }
+    }
+    
+    return count;
 }

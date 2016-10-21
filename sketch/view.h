@@ -38,7 +38,7 @@ public:
     // currently having only two cuboids
     cuboid* cuboids[2];
     
-    cuboid *create_cuboid();
+    cuboid *create_cuboid(int parentflag);
     void get_height_width_depth_of_cuboid();
     
     // draws the input lines for a view
@@ -56,6 +56,9 @@ public:
     // takes the input of the first cuboid and saves the vanishing point
     // using the two parallel lines
     void get_vanishing_points();
+    
+    // get count of cuboids whose input has been taken
+    int get_done_cuboids();
     
     //contructor
     view();

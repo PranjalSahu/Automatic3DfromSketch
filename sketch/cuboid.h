@@ -52,8 +52,16 @@ public:
     int world_y[8];
     int world_z[8];
     
+    // Remember the order of drawing the lenghts for a cuboid
+    // current_cuboid(current_cuboid->dimen[2]/cuboid_ratio, current_cuboid->dimen[0]/cuboid_ratio, current_cuboid->dimen[1]/cuboid_ratio);
+    // draws the cuboid at origin given its length, breadth and height
+    void drawmycuboid(int cuboid_ratio);
+    
     // gets the height depth and width of cuboid based on the 8 clicked input points
     void get_height_width_depth_of_cuboid();
+    
+    // get the 3d coordinates of the cuboid after the input has been taken
+    void get_3d_coordinates();
     
     // called when a new point is clicked for insertion
     void insert_mouse_point(int x, int y);
