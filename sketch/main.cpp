@@ -51,6 +51,11 @@ int s_height = 600;
 GLuint texid;
 float cuboid_ratio = 107.0;
 
+float _zview = 2.0f;
+float _xview = 2.0f;
+float _yview = 2.0f;
+float angle_amount = 0.05;
+
 
 void mylinefun(int x1, int y1,int x2,int y2, int flag);
 void createmymenu(void);
@@ -64,6 +69,30 @@ using namespace std;
 //Called when a key is pressed
 void handleKeypress(unsigned char key, int x, int y) {
     switch (key) {
+        case 'z':
+            _zview = _zview+angle_amount;
+            printf("z angle is %f\n", _zview);
+            break;
+        case 'x':
+            _xview = _xview+angle_amount;
+            printf("x angle is %f\n", _xview);
+            break;
+        case 'y':
+            _yview = _yview+angle_amount;
+            printf("y angle is %f\n", _yview);
+            break;
+        case 'a':
+            _zview = _zview-angle_amount;
+            printf("z angle is %f\n", _zview);
+            break;
+        case 's':
+            _xview = _xview-angle_amount;
+            printf("x angle is %f\n", _xview);
+            break;
+        case 'd':
+            _yview = _yview-angle_amount;
+            printf("y angle is %f\n", _yview);
+            break;
         case 27: //Escape key
             exit(0);
     }
@@ -96,7 +125,6 @@ void handleResize(int w, int h) {
 }
 
 float _angle = 0.0f;
-float _zview = 2.5f;
 float yangle = 0;
 
 
@@ -178,6 +206,59 @@ void drawinputlines(int point_x[], int point_y[], int start, int count){
     glEnd();
 }
 
+
+//void drawmycuboid_coord(int cuboid_ratio){
+//    int world_x[8];
+//    int world_y[8];
+//    int world_z[8];
+//    
+//    world_x[0] = 0; world_x[1] = 1;
+//    glBegin(GL_QUADS);
+//    glNormal3f(0.0f, 0.0f, 1.0f);
+//    
+//    // Front face 0, 1, 2, 3
+//    glNormal3f(1.0f, 0.0f, 0.0f);
+//    glVertex3f(world_x[0], world_x[0], world_x[0]);
+//    glVertex3f(world_x[1], world_x[1], world_x[1]);
+//    glVertex3f(world_x[2], world_x[2], world_x[2]);
+//    glVertex3f(world_x[3], world_x[3], world_x[3]);
+//    
+//    // Back face 4, 5, 6, 7
+//    glNormal3f(-1.0f, 0.0f, 0.0f);
+//    glVertex3f(world_x[4], world_x[4], world_x[4]);
+//    glVertex3f(world_x[5], world_x[5], world_x[5]);
+//    glVertex3f(world_x[6], world_x[6], world_x[6]);
+//    glVertex3f(world_x[7], world_x[7], world_x[7]);
+//    
+//    // Side 0, 4, 5, 1
+//    glNormal3f(0.0f, 1.0f, 0.0f);
+//    glVertex3f(world_x[0], world_x[0], world_x[0]);
+//    glVertex3f(world_x[4], world_x[4], world_x[4]);
+//    glVertex3f(world_x[5], world_x[5], world_x[5]);
+//    glVertex3f(world_x[1], world_x[1], world_x[1]);
+//    
+//    // Side 3, 7, 6, 2
+//    glNormal3f(0.0f, 1.0f, 0.0f);
+//    glVertex3f(world_x[3], world_x[3], world_x[3]);
+//    glVertex3f(world_x[7], world_x[7], world_x[7]);
+//    glVertex3f(world_x[6], world_x[6], world_x[6]);
+//    glVertex3f(world_x[2], world_x[2], world_x[2]);
+//    
+//    // Top 1, 5, 6, 2
+//    glVertex3f(world_x[1], world_x[1], world_x[1]);
+//    glVertex3f(world_x[5], world_x[5], world_x[5]);
+//    glVertex3f(world_x[6], world_x[6], world_x[6]);
+//    glVertex3f(world_x[2], world_x[2], world_x[2]);
+//    
+//    // HIDDEN
+//    //    glVertex3f(0.0f, 0.0f, -1*b);
+//    //    glVertex3f(0.0f, l, -1*b);
+//    //    glVertex3f(-1*h, l, -1*b);
+//    //    glVertex3f(-1*h, 0.0f, -1*b);
+//    
+//    glEnd();
+//    return;
+//}
 
 
 void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
@@ -293,7 +374,7 @@ void drawScene() {
     
     //gluLookAt(10, 10, 10, 3, 0, -3, 0, 1, 0);
     //_zview = _zview-0.05;
-    gluLookAt(2, 2, _zview, 0, 0, 0, 0, 1, 0);
+    gluLookAt(_xview, _yview, _zview, 0, 0, 0, 0, 1, 0);
     
     
     // Rotating The cuboid
@@ -310,13 +391,22 @@ void drawScene() {
         drawmycuboid(100/cuboid_ratio, 80/cuboid_ratio, 20/cuboid_ratio);
     }
     else{
-        for (int i=0;i<current_view->num_cuboid;++i){
-            cuboid* cs = current_view->cuboids[i];
-            if(cs->input_done == 1){
-                current_cuboid = cs;
-                current_cuboid->drawmycuboid(cuboid_ratio);
+//        if(current_view->num_cuboid > 1){
+//            cuboid* cs = current_view->cuboids[1];
+//            if(cs->input_done == 1){
+//                current_cuboid = cs;
+//                current_cuboid->drawmycuboid_coord(cuboid_ratio);
+//            }
+//        }
+//        else{
+            for (int i=0;i<current_view->num_cuboid;++i){
+                cuboid* cs = current_view->cuboids[i];
+                if(cs->input_done == 1){
+                    current_cuboid = cs;
+                    current_cuboid->drawmycuboid_coord(cuboid_ratio);
+                }
             }
-        }
+        //}
         //cuboid *current_cuboid = current_view->get_current_cuboid();
         //drawmycuboid(6, 4, 2);
     }

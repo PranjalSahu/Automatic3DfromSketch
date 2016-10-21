@@ -48,20 +48,28 @@ public:
     int mouse_ys[8];
     
     // world x, y and z coordinate for this cuboid
-    int world_x[8];
-    int world_y[8];
-    int world_z[8];
+    GLfloat world_x[8];
+    GLfloat world_y[8];
+    GLfloat world_z[8];
+    
+    // world x, y, z scaled
+    GLfloat world_xs[8];
+    GLfloat world_ys[8];
+    GLfloat world_zs[8];
     
     // Remember the order of drawing the lenghts for a cuboid
     // current_cuboid(current_cuboid->dimen[2]/cuboid_ratio, current_cuboid->dimen[0]/cuboid_ratio, current_cuboid->dimen[1]/cuboid_ratio);
     // draws the cuboid at origin given its length, breadth and height
     void drawmycuboid(int cuboid_ratio);
     
+    // Draws the cuboid using its 3d coordinates and the given cuboid ratio
+    void drawmycuboid_coord(int cuboid_ratio);
+    
     // gets the height depth and width of cuboid based on the 8 clicked input points
-    void get_height_width_depth_of_cuboid();
+    void get_height_width_depth_of_cuboid(int cuboid_ratio);
     
     // get the 3d coordinates of the cuboid after the input has been taken
-    void get_3d_coordinates();
+    void get_3d_coordinates(int cuboid_ratio);
     
     // called when a new point is clicked for insertion
     void insert_mouse_point(int x, int y);
