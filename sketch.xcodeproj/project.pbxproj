@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F9074DD21DB7CDA80023CF9A /* view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DD11DB7CDA80023CF9A /* view.cpp */; };
-		F9074DD51DB7CE100023CF9A /* cuboid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DD41DB7CE100023CF9A /* cuboid.cpp */; };
 		F9074DDC1DB877EC0023CF9A /* mypoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DDB1DB877EC0023CF9A /* mypoint.cpp */; };
 		F9074DDE1DBC47E40023CF9A /* newmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DDD1DBC47E40023CF9A /* newmain.cpp */; };
 		F9074DE01DBC49070023CF9A /* libopencv_core.2.4.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F9074DDF1DBC49070023CF9A /* libopencv_core.2.4.13.dylib */; };
 		F9074DE21DBC49170023CF9A /* libopencv_imgproc.2.4.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F9074DE11DBC49170023CF9A /* libopencv_imgproc.2.4.13.dylib */; };
 		F9074DE41DBC78C50023CF9A /* libopencv_highgui.2.4.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F9074DE31DBC78C50023CF9A /* libopencv_highgui.2.4.13.dylib */; };
 		F9074DE71DBD000F0023CF9A /* myline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DE61DBD000F0023CF9A /* myline.cpp */; };
-		F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9899B891DA3660500F0A4C1 /* main.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
+		F9074DE91DBD4C9F0023CF9A /* myutilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */; };
 		F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
 		F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
 		F9899BA01DA36EFA00F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
@@ -46,10 +44,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F9074DD11DB7CDA80023CF9A /* view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cpp; sourceTree = "<group>"; };
-		F9074DD31DB7CDDC0023CF9A /* cuboid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cuboid.h; sourceTree = "<group>"; };
-		F9074DD41DB7CE100023CF9A /* cuboid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cuboid.cpp; sourceTree = "<group>"; };
-		F9074DD61DB7CE340023CF9A /* view.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		F9074DDA1DB866EC0023CF9A /* myutilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myutilities.h; sourceTree = "<group>"; };
 		F9074DDB1DB877EC0023CF9A /* mypoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mypoint.cpp; sourceTree = "<group>"; };
 		F9074DDD1DBC47E40023CF9A /* newmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = newmain.cpp; sourceTree = "<group>"; };
@@ -58,8 +52,8 @@
 		F9074DE31DBC78C50023CF9A /* libopencv_highgui.2.4.13.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.2.4.13.dylib; path = ../../../../../usr/local/lib/libopencv_highgui.2.4.13.dylib; sourceTree = "<group>"; };
 		F9074DE51DBCF6E10023CF9A /* myline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = myline.h; sourceTree = "<group>"; };
 		F9074DE61DBD000F0023CF9A /* myline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = myline.cpp; sourceTree = "<group>"; };
+		F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = myutilities.cpp; sourceTree = "<group>"; };
 		F9899B861DA3660500F0A4C1 /* sketch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketch; sourceTree = BUILT_PRODUCTS_DIR; };
-		F9899B891DA3660500F0A4C1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F9899B941DA36D2800F0A4C1 /* sketcha */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketcha; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -120,15 +114,11 @@
 			isa = PBXGroup;
 			children = (
 				F9074DDA1DB866EC0023CF9A /* myutilities.h */,
-				F9899B891DA3660500F0A4C1 /* main.cpp */,
-				F9074DD61DB7CE340023CF9A /* view.h */,
-				F9074DD11DB7CDA80023CF9A /* view.cpp */,
-				F9074DD31DB7CDDC0023CF9A /* cuboid.h */,
-				F9074DD41DB7CE100023CF9A /* cuboid.cpp */,
 				F9074DDB1DB877EC0023CF9A /* mypoint.cpp */,
 				F9074DDD1DBC47E40023CF9A /* newmain.cpp */,
 				F9074DE51DBCF6E10023CF9A /* myline.h */,
 				F9074DE61DBD000F0023CF9A /* myline.cpp */,
+				F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */,
 			);
 			path = sketch;
 			sourceTree = "<group>";
@@ -211,11 +201,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9074DDE1DBC47E40023CF9A /* newmain.cpp in Sources */,
-				F9074DD51DB7CE100023CF9A /* cuboid.cpp in Sources */,
+				F9074DE91DBD4C9F0023CF9A /* myutilities.cpp in Sources */,
 				F9074DDC1DB877EC0023CF9A /* mypoint.cpp in Sources */,
 				F9074DE71DBD000F0023CF9A /* myline.cpp in Sources */,
-				F9899B8A1DA3660500F0A4C1 /* main.cpp in Sources */,
-				F9074DD21DB7CDA80023CF9A /* view.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

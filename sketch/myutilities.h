@@ -31,5 +31,11 @@ public:
 
 
 
+int mymin(int a, int b);
+float mymin(float a, float b);
+int mymax(int a, int b);
+float mymax(float a, float b);
+float get_point_distance(int x1, int y1, int x2, int y2);
+
 
 #endif

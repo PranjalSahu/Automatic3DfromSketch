@@ -6,9 +6,15 @@
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
+#ifndef MYLINE_H
+#define MYLINE_H
+
 #include <stdio.h>
 #include "myline.h"
 #include <math.h>
+#include "myutilities.h"
+
+
 
 
 myline::myline(int a,int b, float ma){
@@ -34,6 +40,19 @@ myline::myline(myline *t){
 myline::myline(){
     x1 = 0;
     y1 = 0;
+}
+myline::myline(int a1, int b1, int c1, int d1){
+    x1 = a1;
+    x2 = b1;
+    y1 = c1;
+    y2 = d1;
+    
+    if (x1 == x2){
+        m = infslope;
+    }
+    else{
+        m = (y2-y1)/(x2-x1);
+    }
 }
 
 int myline::checkpointlies(int x, int y){
@@ -96,7 +115,29 @@ void myline::mergelines(myline *t){
     }
 }
 
+
+float myline::get_distance(const myline *ml) const {
+    // when both are just points
+    if(x2 == infvalue && ml->x2 == infvalue){
+        // distance between two points
+        return get_point_distance(x1, y1, ml->x1, ml->y1);
+    }
+    // when both are line segments
+    // get 4 combinations and return the minimum
+    else{
+        float a = get_point_distance(x1, y1, ml->x1, ml->y1);
+        float b = get_point_distance(x1, y1, ml->x2, ml->y2);
+        float c = get_point_distance(x2, y2, ml->x1, ml->y1);
+        float d = get_point_distance(x2, y2, ml->x2, ml->y2);
+        return mymin(mymin(a, b), mymin(c, d));
+    }
+    
+    return 1000;
+}
+
 int myline::get_intersection_count(cv::Mat &im){
     
     return 0;
 }
+#endif
+

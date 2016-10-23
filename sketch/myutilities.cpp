@@ -2,26 +2,31 @@
 //  myutilities.cpp
 //  sketch
 //
-//  Created by Pranjal Sahu on 10/19/16.
+//  Created by Pranjal Sahu on 10/23/16.
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
 #include <stdio.h>
-#include "myutilities.h"
+#include <math.h>
 
+int mymin(int a, int b){
+    return (a < b ? a : b);
+}
 
-mypoint::mypoint(GLfloat a,GLfloat b, GLfloat c){
-    x = a;
-    y = b;
-    z = c;
+float mymin(float a, float b){
+    return (a < b ? a : b);
 }
-mypoint::mypoint(mypoint *t){
-    x = t->x;
-    y = t->y;
-    z = t->z;
+
+int mymax(int a, int b){
+    return (a > b ? a : b);
 }
-mypoint::mypoint(){
-    x = 0;
-    y = 0;
-    z = 0;
+
+float mymax(float a, float b){
+    return (a > b ? a : b);
 }
+
+// returns distance between two points
+float get_point_distance(int x1, int y1, int x2, int y2){
+    return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+

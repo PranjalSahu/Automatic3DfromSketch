@@ -31,6 +31,11 @@
 #include <GL/gl.h>
 #endif
 
+
+#ifndef NEWMAIN_H
+#define NEWMAIN_H
+
+
 #include <queue>
 #include <list>
 #include <vector>
@@ -47,6 +52,7 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include "myutilities.h"
 
 using namespace cv;
 using namespace std;
@@ -62,8 +68,8 @@ static int winmenu;
 static int menuid;
 static int val = 0;
 
-int sa_width  = 400;
-int sa_height = 400;
+int sa_width  = 800;
+int sa_height = 800;
 
 //flags to be used by keyboard for three different operations
 int count     = 0;
@@ -106,39 +112,11 @@ mypointa::mypointa(){
 typedef std::tuple<int,int> i2tuple;
 std::map<i2tuple, myline*> all_lines;
 std::map<i2tuple, int> map_slopes;
-
-#include "myline.h"
+std::list<myline*> all_lines_to_merge;
 
 
 #define PI 3.14159265
 
-
-
-struct sortbyxasc {
-    bool operator()(const mypointa* o1, const mypointa* o2) const {
-        return o1->x < o2->x;
-    }
-};
-struct sortbyxdes {
-    bool operator()(const mypointa* o1, const mypointa* o2) const {
-        return o2->x < o1->x;
-    }
-};
-struct sortbyyasc {
-    bool operator()(const mypointa* o1, const mypointa* o2) const {
-        return o1->y < o2->y;
-    }
-};
-struct sortbyydes {
-    bool operator()(const mypointa* o1, const mypointa* o2) const {
-        return o2->y < o1->y;
-    }
-};
-struct sortbyangle {
-    bool operator()(const mypointa* o1, const mypointa* o2) const{
-        return atan2(o1->y-starmean.y, o1->x-starmean.x) < atan2(o2->y-starmean.y, o2->x-starmean.x);
-    }
-};
 
 std::list<mypointa*> poly1;			// for storing the points of polygon
 std::list<mypointa*> poly2;
@@ -638,6 +616,8 @@ void displayone() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
     
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    
     // Draw a Red 1x1 Square centered at origin
         int sizea = map_slopes.size();
     
@@ -654,6 +634,35 @@ void displayone() {
                 glVertex2f(px, py);
             }
             glEnd();
+    
+    
+                for(std::list<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
+                    myline * linet = *iterator;
+                    
+                    if (linet->x2 == infvalue || linet->y2 ==infvalue)
+                        continue;
+                    
+                    glBegin(GL_LINE_LOOP);
+                    
+                        int r = rand()%4;
+                        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
+                    
+                        GLfloat px = (linet->x1+10)*1.0/sa_width;
+                        GLfloat py = (linet->y1+10)*1.0/sa_height;
+                    
+                        GLfloat qx = (linet->x2+10)*1.0/sa_width;
+                        GLfloat qy = (linet->y2+10)*1.0/sa_height;
+                    
+                        glVertex2f(px, py);
+                        glVertex2f(qx, qy);
+                    
+                    glEnd();
+                    
+                }
+
+    
+    
+    
  //       }
     glFlush();  // Render now
 }
@@ -672,9 +681,165 @@ void handleResize(int w, int h) {
 }
 
 
+
+struct sortbyxasc {
+    bool operator()(const myline* o1, const myline* o2) const {
+        //return 100*(std::abs(o1->m-o2->m))+0.5*(o1->get_distance(o2));
+        return o1->get_distance(o2);
+    }
+};
+
+// in iteration merges all the lines present in the all_lines_to_merge
+int mergelines(){
+    // In first iteration we only merge lines with same x or same y and adjacent to each other
+    int checkiter = 1;
+    int merged_count = 0;
+    
+    if(all_lines_to_merge.size() == 0){
+        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+            i2tuple key = iterator->first;
+            int x = get<0>(key);
+            int y = get<1>(key);
+            int theta   = iterator->second;
+            all_lines_to_merge.push_back(new myline(x, y, mytan(theta)));
+        }
+        checkiter = 0;
+    }
+    
+        all_lines_to_merge.sort(sortbyxasc());
+        
+        std::list<myline*>::iterator iterator = all_lines_to_merge.begin();
+        std::list<myline*>::iterator prev     = iterator;
+        
+        // we will be strict for 1st iteration
+        // later on this threholds will change
+    
+        int ttcount = 0 ;
+    
+        for(std::list<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
+            int tsize = all_lines_to_merge.size();
+            
+            prev = iter;
+            iter++;
+            ttcount = ttcount +2;
+            
+            if(ttcount >= tsize)
+                break;
+            
+            myline* current_line = *iter;
+            myline* prev_line    = *prev;
+            
+            printf("%d %d %d %d\n", current_line->x1, current_line->x2, current_line->y1, current_line->y2);
+            
+            printf("ttcount %d %f\n", ttcount, prev_line->m);
+            int merged_flag = 0;
+            
+            // if both have same slope and distance is less
+            // when both are points only
+            if(fabs(prev_line->m-current_line->m) <= 0.01 && current_line->get_distance(prev_line) < 1.5){
+                if (current_line->x2 == infvalue && prev_line->y2 == infvalue){
+                    // create a new line
+                    myline* temp;
+                    
+                    int x1 = mymin(prev_line->x1, current_line->x1);
+                    int x2 = mymax(prev_line->x1, current_line->x1);
+                    int y1 = mymin(prev_line->y1, current_line->y1);
+                    int y2 = mymax(prev_line->y1, current_line->y1);
+                    
+                    temp = new myline(x1, x2, y1, y2);
+                    
+                    // delete the two lines and insert a new one
+                    all_lines_to_merge.erase(prev);
+                    iter = all_lines_to_merge.erase(iter);
+                    all_lines_to_merge.insert(iter, temp);
+                    
+                    
+                }
+                else{
+                    // now 2 cases arrive
+                    // one line is a point and other is line segment
+                    //      OR
+                    // both are line segment
+                    int x1, y1, x2, y2;
+                    
+                    // one is a point
+                    if(current_line->x2 == infvalue){
+                        x1 = mymin(mymin(current_line->x1, prev_line->x1), prev_line->x2);
+                        x2 = mymax(mymax(current_line->x1, prev_line->x1), prev_line->x2);
+                        y1 = mymin(mymin(current_line->y1, prev_line->y1), prev_line->y2);
+                        y2 = mymax(mymax(current_line->y1, prev_line->y1), prev_line->y2);
+                    }
+                    // two is a point
+                    else if(prev_line->x2 == infvalue){
+                        x1 = mymin(mymin(current_line->x1, prev_line->x1), current_line->x2);
+                        x2 = mymax(mymax(current_line->x1, prev_line->x1), current_line->x2);
+                        y1 = mymin(mymin(current_line->y1, prev_line->y1), current_line->y2);
+                        y2 = mymax(mymax(current_line->y1, prev_line->y1), current_line->y2);
+                    }
+                    // both are line segment
+                    else{
+                        // create a new line
+                        x1 = mymin(mymin(current_line->x1, prev_line->x1), mymin(current_line->x2, prev_line->x2));
+                        x2 = mymax(mymax(current_line->x1, prev_line->x1), mymax(current_line->x2, prev_line->x2));
+                        y1 = mymin(mymin(current_line->y1, prev_line->y1), mymin(current_line->y2, prev_line->y2));
+                        y2 = mymax(mymax(current_line->y1, prev_line->y1), mymax(current_line->y2, prev_line->y2));
+                    }
+                    
+                    // create a new line
+                    myline* temp = new myline(x1, x2, y1, y2);
+                    
+                    // delete the two lines and insert a new one
+                    all_lines_to_merge.erase(prev);
+                    iter = all_lines_to_merge.erase(iter);
+                    all_lines_to_merge.insert(iter, temp);
+                    
+                }
+                merged_flag = 1;
+                ++merged_count;
+            }
+            
+            //if(merged_flag != 1)
+             //   iter++;
+        }
+        int sp = 0;
+    
+    
+    return merged_count;
+    
+}
+
+//Called when a key is pressed
+void handleKeypressa(unsigned char key, int x, int y) {
+    switch (key) {
+        case 'i':
+            mergelines();
+            break;
+        case 27: //Escape key
+            exit(0);
+    }
+}
+
+
 int main(int argc, char** argv){
     
-    Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
+//    std::list<int> lp;
+//    std::list<int>::iterator iter = lp.begin();
+//    
+//    lp.push_back(5);
+//    lp.push_back( 6);
+//    lp.push_back( 7);
+//    lp.push_back( 8);
+//    
+//    iter  = lp.begin();
+//    printf("%d \n", *iter);
+//    iter  = lp.erase(iter);
+//    printf("%d \n", *iter);
+//    lp.insert(iter, 10);
+//    lp.insert(iter, 10);
+//    lp.insert(iter, 10);
+//    printf("%d \n", *iter);
+
+        Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
     Mat bw = imga > 128;
     Mat img = bw > 120;
     
@@ -682,7 +847,16 @@ int main(int argc, char** argv){
     bitwise_not(bw, img);
     thinning(img);
     map_slopes = sweepline(img);
-
+    for(int i=0;i<10;++i){
+        int mer  = mergelines();
+        if(mer < 5)
+            break;
+    }
+    mergelines();
+    
+    
+    int p;
+    
     for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
         i2tuple key = iterator->first;
         int theta = iterator->second;
@@ -698,15 +872,8 @@ int main(int argc, char** argv){
     //glutInitWindowSize(320, 320);   // Set the window's initial width & height
     glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
     glutDisplayFunc(displayone); // Register display callback handler for window re-paint
+    glutKeyboardFunc(handleKeypressa);
     glutMainLoop();           // Enter the event-processing loop
-    
-    
-    
-        //Set handler functions
-       //        glutKeyboardFunc(handleKeypress);
-//        glutReshapeFunc(handleResize);
-//        glutMouseFunc(mousemotion);
-
     
     // i2tuple p1 = i2tuple(1, 1);
     
@@ -714,20 +881,6 @@ int main(int argc, char** argv){
     //all_lines[p1] = new myline(1, 6, 5);
     //all_lines[p2] = new myline(1, 9, 53);
     
-    
-    
-//
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-//    glutInitWindowSize(600, 600);
-//    winmenu = glutCreateWindow("Sketch");
-//    glClearColor(1.0, 1.0, 1.0, 1.0);
-//    //initRendering();
-//    glutDisplayFunc(drawScenea);
-//    glutReshapeFunc(handleResize);
-//    glutTimerFunc(25, updatea, 0);
-//    
-//    //glutMainLoop();
 //    
 //    
 //    printf("rows = %d cols = %d\n", img.rows, img.cols);
@@ -742,3 +895,4 @@ int main(int argc, char** argv){
 //    cvDestroyWindow("Example1");
     return 0;
 }
+#endif

@@ -6,12 +6,12 @@
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
-#ifndef myline_h
-#define myline_h
+#ifndef mylinea_h
+#define mylinea_h
 
 #define infslope 10000000
 #define infvalue 10000000
-#define MY_EPS      0.00001
+#define MY_EPS   0.00001
 
 #include <opencv2/opencv.hpp>
 
@@ -28,11 +28,17 @@ public:
     void mergelines(myline *t);
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
+    float get_distance(const myline *ml) const;
 
         
     myline(int a, int b, float m);
     myline(myline *t);
+    myline(int a1, int b1, int c1, int d1);
     myline();
 };
+
+
+
+
 
 #endif /* myline_h */
