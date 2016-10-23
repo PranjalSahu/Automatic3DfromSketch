@@ -559,7 +559,7 @@ int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
     int max_slope = 0;
     int max_count  = -1;
     
-    for(int i=0; i<180; i = i+2){
+    for(int i=0; i<180; i = i+5){
         int theta = i;
         float m = tan(theta);
         
@@ -577,6 +577,7 @@ int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
         delete(a);
         
         if(count > max_count){
+            max_count = count;
             max_slope = theta;
         }
     }
@@ -589,8 +590,8 @@ std::map<i2tuple, int> sweepline(Mat& im){
     vector<i2tuple> points_vector;
     
     // get all the non zero pixels
-    for(int i=10; i<im.rows; ++i){
-        for(int j=10;j<im.cols;++j){
+    for(int i=1; i<im.rows; ++i){
+        for(int j=1;j<im.cols;++j){
             if(im.at<uchar>(i, j) > 120){
                 points_vector.push_back(i2tuple(i, j));
             }
@@ -645,11 +646,6 @@ void displayone() {
             glBegin( GL_POINTS );
             glColor3f(1.0f, 0.0f, 0.0f);
 
-//            glVertex2f(0/500.0, 100/500.0);
-//            glVertex2f(120/500.0, 200/500.0);
-//            glVertex2f(200/500.0, 300/500.0);
-//            glVertex2f(250/500.0, 350/500.0);
-//            
             for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
                 i2tuple key = iterator->first;
                 GLfloat px = get<0>(key)*1.0/sa_width;
@@ -660,77 +656,6 @@ void displayone() {
             glEnd();
  //       }
     glFlush();  // Render now
-}
-
-
-void drawScenea() {
-    glClear(GL_COLOR_BUFFER_BIT);
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
-    
-    
-            glDepthMask(GL_FALSE);      // disable depth writes
-    
-    
-    int sizea = map_slopes.size();
-    
-    glPointSize(100);
-    //if(map_slopes.size() > 0){
-        glBegin(GL_POINTS);
-            glVertex2f(0, 50);
-            glVertex2f(50, 250);
-            glVertex2f(500, 50);
-            glVertex2f(600, 550);
-        glEnd();
-        
-//        glBegin( GL_POINTS );
-//            glColor3f( 0.95f, 0.207, 0.031f );
-//        
-//            for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-//                i2tuple key = iterator->first;
-//                int px = get<0>(key);
-//                int py = get<1>(key);
-//            
-//                glVertex2f(px, py);
-//            }
-//        glEnd();
- //   }
-    
-    
-//    
-//    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
-//    int back = 1;
-//
-//    
-//    //Setup for 2D
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glOrtho(0.0, 500, 500, 0.0, -1.0, 10.0);
-//    glMatrixMode(GL_MODELVIEW);
-//    //glPushMatrix();
-//    glLoadIdentity();
-//    glDisable(GL_CULL_FACE);
-//    
-//    glClear(GL_DEPTH_BUFFER_BIT);
-//    glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f);
-    
-//    int sizea = map_slopes.size();
-//    
-//    if(map_slopes.size() > 0){
-//        glBegin( GL_POINTS );
-//        glColor3f( 0.95f, 0.207, 0.031f );
-//        
-//        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-//            i2tuple key = iterator->first;
-//            int px = get<0>(key);
-//            int py = get<1>(key);
-//            
-//            glVertex2f(px, py);
-//        }
-//    }
-    
-    glutSwapBuffers();
 }
 
 //Called when the window is resized
@@ -758,6 +683,12 @@ int main(int argc, char** argv){
     thinning(img);
     map_slopes = sweepline(img);
 
+    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+        i2tuple key = iterator->first;
+        int theta = iterator->second;
+        printf("(%d, %d)  => %d\n", get<0>(key), get<1>(key), theta);
+    }
+    
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitWindowSize(sa_width, sa_height);
