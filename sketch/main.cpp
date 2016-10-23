@@ -99,20 +99,20 @@ void handleKeypress(unsigned char key, int x, int y) {
 }
 
 //Initializes 3D rendering
-void initRendering() {
-    glEnable( GL_POINT_SMOOTH );
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING); //Enable lighting
-    glEnable(GL_LIGHT0); //Enable light #0
-    glEnable(GL_LIGHT1); //Enable light #1
-    glEnable(GL_NORMALIZE); //Automatically normalize normals
-    
-    //glShadeModel(GL_SMOOTH); //Enable smooth shading
-}
+//void initRendering() {
+//    glEnable( GL_POINT_SMOOTH );
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_COLOR_MATERIAL);
+//    glEnable(GL_LIGHTING); //Enable lighting
+//    glEnable(GL_LIGHT0); //Enable light #0
+//    glEnable(GL_LIGHT1); //Enable light #1
+//    glEnable(GL_NORMALIZE); //Automatically normalize normals
+//    
+//    //glShadeModel(GL_SMOOTH); //Enable smooth shading
+//}
 
 //Called when the window is resized
-void handleResize(int w, int h) {
+void handleResizea(int w, int h) {
     s_width  = w;
     s_height = h;
     
@@ -589,7 +589,7 @@ void setup_view(){
 //    //Set handler functions
 //    glutDisplayFunc(drawScene);
 //    glutKeyboardFunc(handleKeypress);
-//    glutReshapeFunc(handleResize);
+//    glutReshapeFunc(handleResizea);
 //    glutMouseFunc(mousemotion);
 //    
 //    //Add a timer

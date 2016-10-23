@@ -31,7 +31,6 @@
 #include <GL/gl.h>
 #endif
 
-#include <math.h>
 #include <queue>
 #include <list>
 #include <vector>
@@ -44,12 +43,14 @@
 #include <queue>
 #include <list>
 #include <math.h>
-
+#include "myline.h"
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
+
 
 int godisp = 1;
 // for right click menu
@@ -95,6 +96,20 @@ mypointa::mypointa(){
     x = 0;
     y = 0;
 }
+
+
+
+// 2d hash for storing lines at each pixel
+typedef std::tuple<int,int> i2tuple;
+std::map<i2tuple, myline*> all_lines;
+std::map<i2tuple, int> map_slopes;
+
+#include "myline.h"
+
+
+#define PI 3.14159265
+
+
 
 struct sortbyxasc {
     bool operator()(const mypointa* o1, const mypointa* o2) const {
@@ -166,120 +181,6 @@ void myclear(){
     return;
 }
 
-void display3(){
-    int nw = maxpx-minpx;
-    int nh = maxpy-minpy;
-    int i, j, k;
-    int mymask[nw+1][nh+1];
-    
-    for(i=0;i<=nw;++i)
-        for(j=0;j<=nh;++j)
-            mymask[i][j] = 0;
-    
-    int size = (int)maskpoly.size();
-    int ycount=0;
-    for(i=0;i<size;++i){
-        mymask[maskpoly.front()->x-minpx][maskpoly.front()->y-minpy] = 1;		//set the flag
-        maskpoly.pop_front();
-        ++ycount;
-    }
-    
-    unsigned char tempimage[nw+1][nh+1][3];
-    memcpy(tempimage, image2, (nw+1)*(nh+1)*3);
-    int count =0 ;
-    for(i=-5+nw/2;i<=5+nw/2;++i){
-        for(j=0;j<=nh;++j){
-            //if(mymask[i][j] != 1){
-            tempimage[i][j][0] 	= (unsigned char)0;
-            tempimage[i][j][1] 	= (unsigned char)255;
-            tempimage[i][j][2]  = (unsigned char)0;
-            ++count;
-            //}
-        }
-    }
-    glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    printf("ycount = %d count = %d and rest = %d\n", ycount, count, (nw+1)*(nh+1));
-    glDrawPixels(nw, nh, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
-    glutSwapBuffers();
-}
-
-void mytempfun(){
-    int nw = maxpx-minpx;
-    int nh = maxpy-minpy;
-    
-    if(win2 != -1)
-        glutDestroyWindow(win2);
-    
-    image2 = (unsigned char *)malloc(sizeof(unsigned char)*nh*nw*3);
-    glReadPixels(minpx, w-(h-maxpy)-nh, nw, nh, GL_RGB, GL_UNSIGNED_BYTE, image2);
-    
-    glutInitWindowSize(nw+1, nh+1);
-    glutCreateWindow("Polygon 1");
-    glDrawPixels(nw, nh, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)image2);
-    glutSwapBuffers();
-}
-
-void showcopymasked(){
-    if(win2 != -1)
-        glutDestroyWindow(win2);
-    //glClearColor(0, 0, 0, 0);
-    int nw = maxpx-minpx;
-    int nh = maxpy-minpy;
-    
-    unsigned char tempimage[w][h][3];
-    unsigned char tempimage1[w][h][3];
-    memset(tempimage1, 155, w*h*3);
-    //glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, image2);
-    glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, tempimage);
-    //glutInitWindowSize(nw+1, nh+1);
-    glutInitWindowSize(w+1, h+1);
-    win2 = glutCreateWindow("Cropped Polygon");
-    int size = (int)maskpoly.size();
-    
-    while(!maskpoly.empty()){
-        //mymask[maskpoly.front()->x-minpx][maskpoly.front()->y-minpy] = 1;		//set the flag
-        tempimage1[maskpoly.front()->y][maskpoly.front()->x][0] = original[maskpoly.front()->y][maskpoly.front()->x][0];
-        tempimage1[maskpoly.front()->y][maskpoly.front()->x][1] = original[maskpoly.front()->y][maskpoly.front()->x][1];
-        tempimage1[maskpoly.front()->y][maskpoly.front()->x][2] = original[maskpoly.front()->y][maskpoly.front()->x][2];
-        maskpoly.pop_front();
-        //++ycount;
-    }
-    
-    /*int ycount=0;
-     for(i=0;i<size;++i){
-     mymask[maskpoly.front()->x-minpx][maskpoly.front()->y-minpy] = 1;		//set the flag
-     maskpoly.pop_front();
-     ++ycount;
-     }
-     glutDisplayFunc(display3);*/
-    glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage1);
-    glutSwapBuffers();
-    //mytempfun();
-}
-
-void copymasked(){
-    int i, j, k;
-    unsigned char tempimage[w][h][3];
-    glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, tempimage);
-    int size = (int)myq1.size();
-    int count = w*h;
-    while(!maskpoly.empty()){
-        tempimage[maskpoly.front()->y][maskpoly.front()->x][0] = (unsigned char)255;
-        tempimage[maskpoly.front()->y][maskpoly.front()->x][1] = (unsigned char)255;
-        tempimage[maskpoly.front()->y][maskpoly.front()->x][2] = (unsigned char)0;
-        maskpoly.pop_front();
-    }
-    for(i=0;i<w;++i){
-        for(j=0;j<h;++j){
-            for(k=0;k<3;++k){
-                myimage[i][j][k] = tempimage[i][j][k];
-            }
-        }
-    }
-    glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
-    glutSwapBuffers();
-    printf("MASKED COPY DONE count = %d\n", count);
-}
 
 void drawpoint(int x, int y, int color){
     y = h-y;
@@ -333,147 +234,6 @@ int findinvertexset(int x, int y){
         
     }
     return 0;
-}
-
-void croppolygon1(){
-    getminmaxforboundingbox();
-    int bw = maxpx-minpx+1;				// box width
-    int bh = maxpy-minpy+1;				// box height
-    int xcoor;
-    myclear();							// clear the intersection points
-    for(int y=minpy;y<=maxpy;++y){
-        for(int i=0;i<polysize;++i){
-            if(points[i].y-y == 0){
-                scanq[y].push_back(points[i].x);
-                if(findinvertexset(points[i].x, y))
-                    scanq[y].push_back(points[i].x);
-            }
-            if((points[i].y-y)*(points[i+1].y-y) < 0){		// in between the two segments
-                xcoor = (int)(points[i].x+((points[i+1].x-points[i].x+0.0)*(y-points[i].y+0.0)/(points[i+1].y-points[i].y+0.0)));
-                scanq[y].push_back(xcoor);
-                if(findinvertexset(xcoor, y))
-                    scanq[y].push_back(xcoor);
-            }
-        }
-        if(scanq[y].size()%2 == 0 && scanq[y].size()!=0){
-            scanq[y].sort();
-            while(!scanq[y].empty()){
-                int temp1, temp2;
-                temp1 = scanq[y].front();
-                scanq[y].pop_front();
-                temp2 = scanq[y].front();
-                scanq[y].pop_front();
-                for(int p=temp1;p<temp2;++p){
-                    maskpoly.push_back(new mypointa(p, y));
-                }
-            }
-        }
-    }
-    
-    showcopymasked();
-    return;
-}
-
-void croppolygon(){
-    int rcount =0;
-    getminmaxforboundingbox();
-    int bw = maxpx-minpx+1;				// box width
-    int bh = maxpy-minpy+1;				// box height
-    
-    mypointa temp1, temp2;
-    for(int i=0;i<polysize;++i){		// get the points lying on the line
-        if(points[i].x < points[i+1].x)
-            mylinefun(points[i].x, points[i].y, points[i+1].x, points[i+1].y, 2);
-        else
-            mylinefun(points[i+1].x, points[i+1].y, points[i].x, points[i].y, 2);
-    }
-    
-    printf("minpx = %d  minpy = %d  maxpx = %d  maxpy = %d\n", minpx, minpy, maxpx, maxpy);
-    for(int i=minpy;i<=maxpy;++i){		// for each scan line insert the line
-        int size, tcount=0;
-        size = (int)scanq[i].size();
-        if(size == 0)					// check if size is zero
-            continue;
-        
-        scanq[i].sort();				// sort by x coordinate
-        
-        temp1.x = scanq[i].front();		// get first point
-        temp1.y = i;
-        scanq[i].push_back(temp1.x);	// push the first point
-        
-        while(tcount<size){
-            temp2.x = scanq[i].front();
-            temp2.y = i;
-            
-            maskpoly.push_back(new mypointa(temp2.x, temp2.y));
-            scanq[i].pop_front();						// either it is going to be popped or it will be pushed
-            ++tcount;									// behind at each step one point is processed
-            scanq[i].push_back(temp2.x);
-            if(temp2.x-temp1.x != 1 && temp2.x-temp1.x != 0){					// pixels are continuos
-                scanq[i].push_back(temp2.x);
-            }
-            if(findinvertexset(temp2.x, temp2.y)){
-                //scanq[i].pop_back();
-                scanq[i].push_back(temp2.x);
-            }
-            temp1 = temp2;								// update the previous pixel
-            
-        }
-        
-        int newsize = (int)scanq[i].size();
-        if(scanq[i].size()%2 == 0 && scanq[i].size()!=0){
-            while(!scanq[i].empty()){
-                temp1.x = scanq[i].front();
-                scanq[i].pop_front();
-                temp2.x = scanq[i].front();
-                scanq[i].pop_front();
-                for(int p=temp1.x;p<temp2.x;++p){
-                    maskpoly.push_back(new mypointa(p, i));
-                    ++rcount;
-                }
-            }
-        }
-        else if(scanq[i].size() != 1){
-            
-            printf("#ODD i = %d count = %d ", i, (int)scanq[i].size());
-            int stemp = (int)scanq[i].size();
-            while(stemp>0){
-                printf("%d ", scanq[i].front());
-                if(findinvertexset(scanq[i].front(), i)){
-                    int y = scanq[i].front();
-                    scanq[i].push_back(y);			// count it twice
-                    scanq[i].push_back(y);
-                    printf("V ");
-                }
-                else{
-                    scanq[i].push_back(scanq[i].front());
-                }
-                scanq[i].pop_front();
-                --stemp;
-            }
-            printf("\nNEw size after odd = %d\n", (int)scanq[i].size());
-            while(!scanq[i].empty()){
-                printf("%d ", scanq[i].front());
-                scanq[i].pop_front();
-            }
-            printf("\n");
-            if(scanq[i].size()%2 != 0){
-                while(!scanq[i].empty()){
-                    temp1.x = scanq[i].front();
-                    scanq[i].pop_front();
-                    temp2.x = scanq[i].front();
-                    scanq[i].pop_front();
-                    for(int p=temp1.x;p<temp2.x;++p){
-                        maskpoly.push_back(new mypointa(p, i));
-                        ++rcount;
-                    }
-                }
-            }
-        }
-    }
-    showcopymasked();
-    //maskpoly.clear();		// clear the list of points
-    return;
 }
 
 void display1(void){
@@ -627,23 +387,6 @@ void mylinefun(int x1, int y1,int x2,int y2, int flag){
         putpixel();
 }
 
-void write(int x, int y){
-    //x = px[1];y = py[1];
-    float x1 = (2/(w+0.0))*x;
-    y = h-y;
-    float y1 = (2/(h+0.0))*y;
-    printf("writing text to screen\n");
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glRasterPos2f(-1+x1, -1+y1);
-    int len = strlen(etext);
-    for(int i = 0; i < len; i++){
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, etext[i]);
-    }
-    entertext = 0;
-    glutSwapBuffers();
-    glRasterPos2f(-1, -1);
-    count = 0;
-}
 
 bool isleft(mypointa *a, mypointa *b, mypointa *c){
     return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
@@ -656,321 +399,6 @@ bool isequal(mypointa *a, mypointa *b){
 void copyit(mypointa *a, mypointa *b){
     a->x = b->x;
     a->y = b->y;
-}
-
-void drawconvexpolygon(){
-    int i;
-    int size = poly1.size();
-    mypointa *temp1 = new mypointa(0, 0);				// top two elements of stack
-    mypointa *temp2 = new mypointa(0, 0);
-    
-    for(i=0;i<size;++i){
-        temp1 = poly1.front();
-        temp1->y = h-temp1->y;
-        poly1.pop_front();
-        poly1.push_back(new mypointa(temp1));
-    }
-    
-    poly1.sort(sortbyyasc());							// 2
-    // 1
-    starmean.x     = poly1.front()->x;					//	starmean = miny
-    starmean.y     = poly1.front()->y;
-    poly1.pop_front();									// remove that point
-    poly1.sort(sortbyangle());							// sort the remaining point
-    
-    
-    convexpoly.push_front(new mypointa(starmean));		// again put the leftmost point
-    convexpoly.push_front(new mypointa(poly1.front()));	// push in the convex hull set
-    poly1.pop_front();
-    
-    temp1->x = starmean.x;								// top two points of the stack
-    temp1->y = starmean.y;								// top two points of the stack
-    copyit(temp2,convexpoly.front());
-    
-    int csize;
-    while(poly1.size() != 0){
-        csize = (int)convexpoly.size();
-        //printf("csize  = %d\n", csize);
-        if(csize<2 || isleft(temp1, temp2, poly1.front())){
-            copyit(temp1, convexpoly.front());
-            convexpoly.push_front(new mypointa(poly1.front()));
-            copyit(temp2,convexpoly.front());
-            poly1.pop_front();
-        }
-        else{
-            convexpoly.pop_front();
-            copyit(temp2, convexpoly.front());
-            if(convexpoly.size()>1){
-                convexpoly.pop_front();
-                copyit(temp1, convexpoly.front());
-                convexpoly.push_front(new mypointa(temp2));
-            }
-        }
-    }
-    
-    int tx1, ty1;
-    printf("------------------------\n\n");
-    size = (int)convexpoly.size();
-    polysize = size;								// for cropping
-    glBegin(GL_LINE_LOOP);
-    for(int i=0;i<size;++i){
-        tx1  = convexpoly.front()->x;
-        ty1  = convexpoly.front()->y;
-        points[size-i-1].x = tx1;				// store them for cropping
-        points[size-i-1].y = ty1;
-        glVertex2f(-1+2*tx1/(w+0.0), -1+2*ty1/(h+0.0));
-        convexpoly.pop_front();
-    }
-    glEnd();
-    glutSwapBuffers();
-    points[polysize].x = points[0].x;				// make it circular
-    points[polysize].y = points[0].y;
-    croppolygon1();
-    convexpoly.clear();
-    myclear();
-}
-
-void drawstarpolygon(){
-    poly1.sort(sortbyangle());
-    int tx1, ty1;
-    printf("------------------------\n\n");
-    int size = (int)poly1.size();
-    polysize = size;
-    glBegin(GL_LINE_LOOP);
-    for(int i=0;i<size;++i){
-        tx1  = poly1.front()->x;
-        ty1  = poly1.front()->y;
-        points[size-i-1].x = tx1;				// store them for cropping
-        points[size-i-1].y = h-ty1;
-        glVertex2f(-1+2*tx1/(w+0.0), -1+2*(h-ty1)/(h+0.0));
-        poly1.pop_front();
-    }
-    glEnd();
-    glutSwapBuffers();
-    points[polysize].x = points[0].x;
-    points[polysize].y = points[0].y;
-    croppolygon1();
-    myclear();
-}
-
-void drawypolygon(){
-    printf("Draw the polygon\n");
-    poly1.sort(sortbyyasc());			// sorting by y
-    mypointa *min = new mypointa(poly1.front()->x, poly1.front()->y);		// getting the top and bottom most point
-    mypointa *max = new mypointa(poly1.back()->x, poly1.back()->y);
-    printf("max (%d, %d) min (%d, %d)\n", max->x, max->y, min->x, min->y);
-    int size = poly1.size();
-    
-    std::list<mypointa*> left;			// for storing the points of polygon on left side
-    std::list<mypointa*> right;			// for storing the points of polygon on right side
-    std::list<mypointa*> finalpoly;
-    
-    int i;
-    left.push_back(new mypointa(poly1.front()->x, poly1.front()->y));				// put max and min in left one
-    poly1.pop_front();		// remove first point
-    
-    
-    for(i=0;i<size-2;++i){
-        if(isleft(min, max, poly1.front()))				// which side of line
-            left.push_back(new mypointa(poly1.front()->x, poly1.front()->y));
-        else
-            right.push_back(new mypointa(poly1.front()->x, poly1.front()->y));
-        poly1.pop_front();
-    }
-    left.push_back(new mypointa(poly1.front()->x, poly1.front()->y));				// put max and min in left one
-    poly1.pop_front();
-    
-    left.sort(sortbyyasc());		// sorting from top to bottom
-    right.sort(sortbyydes());		// sorting from bottom to top
-    
-    printf("------------------------\n\n");
-    size = (int)left.size();
-    for(i=0;i<size;++i){
-        //printf("(%d %d)\n", left.front()->x, left.front()->y);
-        finalpoly.push_back(new mypointa(left.front()));
-        drawpoint(left.front()->x, left.front()->y, 1);
-        left.pop_front();
-    }
-    size = (int)right.size();
-    for(i=0;i<size;++i){
-        //printf("(%d %d)\n", right.front()->x, right.front()->y);
-        finalpoly.push_back(new mypointa(right.front()));
-        drawpoint(right.front()->x, right.front()->y, 2);
-        right.pop_front();
-    }
-    
-    int tx1, ty1;
-    printf("------------------------\n\n");
-    size = (int)finalpoly.size();
-    polysize = size;
-    glBegin(GL_LINE_LOOP);
-    for(i=0;i<size;++i){
-        tx1  = finalpoly.front()->x;
-        ty1  = finalpoly.front()->y;
-        points[size-i-1].x = tx1;				// store them for cropping
-        points[size-i-1].y = h-ty1;
-        glVertex2f(-1+2*tx1/(w+0.0), -1+2*(h-ty1)/(h+0.0));
-        finalpoly.pop_front();
-    }
-    glEnd();
-    glutSwapBuffers();
-    points[polysize].x = points[0].x;
-    points[polysize].y = points[0].y;
-    croppolygon1();
-    myclear();
-    return;
-}
-
-void mousemotiona(int button, int state, int x, int y){
-    printf("%d %d %d %d %d %d\n", button, state, x, y, x, h-y);
-    if(donepoly){
-        donepoly = 0;
-        drawpoly = 0;
-        if(polytype == 1)
-            drawypolygon();
-        else if(polytype == 2){
-            starmean.x = starmean.x/poly1.size();
-            starmean.y = starmean.y/poly1.size();
-            drawstarpolygon();
-        }
-        else{
-            drawconvexpolygon();
-        }
-        return;
-    }
-    if(state == GLUT_DOWN){
-        px[count] = x;
-        py[count] = y;
-        ++count;
-    }
-    else{
-        if(drawpoly && button == 0){
-            if(drawpoly == 1){					// taking points of polygon
-                drawpoly = 2;					// ignore the point
-                starmean.x=0;
-                starmean.y=0;
-                return;
-            }
-            printf("taking point\n");
-            if(drawpoly == 2){
-                drawpoint(x, y, 1);
-                poly1.push_back(new mypointa(x, y));
-                starmean.x = starmean.x+x;
-                starmean.y = starmean.y+y;
-            }
-            return;
-        }
-        if(entertext){
-            count = 0;
-            printf("Enter your text\n");
-            gets(etext);
-            write(x, y);
-            return;
-        }
-        if(count>=2){
-            count = 0;
-            if(drawline){
-                int tx[2], ty[2];
-                if(px[0]<px[1]){
-                    tx[0] = px[0];	ty[0] = py[0];
-                    tx[1] = px[1];	ty[1] = py[1];
-                }
-                else{
-                    tx[0] = px[1];	ty[0] = py[1];
-                    tx[1] = px[0];	ty[1] = py[0];
-                }
-                mylinefun(tx[0], h-ty[0], tx[1], h-ty[1], 1);		// change it to support other slopes
-            }
-            else if(cropimage){
-                drawrectangle();
-            }
-        }
-    }
-}
-
-void display(void){
-    if(!godisp)
-        return;
-    int k;
-    glClear (GL_COLOR_BUFFER_BIT);
-    
-    printf("width = %d and height = %d\n", w, h);
-    
-    unsigned char image1[w][h][3];
-    unsigned int a;
-    int i, j;
-    
-    for(i=0;i<w;++i){
-        for(j=0;j<h;++j){
-            fscanf(fp, "%u", &a);
-            image1[i][j][0] = (unsigned char)a;
-            myimage[i][j][0] = image1[i][j][0];
-            fscanf(fp, "%u", &a);
-            image1[i][j][1] = (unsigned char)a;
-            myimage[i][j][1] = image1[i][j][1];
-            fscanf(fp, "%u", &a);
-            image1[i][j][2] = (unsigned char)a;
-            myimage[i][j][2] = image1[i][j][2];
-        }
-    }
-    
-    unsigned char temp[3];
-    
-    for(i=0;i<h/2;++i){			// displaying upright image
-        for(j=0;j<w;++j){
-            for(k=0;k<3;++k){
-                temp[k]	 		 	  = image1[i][j][k];
-                image1[i][j][k]  	  = image1[h-i-1][j][k];
-                image1[h-i-1][j][k]   = temp[k];
-                original[h-i-1][j][k] = image1[h-i-1][j][k];
-                original[i][j][k]     = image1[i][j][k];
-            }
-        }
-    }
-    
-    for(i=0;i<w;++i){			// copying again upright image
-        for(j=0;j<h;++j){
-            myimage[i][j][0] = image1[i][j][0];
-            myimage[i][j][1] = image1[i][j][1];
-            myimage[i][j][2] = image1[i][j][2];
-        }
-    }
-    
-    // copying again the image with line
-    /*for(i=0;i<w;++i){
-     for(j=0;j<h;++j){
-     image1[i][j][0] = myimage[i][j][0];
-     image1[i][j][1] = myimage[i][j][1];
-     image1[i][j][2] = myimage[i][j][2];
-     }
-     }
-     */
-    glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)image1);
-    glutSwapBuffers();
-    godisp = 0;
-}
-
-void keyboard(unsigned char key, int x, int y){
-    count = 0;
-    if(key == 'r'){				// reset operation
-        //glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)image1);
-        //glutSwapBuffers(); 	
-    }   
-    else if(key == 't'){			// enter text
-        entertext = 1;
-        cropimage = 0;
-        drawline  = 0;
-    }
-    else if(key == 'c'){			// crop image
-        entertext = 0;
-        cropimage = 1;
-        drawline  = 0;
-    }
-    else if(key == 'l'){			// draw line
-        entertext = 0;
-        cropimage = 0;
-        drawline  = 1;
-    }
 }
 
 void reset(){
@@ -996,63 +424,6 @@ void reset(){
     glRasterPos2f(-1, -1);
     glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
     glutSwapBuffers();
-}
-
-void menufunaaa(int value){
-    count = 0;
-    if(value == 0){
-        glutDestroyWindow(winmenu);
-        exit(0);
-    }
-    else if(value == 1){		// draw line
-        entertext = 0;	   cropimage = 0;	   drawline  = 1;   drawpoly  = 0;
-    } 	
-    else if(value == 2){		// crop image
-        entertext = 0;	   cropimage = 1;	   drawline  = 0;   drawpoly  = 0;
-    }
-    else if(value == 3){		// Annotate point
-        entertext = 1;	   cropimage = 0;	   drawline  = 0;	drawpoly  = 0;	
-    }
-    else if(value == 4){		// reset
-        reset();
-    }
-    else if(value == 6){		// star monotone
-        drawpoly = 1;
-        donepoly = 0;
-        polytype = 2;
-    }
-    else if(value == 7){		// y monotone
-        drawpoly = 1;
-        donepoly = 0;
-        polytype = 1;
-    }
-    else if(value == 8){		// convex polygon
-        drawpoly = 1;
-        donepoly = 0;
-        polytype = 3;
-    }
-    else if(value == 9){		// done polygon	
-        drawpoly = 0;
-        donepoly = 1;		
-    }
-}
-
-void createmymenua(void){		
-    int polygonmenu = glutCreateMenu(menufunaaa);
-    glutAddMenuEntry("Closed Contour", 5);
-    glutAddMenuEntry("Star polygon", 6);
-    glutAddMenuEntry("Y monotone", 7);
-    glutAddMenuEntry("Convex polygon", 8);
-    
-    menuid = glutCreateMenu(menufunaaa);	
-    glutAddMenuEntry("Draw Line", 1);
-    glutAddMenuEntry("Crop Image", 2);
-    glutAddMenuEntry("Annotate", 3);
-    glutAddSubMenu("Polygon", polygonmenu);
-    glutAddMenuEntry("Done", 9);
-    glutAddMenuEntry("Reset", 4);
-    glutAddMenuEntry("Exit", 0);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 //int main(int argc, char** argv){	
@@ -1152,10 +523,217 @@ void thinning(cv::Mat& im)
     im *= 255;
 }
 
+void get_transpose(Mat& im, Mat& im2){
+    for (int i = 1; i < im.rows-1; i++)
+    {
+        for (int j = 1; j < im.cols-1; j++)
+        {
+            im2.at<uchar>(i, j) = im.at<uchar>(j, i);
+        }
+    }
+}
+
+void get_positive_y(Mat &im){
+    Mat temp = cv::Mat::zeros(im.size(), CV_8UC1);
+    
+    for(int i=1;i < im.rows-1;++i){
+        for(int j=1;j< im.cols-1;++j){
+            temp.at<uchar>(i, im.cols-j) = im.at<uchar>(i, j);
+        }
+    }
+    
+    for(int i=1;i < im.rows-1;++i){
+        for(int j=1;j< im.cols-1;++j){
+            im.at<uchar>(i, j) = temp.at<uchar>(i, j);
+        }
+    }
+    
+    return;
+}
 
 
-int main()
-{
+int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
+    int max_slope = 0;
+    int max_count  = -1;
+    
+    for(int i=0; i<180; i = i+2){
+        int theta = i;
+        float m = tan(theta);
+        
+        // get a sweeping line
+        myline *a = new myline(x, y, m);
+        
+        int count = 0;
+        for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it){
+            i2tuple pt = *it;
+            if ( a->checkpointlies(get<0>(pt), get<1>(pt)) == 1){
+                count = count+1;
+            }
+        }
+        
+        delete(a);
+        
+        if(count > max_count){
+            max_slope = theta;
+        }
+    }
+    printf("%d, %d\n", x, y);
+    return max_slope;
+}
+
+// pass the matrix and perform the sweepline algorithm
+std::map<i2tuple, int> sweepline(Mat& im){
+    vector<i2tuple> points_vector;
+    
+    // get all the non zero pixels
+    for(int i=10; i<im.rows; ++i){
+        for(int j=10;j<im.cols;++j){
+            if(im.at<uchar>(i, j) > 120){
+                points_vector.push_back(i2tuple(i, j));
+            }
+        }
+    }
+    
+    // stores the slopes for each pixel
+    std::map<i2tuple, int> all_line_slopes;
+    
+    // for each positive pixel
+    for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it) {
+        i2tuple pt = *it;
+        all_line_slopes[pt] = get_max_slope(get<0>(pt), get<1>(pt), points_vector);
+    }
+    
+    return all_line_slopes;
+}
+
+float mytan(int degree){
+    return tan(degree * PI/180.0);
+}
+
+
+//Initializes 3D rendering
+void initRendering() {
+    glEnable( GL_POINT_SMOOTH );
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); //Enable lighting
+    glEnable(GL_LIGHT0); //Enable light #0
+    glEnable(GL_LIGHT1); //Enable light #1
+    glEnable(GL_NORMALIZE); //Automatically normalize normals
+    
+    //glShadeModel(GL_SMOOTH); //Enable smooth shading
+}
+
+void updatea(int value) {
+    glutPostRedisplay();
+    glutTimerFunc(25, updatea, 0);
+}
+
+
+void drawScenea() {
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
+    
+    
+            glDepthMask(GL_FALSE);      // disable depth writes
+    
+            glBegin (GL_QUADS);
+            glTexCoord2d(0.0,0.0); glVertex2d(0.0, 0.0);
+            glTexCoord2d(1.0,0.0); glVertex2d(400.0, 0.0);
+            glTexCoord2d(1.0,1.0); glVertex2d(400.0, 400.0);
+            glTexCoord2d(0.0,1.0); glVertex2d(0.0, 400.0);
+            glEnd();
+    
+    int sizea = map_slopes.size();
+    
+    if(map_slopes.size() > 0){
+        glBegin( GL_POINTS );
+        glColor3f( 0.95f, 0.207, 0.031f );
+        
+        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+            i2tuple key = iterator->first;
+            int px = get<0>(key);
+            int py = get<1>(key);
+            
+            glVertex2f(px, py);
+        }
+    }
+    
+            // re-enable depth writes
+            glDepthMask(GL_TRUE);
+    
+            // perspective projection for foreground
+            glLoadIdentity();
+    
+//    
+//    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
+//    int back = 1;
+//
+//    
+//    //Setup for 2D
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(0.0, 500, 500, 0.0, -1.0, 10.0);
+//    glMatrixMode(GL_MODELVIEW);
+//    //glPushMatrix();
+//    glLoadIdentity();
+//    glDisable(GL_CULL_FACE);
+//    
+//    glClear(GL_DEPTH_BUFFER_BIT);
+//    glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f);
+    
+//    int sizea = map_slopes.size();
+//    
+//    if(map_slopes.size() > 0){
+//        glBegin( GL_POINTS );
+//        glColor3f( 0.95f, 0.207, 0.031f );
+//        
+//        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+//            i2tuple key = iterator->first;
+//            int px = get<0>(key);
+//            int py = get<1>(key);
+//            
+//            glVertex2f(px, py);
+//        }
+//    }
+    
+    glutSwapBuffers();
+}
+
+//Called when the window is resized
+void handleResize(int w, int h) {
+    //s_width  = w;
+    //s_height = h;
+    
+    glViewport(0, 0, w, h);
+    glEnable(GL_TEXTURE_2D);
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+}
+
+
+int main(int argc, char** argv){
+    
+    
+    
+    
+    
+        //Set handler functions
+       //        glutKeyboardFunc(handleKeypress);
+//        glutReshapeFunc(handleResize);
+//        glutMouseFunc(mousemotion);
+
+    
+    // i2tuple p1 = i2tuple(1, 1);
+    
+    //i2tuple p2 = i2tuple(1, 3);
+    //all_lines[p1] = new myline(1, 6, 5);
+    //all_lines[p2] = new myline(1, 9, 53);
+    
+    
     Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
     Mat bw = imga > 128;
     Mat img = bw > 120;
@@ -1163,12 +741,29 @@ int main()
     bitwise_not(bw, img);
     thinning(img);
     
+    //get_positive_y(img);
     
+     map_slopes = sweepline(img);
+    
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(600, 600);
+    winmenu = glutCreateWindow("Sketch");
+    initRendering();
+    glutDisplayFunc(drawScenea);
+    glutReshapeFunc(handleResize);
+    glutTimerFunc(25, updatea, 0);
+    //glutMainLoop();
+    
+    
+    printf("rows = %d cols = %d\n", img.rows, img.cols);
     //IplImage* img = cvLoadImage( "/Users/pranjal/Desktop/img2_2.png" , CV_LOAD_IMAGE_GRAYSCALE);
     cvNamedWindow("Example1", CV_WINDOW_AUTOSIZE );
-    namedWindow( "Display window", WINDOW_AUTOSIZE );// Create a window for display.
-    imshow( "Display window", img );                   // Show our image inside it.
+    namedWindow( "sketch", WINDOW_AUTOSIZE );// Create a window for display.
+    imshow( "sketch", img );                   // Show our image inside it.
 
+    
+    
     cvWaitKey(0);
     cvDestroyWindow("Example1");
     return 0;
