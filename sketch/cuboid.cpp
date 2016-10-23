@@ -18,7 +18,13 @@ void cuboid::insert_mouse_point(int x, int y){
         this->mouse_ys[this->current_index] = y;
         this->current_index = this->current_index+1;
         
-        if(current_index >= 7){
+        // for parent cuboid we need 7 points
+        if(this->parent_cuboid == NULL && current_index >= 7){
+            input_done = 1;
+            this->get_height_width_depth_of_cuboid(100);
+        }
+        // for child cuboids we need only 4 points
+        else if(this->parent_cuboid != NULL && current_index >=3 ){
             input_done = 1;
             this->get_height_width_depth_of_cuboid(100);
         }
@@ -143,24 +149,24 @@ void cuboid::drawmycuboid_coord(int cuboid_ratio){
     glVertex3f(world_xs[7], world_ys[7], world_zs[7]);
 
     // Side 0, 4, 5, 1
-//    glNormal3f(0.0f, 1.0f, 0.0f);
-//    glVertex3f(world_xs[0], world_ys[0], world_zs[0]);
-//    glVertex3f(world_xs[4], world_ys[4], world_zs[4]);
-//    glVertex3f(world_xs[5], world_ys[5], world_zs[5]);
-//    glVertex3f(world_xs[1], world_ys[1], world_zs[1]);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(world_xs[0], world_ys[0], world_zs[0]);
+    glVertex3f(world_xs[4], world_ys[4], world_zs[4]);
+    glVertex3f(world_xs[5], world_ys[5], world_zs[5]);
+    glVertex3f(world_xs[1], world_ys[1], world_zs[1]);
 //
 //    // Side 3, 7, 6, 2
-//    glNormal3f(0.0f, 1.0f, 0.0f);
-//    glVertex3f(world_xs[3], world_ys[3], world_zs[3]);
-//    glVertex3f(world_xs[7], world_ys[7], world_zs[7]);
-//    glVertex3f(world_xs[6], world_ys[6], world_zs[6]);
-//    glVertex3f(world_xs[2], world_ys[2], world_zs[2]);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(world_xs[3], world_ys[3], world_zs[3]);
+    glVertex3f(world_xs[7], world_ys[7], world_zs[7]);
+    glVertex3f(world_xs[6], world_ys[6], world_zs[6]);
+    glVertex3f(world_xs[2], world_ys[2], world_zs[2]);
 //
-//    // Top 1, 5, 6, 2
-//    glVertex3f(world_xs[1], world_ys[1], world_zs[1]);
-//    glVertex3f(world_xs[5], world_ys[5], world_zs[5]);
-//    glVertex3f(world_xs[6], world_ys[6], world_zs[6]);
-//    glVertex3f(world_xs[2], world_ys[2], world_zs[2]);
+    // Top 1, 5, 6, 2
+    glVertex3f(world_xs[1], world_ys[1], world_zs[1]);
+    glVertex3f(world_xs[5], world_ys[5], world_zs[5]);
+    glVertex3f(world_xs[6], world_ys[6], world_zs[6]);
+    glVertex3f(world_xs[2], world_ys[2], world_zs[2]);
     
     // HIDDEN
 //    glVertex3f(0.0f, 0.0f, -1*b);
