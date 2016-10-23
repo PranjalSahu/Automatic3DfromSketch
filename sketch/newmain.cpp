@@ -62,6 +62,9 @@ static int winmenu;
 static int menuid;
 static int val = 0;
 
+int sa_width  = 400;
+int sa_height = 400;
+
 //flags to be used by keyboard for three different operations
 int count     = 0;
 int entertext = 0;
@@ -630,7 +633,38 @@ void updatea(int value) {
 }
 
 
+void displayone() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+    glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+    
+    // Draw a Red 1x1 Square centered at origin
+        int sizea = map_slopes.size();
+    
+//        if(map_slopes.size() > 0){
+            
+            glBegin( GL_POINTS );
+            glColor3f(1.0f, 0.0f, 0.0f);
+
+//            glVertex2f(0/500.0, 100/500.0);
+//            glVertex2f(120/500.0, 200/500.0);
+//            glVertex2f(200/500.0, 300/500.0);
+//            glVertex2f(250/500.0, 350/500.0);
+//            
+            for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+                i2tuple key = iterator->first;
+                GLfloat px = get<0>(key)*1.0/sa_width;
+                GLfloat py = get<1>(key)*1.0/sa_height;
+    
+                glVertex2f(px, py);
+            }
+            glEnd();
+ //       }
+    glFlush();  // Render now
+}
+
+
 void drawScenea() {
+    glClear(GL_COLOR_BUFFER_BIT);
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             glOrtho(0.0f, 400.0, 400.0, 0.0, 0.0, 1.f);
@@ -638,33 +672,31 @@ void drawScenea() {
     
             glDepthMask(GL_FALSE);      // disable depth writes
     
-            glBegin (GL_QUADS);
-            glTexCoord2d(0.0,0.0); glVertex2d(0.0, 0.0);
-            glTexCoord2d(1.0,0.0); glVertex2d(400.0, 0.0);
-            glTexCoord2d(1.0,1.0); glVertex2d(400.0, 400.0);
-            glTexCoord2d(0.0,1.0); glVertex2d(0.0, 400.0);
-            glEnd();
     
     int sizea = map_slopes.size();
     
-    if(map_slopes.size() > 0){
-        glBegin( GL_POINTS );
-        glColor3f( 0.95f, 0.207, 0.031f );
+    glPointSize(100);
+    //if(map_slopes.size() > 0){
+        glBegin(GL_POINTS);
+            glVertex2f(0, 50);
+            glVertex2f(50, 250);
+            glVertex2f(500, 50);
+            glVertex2f(600, 550);
+        glEnd();
         
-        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-            i2tuple key = iterator->first;
-            int px = get<0>(key);
-            int py = get<1>(key);
-            
-            glVertex2f(px, py);
-        }
-    }
+//        glBegin( GL_POINTS );
+//            glColor3f( 0.95f, 0.207, 0.031f );
+//        
+//            for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+//                i2tuple key = iterator->first;
+//                int px = get<0>(key);
+//                int py = get<1>(key);
+//            
+//                glVertex2f(px, py);
+//            }
+//        glEnd();
+ //   }
     
-            // re-enable depth writes
-            glDepthMask(GL_TRUE);
-    
-            // perspective projection for foreground
-            glLoadIdentity();
     
 //    
 //    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f } };
@@ -717,7 +749,25 @@ void handleResize(int w, int h) {
 
 int main(int argc, char** argv){
     
+    Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
+    Mat bw = imga > 128;
+    Mat img = bw > 120;
     
+    
+    bitwise_not(bw, img);
+    thinning(img);
+    map_slopes = sweepline(img);
+
+    
+    glutInit(&argc, argv);                 // Initialize GLUT
+    glutInitWindowSize(sa_width, sa_height);
+
+    
+    glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
+    //glutInitWindowSize(320, 320);   // Set the window's initial width & height
+    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
+    glutDisplayFunc(displayone); // Register display callback handler for window re-paint
+    glutMainLoop();           // Enter the event-processing loop
     
     
     
@@ -734,37 +784,30 @@ int main(int argc, char** argv){
     //all_lines[p2] = new myline(1, 9, 53);
     
     
-    Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
-    Mat bw = imga > 128;
-    Mat img = bw > 120;
     
-    bitwise_not(bw, img);
-    thinning(img);
-    
-    //get_positive_y(img);
-    
-     map_slopes = sweepline(img);
-    
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(600, 600);
-    winmenu = glutCreateWindow("Sketch");
-    initRendering();
-    glutDisplayFunc(drawScenea);
-    glutReshapeFunc(handleResize);
-    glutTimerFunc(25, updatea, 0);
-    //glutMainLoop();
-    
-    
-    printf("rows = %d cols = %d\n", img.rows, img.cols);
-    //IplImage* img = cvLoadImage( "/Users/pranjal/Desktop/img2_2.png" , CV_LOAD_IMAGE_GRAYSCALE);
-    cvNamedWindow("Example1", CV_WINDOW_AUTOSIZE );
-    namedWindow( "sketch", WINDOW_AUTOSIZE );// Create a window for display.
-    imshow( "sketch", img );                   // Show our image inside it.
-
-    
-    
-    cvWaitKey(0);
-    cvDestroyWindow("Example1");
+//
+//    glutInit(&argc, argv);
+//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+//    glutInitWindowSize(600, 600);
+//    winmenu = glutCreateWindow("Sketch");
+//    glClearColor(1.0, 1.0, 1.0, 1.0);
+//    //initRendering();
+//    glutDisplayFunc(drawScenea);
+//    glutReshapeFunc(handleResize);
+//    glutTimerFunc(25, updatea, 0);
+//    
+//    //glutMainLoop();
+//    
+//    
+//    printf("rows = %d cols = %d\n", img.rows, img.cols);
+//    //IplImage* img = cvLoadImage( "/Users/pranjal/Desktop/img2_2.png" , CV_LOAD_IMAGE_GRAYSCALE);
+//    cvNamedWindow("Example1", CV_WINDOW_AUTOSIZE );
+//    namedWindow( "sketch", WINDOW_AUTOSIZE );// Create a window for display.
+//    imshow( "sketch", img );                   // Show our image inside it.
+//
+//    
+//    
+//    cvWaitKey(0);
+//    cvDestroyWindow("Example1");
     return 0;
 }
