@@ -12,8 +12,8 @@
 #define infslope 10000000
 #define infvalue 10000000
 #define MY_EPS   0.00001
-#define SLOPE_DIFFERENCE 0.05
-#define DISTANCE_DIFFERENCE 1.2
+#define SLOPE_DIFFERENCE 0.01
+#define DISTANCE_DIFFERENCE 1.1
 
 #include <opencv2/opencv.hpp>
 

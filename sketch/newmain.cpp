@@ -573,9 +573,35 @@ struct sortbyxasc {
 // short length lines will be merged first
 struct sortbylength {
     bool operator()(const myline* o1, const myline* o2) const {
-        return (o1->get_line_length() - o2->get_line_length() < 0);
+        return (o1->get_line_length() - o2->get_line_length() > 0);
     }
 };
+
+// gives the line which is nearest to the point by doing exhaustive search
+// over all points
+int get_min_line_to_merge(myline *current_line){
+    std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
+    std::vector<myline*>::iterator iterator_ret;
+    
+    float distance_difference;
+    myline *min_prev;
+    
+    float diff_total = 100000;
+    
+    for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end(); iter++){
+        myline *prev_line = *iter;
+        distance_difference = current_line->get_distance(prev_line);
+        
+        if(distance_difference < diff_total){
+            diff_total   = distance_difference;
+            min_prev     = prev_line;
+            iterator_ret = iter;
+        }
+    }
+    
+    
+    return iterator_ret-all_lines_to_merge.begin();
+}
 
 
 int get_line_to_merge(myline *current_line){
@@ -587,7 +613,6 @@ int get_line_to_merge(myline *current_line){
     float diff_total = 100000;
     float min_slope = 100000;
     float min_distance = 1000000;
-    int p1x, p1y, p2x, p2y;
     
     for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end(); iter++){
         myline *prev_line = *iter;
@@ -614,7 +639,7 @@ int get_line_to_merge(myline *current_line){
 
 
 // in iteration merges all the lines present in the all_lines_to_merge
-int mergelines(){
+int mergelines(int force){
     // In first iteration we only merge lines with same x or same y and adjacent to each other
     int checkiter = 1;
     int merged_count = 0;
@@ -644,12 +669,18 @@ int mergelines(){
     
     for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
         myline* current_line = *iter;
+        printf("%d %d %d %d \n", current_line->x1, current_line->y1, current_line->x2, current_line->y2);
         
         // temporary delete current line
         iter  = all_lines_to_merge.erase(iter);
         
         // if the merge line is found then well and good else push it just behind current iterator
-        int index  = get_line_to_merge(current_line);
+        int index;
+        if(force == 0)
+            index = get_line_to_merge(current_line);
+        else
+            index = get_min_line_to_merge(current_line);
+        
         if(index == -1){
             iter = all_lines_to_merge.insert(iter, current_line);
             iter++;
@@ -711,7 +742,7 @@ int mergelines(){
         
         // delete the two lines and insert a new one
         all_lines_to_merge.erase(iterator_prev);
-        all_lines_to_merge.insert(iter, line_to_insert);
+        all_lines_to_merge.insert(iter, 0, line_to_insert);
         ++merged_count;
         
     }
@@ -724,7 +755,10 @@ int mergelines(){
 void handleKeypressa(unsigned char key, int x, int y) {
     switch (key) {
         case 'i':
-            mergelines();
+            mergelines(0);
+            break;
+        case 'f':
+            mergelines(1);
             break;
         case 27: //Escape key
             exit(0);
@@ -791,7 +825,6 @@ int main(int argc, char** argv){
 //    mergelines();
 //    
     
-    int p;
     
     for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
         i2tuple key = iterator->first;
