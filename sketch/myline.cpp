@@ -115,6 +115,13 @@ void myline::mergelines(myline *t){
     }
 }
 
+float myline::get_line_length() const{
+    if(x2 == infvalue)
+        return 1;
+    else{
+        return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+    }
+}
 
 float myline::get_distance(const myline *ml) const {
     // when both are just points

@@ -64,6 +64,8 @@ void createmymenua(void);
 void menu(int value);
 void disp(void);
 
+int merge_iteration =0;
+
 static int winmenu;
 static int menuid;
 static int val = 0;
@@ -152,9 +154,6 @@ mypointa points[MAXSIZE];
 std::queue<int> p1;					// for intersection points x coordinate
 
 std::list<int> scanq[1000];			// one queue for each scan line
-
-// function prototypes
-void mylinefun(int x1, int y1,int x2,int y2, int flag);
 
 void myclear(){
     for(int i=0;i<1000;++i)
@@ -292,83 +291,6 @@ void putpixel(){
     showintensity();
     drawline = 0;
 }
-
-// flag = 1 means normal operation
-// flag = 2 means only store points for intersection
-void mylinefun(int x1, int y1,int x2,int y2, int flag){
-    int oy1 = y1;
-    
-    int swap    = 0;
-    int acrossx = 0;
-    
-    int t1;
-    int xt, yt;
-    
-    if(y2 < y1){				// negative slope
-        acrossx = 1;
-        y2 = 2*(y1-y2)+y2;
-    }
-    
-    if(flag == 1){
-        myq.push(new mypointa(x1, y1));
-        myq1.push(new mypointa(x1, y1));
-    }
-    else
-        scanq[y1].push_back(x1);			// directly access by y
-    
-    if(y2-y1>x2-x1){
-        swap = 1;			// swapping the coordinates
-        t1 = x1;
-        x1 = y1;			// getting image across y = x line
-        y1 = t1;
-        t1 = x2;
-        x2 = y2;
-        y2 = t1;
-    }
-    
-    int i, j;
-    unsigned char image1[w][h][3];
-    int dx  = x2 - x1;
-    int dy  = y2 - y1;
-    int y   = y1;
-    int x   = x1;
-    int p = 2*dy-dx;
-    
-    int dy2 = 2*dy;
-    int dy2minusdx2 = 2*(dy-dx);
-    
-    while(x<x2){
-        x++;
-        if(p<0)
-            p = p + dy2;
-        else{
-            p = p + dy2minusdx2;
-            y = y + 1;
-        }
-        if(swap){
-            xt = y;			// getting the original line by swapping again
-            yt = x;			// swapping across  y = x line
-        }
-        else{
-            xt = x;
-            yt = y;
-        }
-        
-        if(acrossx){
-            yt = yt -2*(yt-oy1);
-        }
-        if(flag == 1){
-            myq.push(new mypointa(xt, yt));
-            myq1.push(new mypointa(xt, yt));
-        }
-        else
-            scanq[yt].push_back(xt);			// directly access by y
-    }
-    if(flag == 1)
-        putpixel();
-}
-
-
 bool isleft(mypointa *a, mypointa *b, mypointa *c){
     return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
 }
@@ -406,51 +328,6 @@ void reset(){
     glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
     glutSwapBuffers();
 }
-
-//int main(int argc, char** argv){	
-//    
-//    fp = fopen("/Users/pranjal/Downloads/Vision/assi3/hw3data/test.ppm","r");
-//    
-//    char buff[16];
-//    char *t;
-//    
-//    fgets(buff, sizeof(buff), fp);
-//    
-//    if(buff[0] != 'P'||buff[1] != '3') {
-//        printf("Not correct image file");
-//        exit(0);
-//    }	
-//    
-//    do{ 
-//        t = fgets(buff, 256, fp);
-//        if ( t == NULL ) 
-//            exit(0);
-//    }while( strncmp(buff, "#", 1) == 0 );
-//    
-//    int r = sscanf(buff, "%u %u", &w, &h);
-//    if ( r < 2 ) 
-//        exit(0);
-//    
-//    r = fscanf(fp, "%u", &d);
-//    if((r < 1)||( d != 255 )) 
-//        exit(0);
-//    
-//    fseek(fp, 1, SEEK_CUR);
-//    
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-//    glutInitWindowSize(w, h);
-//    winmenu = glutCreateWindow("Draw pixels test");
-//    createmymenua(); 
-//    
-//    glutDisplayFunc(display);
-//    glutMouseFunc(mousemotiona);
-//    glutKeyboardFunc(keyboard);
-//    glutMainLoop();
-//    return 0;	
-//}
-
-
 
 
 void thinningIteration(cv::Mat& im, int iter)
@@ -619,46 +496,50 @@ void displayone() {
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
     // Draw a Red 1x1 Square centered at origin
-        int sizea = map_slopes.size();
+    int sizea = map_slopes.size();
     
-//        if(map_slopes.size() > 0){
-            
+    glBegin( GL_POINTS );
+    glColor3f(1.0f, 0.0f, 0.0f);
+    
+    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+        i2tuple key = iterator->first;
+        GLfloat px = get<0>(key)*1.0/sa_width;
+        GLfloat py = get<1>(key)*1.0/sa_height;
+        glVertex2f(px, py);
+    }
+    glEnd();
+    
+    
+    for(std::vector<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
+        myline * linet = *iterator;
+        
+        if (linet->x2 == infvalue || linet->y2 ==infvalue){
             glBegin( GL_POINTS );
             glColor3f(1.0f, 0.0f, 0.0f);
-
-            for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-                i2tuple key = iterator->first;
-                GLfloat px = get<0>(key)*1.0/sa_width;
-                GLfloat py = get<1>(key)*1.0/sa_height;
-    
-                glVertex2f(px, py);
-            }
+            GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
+            GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
+            glVertex2f(px, py);
             glEnd();
-    
-    
-                for(std::vector<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
-                    myline * linet = *iterator;
-                    
-                    if (linet->x2 == infvalue || linet->y2 ==infvalue)
-                        continue;
-                    
-                    glBegin(GL_LINE_LOOP);
-                    
-                    int r = 1;//rand()%4;
-                        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
-                    
-                        GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
-                        GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
-                    
-                        GLfloat qx = (linet->x2+10)*IMG_SCALE/sa_width;
-                        GLfloat qy = (linet->y2+10)*IMG_SCALE/sa_height;
-                    
-                        glVertex2f(px, py);
-                        glVertex2f(qx, qy);
-                    
-                    glEnd();
-                    
-                }
+            continue;
+        }
+        
+        glBegin(GL_LINE_LOOP);
+        
+        int r = 1;//rand()%4;
+        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
+        
+        GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
+        GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
+        
+        GLfloat qx = (linet->x2+10)*IMG_SCALE/sa_width;
+        GLfloat qy = (linet->y2+10)*IMG_SCALE/sa_height;
+        
+        glVertex2f(px, py);
+        glVertex2f(qx, qy);
+        
+        glEnd();
+        
+    }
 
     
     
@@ -689,6 +570,14 @@ struct sortbyxasc {
     }
 };
 
+// short length lines will be merged first
+struct sortbylength {
+    bool operator()(const myline* o1, const myline* o2) const {
+        return (o1->get_line_length() - o2->get_line_length() < 0);
+    }
+};
+
+
 int get_line_to_merge(myline *current_line){
     std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
     float slope_difference;
@@ -713,7 +602,7 @@ int get_line_to_merge(myline *current_line){
             min_prev = prev_line;
         }
         
-        if(slope_difference <= SLOPE_DIFFERENCE &&  distance_difference < DISTANCE_DIFFERENCE){
+        if(slope_difference <= SLOPE_DIFFERENCE &&  distance_difference < DISTANCE_DIFFERENCE*(5+merge_iteration)/5.0){
             return iter-all_lines_to_merge.begin();
         }
     }
@@ -729,6 +618,7 @@ int mergelines(){
     // In first iteration we only merge lines with same x or same y and adjacent to each other
     int checkiter = 1;
     int merged_count = 0;
+    merge_iteration++;
     
     if(all_lines_to_merge.size() == 0){
         for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
@@ -741,7 +631,14 @@ int mergelines(){
         checkiter = 0;
     }
     
-        //all_lines_to_merge.sort(sortbyxasc());
+    if(merge_iteration > 1){
+        std::list<myline*> temp{ std::begin(all_lines_to_merge), std::end(all_lines_to_merge) };
+        temp.sort(sortbylength());
+        std::vector<myline*> tempa{ std::begin(temp), std::end(temp) };
+        
+        // sort lines to merge by their length
+        all_lines_to_merge = tempa;
+    }
     
     std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
     

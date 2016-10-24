@@ -12,8 +12,8 @@
 #define infslope 10000000
 #define infvalue 10000000
 #define MY_EPS   0.00001
-#define SLOPE_DIFFERENCE 0.01
-#define DISTANCE_DIFFERENCE 1.5
+#define SLOPE_DIFFERENCE 0.05
+#define DISTANCE_DIFFERENCE 1.2
 
 #include <opencv2/opencv.hpp>
 
@@ -31,7 +31,7 @@ public:
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
     float get_distance(const myline *ml) const;
-
+    float get_line_length() const;
         
     myline(int a, int b, float m);
     myline(myline *t);
