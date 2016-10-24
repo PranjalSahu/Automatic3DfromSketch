@@ -112,7 +112,7 @@ mypointa::mypointa(){
 typedef std::tuple<int,int> i2tuple;
 std::map<i2tuple, myline*> all_lines;
 std::map<i2tuple, int> map_slopes;
-std::list<myline*> all_lines_to_merge;
+std::vector<myline*> all_lines_to_merge;
 
 
 #define PI 3.14159265
@@ -636,7 +636,7 @@ void displayone() {
             glEnd();
     
     
-                for(std::list<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
+                for(std::vector<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
                     myline * linet = *iterator;
                     
                     if (linet->x2 == infvalue || linet->y2 ==infvalue)
@@ -644,14 +644,14 @@ void displayone() {
                     
                     glBegin(GL_LINE_LOOP);
                     
-                        int r = rand()%4;
+                    int r = 1;//rand()%4;
                         glColor3f(colors[r][0], colors[r][1], colors[r][2]);
                     
-                        GLfloat px = (linet->x1+10)*1.0/sa_width;
-                        GLfloat py = (linet->y1+10)*1.0/sa_height;
+                        GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
+                        GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
                     
-                        GLfloat qx = (linet->x2+10)*1.0/sa_width;
-                        GLfloat qy = (linet->y2+10)*1.0/sa_height;
+                        GLfloat qx = (linet->x2+10)*IMG_SCALE/sa_width;
+                        GLfloat qy = (linet->y2+10)*IMG_SCALE/sa_height;
                     
                         glVertex2f(px, py);
                         glVertex2f(qx, qy);
@@ -689,6 +689,41 @@ struct sortbyxasc {
     }
 };
 
+int get_line_to_merge(myline *current_line){
+    std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
+    float slope_difference;
+    float distance_difference;
+    myline *min_prev;
+    
+    float diff_total = 100000;
+    float min_slope = 100000;
+    float min_distance = 1000000;
+    int p1x, p1y, p2x, p2y;
+    
+    for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end(); iter++){
+        myline *prev_line = *iter;
+        
+         slope_difference    = fabs(prev_line->m-current_line->m);
+         distance_difference = current_line->get_distance(prev_line);
+        
+        if(slope_difference + distance_difference < diff_total){
+            min_slope = slope_difference;
+            min_distance = distance_difference;
+            diff_total = slope_difference + distance_difference;
+            min_prev = prev_line;
+        }
+        
+        if(slope_difference <= SLOPE_DIFFERENCE &&  distance_difference < DISTANCE_DIFFERENCE){
+            return iter-all_lines_to_merge.begin();
+        }
+    }
+    
+
+    return -1;
+}
+
+
+
 // in iteration merges all the lines present in the all_lines_to_merge
 int mergelines(){
     // In first iteration we only merge lines with same x or same y and adjacent to each other
@@ -706,103 +741,83 @@ int mergelines(){
         checkiter = 0;
     }
     
-        all_lines_to_merge.sort(sortbyxasc());
-        
-        std::list<myline*>::iterator iterator = all_lines_to_merge.begin();
-        std::list<myline*>::iterator prev     = iterator;
-        
-        // we will be strict for 1st iteration
-        // later on this threholds will change
+        //all_lines_to_merge.sort(sortbyxasc());
     
-        int ttcount = 0 ;
+    std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
     
-        for(std::list<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
-            int tsize = all_lines_to_merge.size();
-            
-            prev = iter;
+    for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
+        myline* current_line = *iter;
+        
+        // temporary delete current line
+        iter  = all_lines_to_merge.erase(iter);
+        
+        // if the merge line is found then well and good else push it just behind current iterator
+        int index  = get_line_to_merge(current_line);
+        if(index == -1){
+            iter = all_lines_to_merge.insert(iter, current_line);
             iter++;
-            ttcount = ttcount +2;
+            continue;
+        }
+        
+        std::vector<myline*>::iterator iterator_prev = all_lines_to_merge.begin();
+        iterator_prev = iterator_prev+index;
+        
+        // other line to be deleted
+        myline *prev_line = *iterator_prev;
+        
+        // create a new line
+        myline* line_to_insert;
+        
+        if (current_line->x2 == infvalue && prev_line->y2 == infvalue){
             
-            if(ttcount >= tsize)
-                break;
+            int x1 = mymin(prev_line->x1, current_line->x1);
+            int x2 = mymax(prev_line->x1, current_line->x1);
+            int y1 = mymin(prev_line->y1, current_line->y1);
+            int y2 = mymax(prev_line->y1, current_line->y1);
             
-            myline* current_line = *iter;
-            myline* prev_line    = *prev;
+            line_to_insert = new myline(x1, x2, y1, y2);
+        }
+        else{
+            // now 2 cases arrive
+            // one line is a point and other is line segment
+            //      OR
+            // both are line segment
+            int x1, y1, x2, y2;
             
-            printf("%d %d %d %d\n", current_line->x1, current_line->x2, current_line->y1, current_line->y2);
-            
-            printf("ttcount %d %f\n", ttcount, prev_line->m);
-            int merged_flag = 0;
-            
-            // if both have same slope and distance is less
-            // when both are points only
-            if(fabs(prev_line->m-current_line->m) <= 0.01 && current_line->get_distance(prev_line) < 1.5){
-                if (current_line->x2 == infvalue && prev_line->y2 == infvalue){
-                    // create a new line
-                    myline* temp;
-                    
-                    int x1 = mymin(prev_line->x1, current_line->x1);
-                    int x2 = mymax(prev_line->x1, current_line->x1);
-                    int y1 = mymin(prev_line->y1, current_line->y1);
-                    int y2 = mymax(prev_line->y1, current_line->y1);
-                    
-                    temp = new myline(x1, x2, y1, y2);
-                    
-                    // delete the two lines and insert a new one
-                    all_lines_to_merge.erase(prev);
-                    iter = all_lines_to_merge.erase(iter);
-                    all_lines_to_merge.insert(iter, temp);
-                    
-                    
-                }
-                else{
-                    // now 2 cases arrive
-                    // one line is a point and other is line segment
-                    //      OR
-                    // both are line segment
-                    int x1, y1, x2, y2;
-                    
-                    // one is a point
-                    if(current_line->x2 == infvalue){
-                        x1 = mymin(mymin(current_line->x1, prev_line->x1), prev_line->x2);
-                        x2 = mymax(mymax(current_line->x1, prev_line->x1), prev_line->x2);
-                        y1 = mymin(mymin(current_line->y1, prev_line->y1), prev_line->y2);
-                        y2 = mymax(mymax(current_line->y1, prev_line->y1), prev_line->y2);
-                    }
-                    // two is a point
-                    else if(prev_line->x2 == infvalue){
-                        x1 = mymin(mymin(current_line->x1, prev_line->x1), current_line->x2);
-                        x2 = mymax(mymax(current_line->x1, prev_line->x1), current_line->x2);
-                        y1 = mymin(mymin(current_line->y1, prev_line->y1), current_line->y2);
-                        y2 = mymax(mymax(current_line->y1, prev_line->y1), current_line->y2);
-                    }
-                    // both are line segment
-                    else{
-                        // create a new line
-                        x1 = mymin(mymin(current_line->x1, prev_line->x1), mymin(current_line->x2, prev_line->x2));
-                        x2 = mymax(mymax(current_line->x1, prev_line->x1), mymax(current_line->x2, prev_line->x2));
-                        y1 = mymin(mymin(current_line->y1, prev_line->y1), mymin(current_line->y2, prev_line->y2));
-                        y2 = mymax(mymax(current_line->y1, prev_line->y1), mymax(current_line->y2, prev_line->y2));
-                    }
-                    
-                    // create a new line
-                    myline* temp = new myline(x1, x2, y1, y2);
-                    
-                    // delete the two lines and insert a new one
-                    all_lines_to_merge.erase(prev);
-                    iter = all_lines_to_merge.erase(iter);
-                    all_lines_to_merge.insert(iter, temp);
-                    
-                }
-                merged_flag = 1;
-                ++merged_count;
+            // one is a point
+            if(current_line->x2 == infvalue){
+                x1 = mymin(mymin(current_line->x1, prev_line->x1), prev_line->x2);
+                x2 = mymax(mymax(current_line->x1, prev_line->x1), prev_line->x2);
+                y1 = mymin(mymin(current_line->y1, prev_line->y1), prev_line->y2);
+                y2 = mymax(mymax(current_line->y1, prev_line->y1), prev_line->y2);
+            }
+            // two is a point
+            else if(prev_line->x2 == infvalue){
+                x1 = mymin(mymin(current_line->x1, prev_line->x1), current_line->x2);
+                x2 = mymax(mymax(current_line->x1, prev_line->x1), current_line->x2);
+                y1 = mymin(mymin(current_line->y1, prev_line->y1), current_line->y2);
+                y2 = mymax(mymax(current_line->y1, prev_line->y1), current_line->y2);
+            }
+            // both are line segment
+            else{
+                // create a new line
+                x1 = mymin(mymin(current_line->x1, prev_line->x1), mymin(current_line->x2, prev_line->x2));
+                x2 = mymax(mymax(current_line->x1, prev_line->x1), mymax(current_line->x2, prev_line->x2));
+                y1 = mymin(mymin(current_line->y1, prev_line->y1), mymin(current_line->y2, prev_line->y2));
+                y2 = mymax(mymax(current_line->y1, prev_line->y1), mymax(current_line->y2, prev_line->y2));
             }
             
-            //if(merged_flag != 1)
-             //   iter++;
+            // create a new line
+            line_to_insert = new myline(x1, x2, y1, y2);
         }
-        int sp = 0;
-    
+        
+        
+        // delete the two lines and insert a new one
+        all_lines_to_merge.erase(iterator_prev);
+        all_lines_to_merge.insert(iter, line_to_insert);
+        ++merged_count;
+        
+    }
     
     return merged_count;
     
@@ -822,24 +837,48 @@ void handleKeypressa(unsigned char key, int x, int y) {
 
 int main(int argc, char** argv){
     
-//    std::list<int> lp;
-//    std::list<int>::iterator iter = lp.begin();
+//        std::vector<int> lp;
+//        std::vector<int>::iterator iter = lp.begin();
 //    
-//    lp.push_back(5);
-//    lp.push_back( 6);
-//    lp.push_back( 7);
-//    lp.push_back( 8);
+//        lp.push_back(5);
+//        lp.push_back( 6);
+//        lp.push_back( 7);
+//        lp.push_back( 8);
+//        lp.push_back( 9);
+//        lp.push_back( 10);
 //    
-//    iter  = lp.begin();
+//    
+//        iter  = lp.begin();
+//        iter++;
+//    
+//        lp.erase(iter+3);
+//        lp.insert(iter, 100);
+//    
+//        printf("%d \n", *iter);
+//        iter++;
+//        printf("%d \n", *iter);
+//        iter++;
+//        printf("%d \n", *iter);
+//        iter++;
+//        printf("%d \n", *iter);
+//        iter++;
 //    printf("%d \n", *iter);
-//    iter  = lp.erase(iter);
+//    iter++;
+//    if(iter == lp.end()){
+//        printf("pranjal");
+//    }
 //    printf("%d \n", *iter);
-//    lp.insert(iter, 10);
-//    lp.insert(iter, 10);
-//    lp.insert(iter, 10);
+//    iter++;
 //    printf("%d \n", *iter);
-
-        Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
+//    iter++;
+//    printf("%d \n", *iter);
+//    iter++;
+    
+    
+    
+    
+    
+    Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
     Mat bw = imga > 128;
     Mat img = bw > 120;
     
@@ -847,13 +886,13 @@ int main(int argc, char** argv){
     bitwise_not(bw, img);
     thinning(img);
     map_slopes = sweepline(img);
-    for(int i=0;i<10;++i){
-        int mer  = mergelines();
-        if(mer < 5)
-            break;
-    }
-    mergelines();
-    
+//    for(int i=0;i<10;++i){
+//        int mer  = mergelines();
+//        if(mer < 5)
+//            break;
+//    }
+//    mergelines();
+//    
     
     int p;
     
@@ -873,7 +912,19 @@ int main(int argc, char** argv){
     glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
     glutDisplayFunc(displayone); // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);
+    glutTimerFunc(25, updatea, 0);
+
     glutMainLoop();           // Enter the event-processing loop
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // i2tuple p1 = i2tuple(1, 1);
     

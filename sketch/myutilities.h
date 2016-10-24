@@ -20,6 +20,7 @@
 #endif
 
 #include <math.h>
+#define IMG_SCALE 5.0
 
 class mypoint{
 public:
