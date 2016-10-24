@@ -742,7 +742,7 @@ int mergelines(int force){
         
         // delete the two lines and insert a new one
         all_lines_to_merge.erase(iterator_prev);
-        all_lines_to_merge.insert(iter, 0, line_to_insert);
+        all_lines_to_merge.push_back(line_to_insert);
         ++merged_count;
         
     }
