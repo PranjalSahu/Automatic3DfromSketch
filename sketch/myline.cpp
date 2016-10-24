@@ -124,36 +124,22 @@ float myline::get_distance(const myline *ml) const {
     }
     // when one is line and other is point
     else if(x2 == infvalue){
-        int x_1 = ml->x1;
-        int x_2 = ml->x2;
-        int y_1 = ml->y1;
-        int y_2 = ml->y2;
-        int x_0 = x1;
-        int y_0 = y1;
-        float dist = abs((y_2-y_1)*x_0-(x_2-x_1)*y_0+x_2*y_1-y_2*x_1)/sqrt((y_2-y_1)*(y_2-y_1)+(x_2-x_1)*(x_2-x_1));
-        return dist;
-        
+        float a = get_point_distance(x1, y1, ml->x1, ml->y1);
+        float b = get_point_distance(x1, y1, ml->x2, ml->y2);
+        return mymin(a, b);
     }
     else if(ml->x2== infvalue){
-        int x_1 = x1;
-        int x_2 = x2;
-        int y_1 = y1;
-        int y_2 = y2;
-        int x_0 = ml->x1;
-        int y_0 = ml->y1;
-        float dist = abs((y_2-y_1)*x_0-(x_2-x_1)*y_0+x_2*y_1-y_2*x_1)/sqrt((y_2-y_1)*(y_2-y_1)+(x_2-x_1)*(x_2-x_1));
-        return dist;
+        float a = get_point_distance(x1, y1, ml->x1, ml->y1);
+        float b = get_point_distance(x2, y2, ml->x1, ml->y1);
+        return mymin(a, b);
     }
     // when both are line segments
     else{
-        int x_1 = x1;
-        int x_2 = x2;
-        int y_1 = y1;
-        int y_2 = y2;
-        int x_0 = ml->x1;
-        int y_0 = ml->y1;
-        float dist = abs((y_2-y_1)*x_0-(x_2-x_1)*y_0+x_2*y_1-y_2*x_1)/sqrt((y_2-y_1)*(y_2-y_1)+(x_2-x_1)*(x_2-x_1));
-        return dist;
+        float a = get_point_distance(x1, y1, ml->x1, ml->y1);
+        float b = get_point_distance(x1, y1, ml->x2, ml->y2);
+        float c = get_point_distance(x2, y2, ml->x1, ml->y1);
+        float d = get_point_distance(x2, y2, ml->x2, ml->y2);
+        return mymin(mymin(a, b), mymin(c, d));
     }
     
     return 1000;
