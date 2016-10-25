@@ -11,9 +11,13 @@
 
 #define infslope 10000000
 #define infvalue 10000000
-#define MY_EPS   0.00001
+#define MY_EPS   0.001
 #define SLOPE_DIFFERENCE 0.01
-#define DISTANCE_DIFFERENCE 1.1
+#define DISTANCE_DIFFERENCE 1
+#define SLOPE_ITER_DIFF 1
+#define HARRIS_THRESH 130
+#define MERGE_POINT_THRESH 4.0        # threshold for merging points when
+
 
 #include <opencv2/opencv.hpp>
 

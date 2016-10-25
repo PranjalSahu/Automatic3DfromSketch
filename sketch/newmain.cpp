@@ -1,15 +1,12 @@
 /*
  * PRANJAL SAHU
- * 09CS1036
- * Graphics Assignment 2
  *
- * NOTE: I have used plain P3 format of .ppm images
- * Two sample images are also attached in the submission
  *
  *
  * Refer
  * 1. http://felix.abecassis.me/2011/09/opencv-morphological-skeleton/
  * 2. https://web.archive.org/web/20160322113207/http://opencv-code.com/quick-tips/implementation-of-thinning-algorithm-in-opencv/
+ * 3. http://opencvexamples.blogspot.com/2013/10/harris-corner-detection.html
  * */
 
 #ifdef WIN32
@@ -52,6 +49,7 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include "myutilities.h"
 
 using namespace cv;
@@ -84,6 +82,9 @@ int polytype  = 0;		// 1 means y polygon and 2 means star polygon
 
 char etext[100];
 
+Mat imga, bw, img;
+Mat dst_norm_scaled;
+
 class mypointa{
 public:
     int x;
@@ -115,6 +116,10 @@ typedef std::tuple<int,int> i2tuple;
 std::map<i2tuple, myline*> all_lines;
 std::map<i2tuple, int> map_slopes;
 std::vector<myline*> all_lines_to_merge;
+std::vector<myline*> all_lines_created;
+vector<i2tuple> points_vector;
+vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
+
 
 
 #define PI 3.14159265
@@ -176,121 +181,11 @@ void drawpoint(int x, int y, int color){
     glutSwapBuffers();
 }
 
-void getminmaxforboundingbox(){
-    int i;
-    minpx = 100000;
-    minpy = 100000;
-    maxpx = -1;
-    maxpy = -1;
-    for(i=0;i<polysize;++i){			// getting bounding box;
-        if(points[i].x < minpx)
-            minpx = points[i].x;
-        if(points[i].y < minpy)
-            minpy = points[i].y;
-        if(points[i].x > maxpx)
-            maxpx = points[i].x;
-        if(points[i].y > maxpy)
-            maxpy = points[i].y;
-    }
-    return;
-}
-
-int findinvertexset(int x, int y){
-    for(int i=0;i<polysize;++i){
-        if(points[i].x == x && points[i].y == y){
-            if(i==0){
-                if((points[0].y-points[1].y)*(points[0].y-points[polysize-1].y) < 0)		// oppsite side
-                    return 0;
-                else
-                    return 1;
-            }
-            else{
-                if((points[i].y-points[i+1].y)*(points[i].y-points[i-1].y) < 0)		// oppsite side
-                    return 0;
-                else
-                    return 1;
-            }
-        }
-        
-    }
-    return 0;
-}
-
 void display1(void){
     glDrawPixels(newwidth, newheight, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)image2);
     glutSwapBuffers();
 }
 
-void drawrectangle(){
-    newwidth  = px[1]-px[0];
-    newheight = py[1]-py[0];
-    
-    printf("drawing rectangle\n");
-    
-    image2 = (unsigned char *)malloc(sizeof(unsigned char)*(newwidth+1)*(newheight+1)*3);
-    glReadPixels(px[0], w-py[0]-newheight, newwidth, newheight, GL_RGB, GL_UNSIGNED_BYTE, image2);
-    
-    glutInitWindowSize(newwidth+1, newheight+1);
-    win2 = glutCreateWindow("New Image");
-    glutDisplayFunc(display1);
-    cropimage = 0;
-}
-
-void display2(){
-    int size = (int)myq.size();
-    glRasterPos2f(-1,-1);
-    float barwidth = 2/(size+0.0);
-    int i, temp;
-    float start = -1;
-    float pre   = -1;
-    
-    glBegin(GL_LINE_STRIP);
-    for(i=0;i<size;++i){
-        temp = original[myq.front()->y][myq.front()->x][0]+original[myq.front()->y][myq.front()->x][1]+original[myq.front()->y][myq.front()->x][2];
-        glVertex2f(start, pre);
-        glVertex2f(start+barwidth, -1+ 2*temp/768.0);
-        //glRectf(start, -1, start+barwidth, -1+ 2*temp/768.0);
-        start = start+barwidth;
-        pre   = -1+ 2*temp/768.0;
-        myq.pop();
-    }
-    glEnd();
-    glutSwapBuffers();
-}
-
-void showintensity(){
-    if(win2 != -1)
-        glutDestroyWindow(win2);
-    glClearColor(0, 0, 0, 0);
-    glutInitWindowSize(512, 256);					// make window of width = no. of pixels in the queue
-    win2 = glutCreateWindow("Intensity profile");
-    glutDisplayFunc(display2);
-}
-
-void putpixel(){
-    int i, j, k;
-    unsigned char tempimage[w][h][3];
-    glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, tempimage);
-    int size = (int)myq1.size();
-    for(i=0;i<size;++i){
-        tempimage[myq1.front()->y][myq1.front()->x][0] = (unsigned char)255;
-        tempimage[myq1.front()->y][myq1.front()->x][1] = (unsigned char)0;
-        tempimage[myq1.front()->y][myq1.front()->x][2] = (unsigned char)0;
-        myq1.pop();
-    }
-    
-    for(i=0;i<w;++i){
-        for(j=0;j<h;++j){
-            for(k=0;k<3;++k){
-                myimage[i][j][k] = tempimage[i][j][k];
-            }
-        }
-    }
-    glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
-    glutSwapBuffers();
-    showintensity();
-    drawline = 0;
-}
 bool isleft(mypointa *a, mypointa *b, mypointa *c){
     return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
 }
@@ -409,12 +304,55 @@ void get_positive_y(Mat &im){
     return;
 }
 
+void merge_horizontal_and_vertical_lines(){
+    
+}
 
-int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
+
+int get_max_slope(int x, int y, std::vector<i2tuple> points_vector, Mat& im){
     int max_slope = 0;
     int max_count  = -1;
     
-    for(int i=0; i<180; i = i+5){
+    for(int i=0; i<=180; i = i+SLOPE_ITER_DIFF){
+        int theta = i;
+        float m = tan(theta);
+        
+        // get a sweeping line
+        myline *a = new myline(x, y, m);
+        
+        // instead of sloving for all intersection we will try only for a line segment
+        // and therefore look for in neighbour hood of 10 pixels
+        // and therefore only 400 pixel entries to check
+        int count = 0;
+        int startx = mymax(0, x-10);
+        int endx   = mymin(im.rows, x+10);
+        int starty = mymax(0, y-10);
+        int endy   = mymin(im.cols, y+10);
+        
+        for(int i=startx;i<endx;++i){
+            for(int j=starty;j<endy;++j){
+                if(im.at<uchar>(i, j) > 120 && a->checkpointlies(i, j) == 1){
+                    count = count +1;
+                }
+            }
+        }
+        
+        delete(a);
+        
+        if(count >= max_count){
+            max_count = count;
+            max_slope = theta;
+        }
+    }
+    printf("%d, %d\n", x, y);
+    return max_slope;
+}
+
+int get_max_slopea(int x, int y, std::vector<i2tuple> points_vector){
+    int max_slope = 0;
+    int max_count = -1;
+    
+    for(int i=0; i<=180; i = i+SLOPE_ITER_DIFF){
         int theta = i;
         float m = tan(theta);
         
@@ -431,7 +369,7 @@ int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
         
         delete(a);
         
-        if(count > max_count){
+        if(count >= max_count){
             max_count = count;
             max_slope = theta;
         }
@@ -440,15 +378,17 @@ int get_max_slope(int x, int y, std::vector<i2tuple> points_vector){
     return max_slope;
 }
 
+
 // pass the matrix and perform the sweepline algorithm
 std::map<i2tuple, int> sweepline(Mat& im){
-    vector<i2tuple> points_vector;
     
     // get all the non zero pixels
-    for(int i=1; i<im.rows; ++i){
-        for(int j=1;j<im.cols;++j){
-            if(im.at<uchar>(i, j) > 120){
-                points_vector.push_back(i2tuple(i, j));
+    if(points_vector.size() == 0){
+        for(int i=1; i<im.rows; ++i){
+            for(int j=1;j<im.cols;++j){
+                if(im.at<uchar>(i, j) > 120){
+                    points_vector.push_back(i2tuple(i, j));
+                }
             }
         }
     }
@@ -459,7 +399,7 @@ std::map<i2tuple, int> sweepline(Mat& im){
     // for each positive pixel
     for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it) {
         i2tuple pt = *it;
-        all_line_slopes[pt] = get_max_slope(get<0>(pt), get<1>(pt), points_vector);
+        all_line_slopes[pt] = get_max_slope(get<0>(pt), get<1>(pt), points_vector, im);
     }
     
     return all_line_slopes;
@@ -495,9 +435,6 @@ void displayone() {
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
-    // Draw a Red 1x1 Square centered at origin
-    int sizea = map_slopes.size();
-    
     glBegin( GL_POINTS );
     glColor3f(1.0f, 0.0f, 0.0f);
     
@@ -516,13 +453,13 @@ void displayone() {
         if (linet->x2 == infvalue || linet->y2 ==infvalue){
             glBegin( GL_POINTS );
             glColor3f(1.0f, 0.0f, 0.0f);
-            GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
-            GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
+            GLfloat px = (linet->x1-100)*IMG_SCALE/sa_width;
+            GLfloat py = (linet->y1-100)*IMG_SCALE/sa_height;
             glVertex2f(px, py);
             glEnd();
             continue;
         }
-        
+
         glBegin(GL_LINE_LOOP);
         
         int r = 1;//rand()%4;
@@ -538,9 +475,44 @@ void displayone() {
         glVertex2f(qx, qy);
         
         glEnd();
-        
     }
 
+    
+    
+    
+    for(std::vector<i2tuple>::iterator iterator = corner_points.begin(); iterator != corner_points.end(); iterator++) {
+        i2tuple p = *iterator;
+        
+        glBegin( GL_POINTS );
+        glColor3f(0.0f, 1.0f, 0.0f);
+        GLfloat px = (get<0>(p)-100)*IMG_SCALE/sa_width;
+        GLfloat py = (get<1>(p)-100)*IMG_SCALE/sa_height;
+        glVertex2f(px, py);
+        glEnd();
+    }
+
+    
+    
+    
+    //Drawing all_lines_created
+//    for(std::vector<myline*>::iterator iterator = all_lines_created.begin(); iterator != all_lines_created.end(); iterator++) {
+//        myline * linet = *iterator;
+//        glBegin(GL_LINE_LOOP);
+//        
+//        int r = 0;//rand()%4;
+//        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
+//        
+//        GLfloat px = (linet->x1+50)*IMG_SCALE/sa_width;
+//        GLfloat py = (linet->y1+50)*IMG_SCALE/sa_height;
+//        
+//        GLfloat qx = (linet->x2+50)*IMG_SCALE/sa_width;
+//        GLfloat qy = (linet->y2+50)*IMG_SCALE/sa_height;
+//        
+//        glVertex2f(px, py);
+//        glVertex2f(qx, qy);
+//        
+//        glEnd();
+//    }
     
     
     
@@ -576,6 +548,18 @@ struct sortbylength {
         return (o1->get_line_length() - o2->get_line_length() > 0);
     }
 };
+
+// sort from left to right
+struct sortfromlefttoright {
+    bool operator()(const myline* o1, const myline* o2) const {
+        if(o1->x1 == o2->x1){
+            return o1->y1-o2->y1;
+        }
+        else
+            return o1->x1 < o2->x1;
+    }
+};
+
 
 // gives the line which is nearest to the point by doing exhaustive search
 // over all points
@@ -638,6 +622,67 @@ int get_line_to_merge(myline *current_line){
 
 
 
+void fill_merge_lines_data(){
+    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+        i2tuple key = iterator->first;
+        int x = get<0>(key);
+        int y = get<1>(key);
+        int theta   = iterator->second;
+        all_lines_to_merge.push_back(new myline(x, y, mytan(theta)));
+    }
+}
+
+int check_if_already_covered_point(int x, int y){
+    for(std::vector<myline*>::iterator iterator = all_lines_created.begin(); iterator != all_lines_created.end(); iterator++) {
+        myline *l = *iterator;
+        if((x >= l->x1 && x <= l->x2) || (x >= l->x2 && x <= l->x1)){
+            if((y >= l->y1 && y <= l->y2) || (y >= l->y2 && x <= l->y1)){
+                int flag = l->checkpointlies(x, y);
+                if(flag == 1){
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+// merges if the sweep angles are 180 apart
+// we will check if the sum of slope of at two points is approx 180
+void mergelinesa(Mat &im){
+    std::vector<i2tuple>::iterator iterator = points_vector.begin();
+    
+    for(std::vector<i2tuple>::iterator iter = iterator; iter != points_vector.end(); ++iter){
+        i2tuple current_tuple = *iter;
+        int x = get<0>(current_tuple);
+        int y = get<1>(current_tuple);
+        
+        if(check_if_already_covered_point(x, y) == 1){
+            // remove this point and continue
+            iter = points_vector.erase(iter);
+        }
+        
+        int startx = mymax(0, x-10);
+        int endx   = mymin(im.rows, x+10);
+        int starty = mymax(0, y-10);
+        int endy   = mymin(im.cols, y+10);
+        
+        for(int i=startx;i<endx;++i){
+            for(int j=starty;j<endy;++j){
+                float sum_slope = map_slopes[i2tuple(i, j)]+map_slopes[i2tuple(x, y)];
+                //if((sum_slope < 190 && sum_slope > 170 ) || (sum_slope < 10 && sum_slope > 0)){
+                if(((sum_slope  == 0 ) || (sum_slope == 180)) && get_point_distance(x, y, i, j) > 8){
+                    myline *a = new myline(i, x, j, y);
+                    all_lines_created.push_back(a);
+                    //remove_all_lying_points(a, startx, starty, endx, endy);
+                }
+            }
+        }
+    }
+    return;
+}
+
+
 // in iteration merges all the lines present in the all_lines_to_merge
 int mergelines(int force){
     // In first iteration we only merge lines with same x or same y and adjacent to each other
@@ -645,15 +690,11 @@ int mergelines(int force){
     int merged_count = 0;
     merge_iteration++;
     
+    //printf("LINES TO MERGE %d\n", all_lines_to_merge.size());
+    
     if(all_lines_to_merge.size() == 0){
-        for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-            i2tuple key = iterator->first;
-            int x = get<0>(key);
-            int y = get<1>(key);
-            int theta   = iterator->second;
-            all_lines_to_merge.push_back(new myline(x, y, mytan(theta)));
-        }
         checkiter = 0;
+        fill_merge_lines_data();
     }
     
     if(merge_iteration > 1){
@@ -669,7 +710,16 @@ int mergelines(int force){
     
     for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
         myline* current_line = *iter;
-        printf("%d %d %d %d \n", current_line->x1, current_line->y1, current_line->x2, current_line->y2);
+        // only consider small lines when force merge
+        if(force == 1){
+            if(current_line->get_line_length() >= 2){
+                iter++;
+                continue;
+            }
+        }
+        
+        
+        //printf("%d %d %d %d \n", current_line->x1, current_line->y1, current_line->x2, current_line->y2);
         
         // temporary delete current line
         iter  = all_lines_to_merge.erase(iter);
@@ -751,6 +801,61 @@ int mergelines(int force){
     
 }
 
+
+
+
+// merges the points until no change is observed in the point set
+int merge_points(){
+    int count  = 0;
+    printf("size of corner_points START %d\n", corner_points.size());
+    
+    vector<i2tuple> corner_points_temp;
+    vector<tuple<i2tuple, i2tuple>> corner_points_to_merge;
+    
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        i2tuple pt = *it;
+        int px1 = get<0>(pt);
+        int py1 = get<1>(pt);
+        int px2 = -1;
+        int py2 = -1;
+        
+        float mind = 10000;
+        std::vector<i2tuple>::iterator minp = it+1;
+        
+        for(std::vector<i2tuple>::iterator ita = it+1; ita != corner_points.end(); ++ita){
+            i2tuple pta = *ita;
+            int pxa = get<0>(pta);
+            int pya = get<1>(pta);
+            
+            if(px1 == pxa && py1 == pya){
+                continue;
+            }
+            
+            int flag = 0;
+            float d = get_point_distance(px1, py1, pxa, pya);
+            if (d < mind){
+                mind = d;
+                minp = ita;
+                px2 = pxa;
+                py2 = pya;
+            }
+        }
+        
+        if(mind < 12.0){
+            // replace the merged point with the new formed point
+            corner_points[minp-corner_points.begin()] = i2tuple((px1+px2)/2, (py1+py2)/2);
+            // erase the current point
+            it = corner_points.erase(it);
+            count  =count+1;
+        }
+        
+    }
+    
+    printf("size of corner_points END %d\n", corner_points.size());
+    return count;
+}
+
+
 //Called when a key is pressed
 void handleKeypressa(unsigned char key, int x, int y) {
     switch (key) {
@@ -760,13 +865,55 @@ void handleKeypressa(unsigned char key, int x, int y) {
         case 'f':
             mergelines(1);
             break;
+        case 'a':
+            mergelinesa(img);
+            break;
+        case 'm':
+            merge_points();
+            break;
         case 27: //Escape key
             exit(0);
     }
 }
 
+// gets the corner points using the harris detector
+// and clubs the points which are nearby into one
+// These points will be used to
+void get_corner_points(Mat &imga){
+    Mat dst, dst_norm;
+    dst = Mat::zeros( imga.size(), CV_32FC1 );
+    
+    cornerHarris( imga, dst, 5, 5, 0.05, BORDER_DEFAULT );
+    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
+    convertScaleAbs( dst_norm, dst_norm_scaled );
+    
+    
+    // store it in corner points
+    for( int j = 0; j < dst_norm.rows ; j++ ){
+        for( int i = 0; i < dst_norm.cols; i++ ){
+            if( (int) dst_norm.at<float>(j,i) > HARRIS_THRESH ){
+                corner_points.push_back(i2tuple(j, i));
+            }
+        }
+    }
+    return;
+}
+
+
 
 int main(int argc, char** argv){
+//            std::vector<i2tuple> lp;
+//            std::vector<i2tuple>::iterator iter = lp.begin();
+//    
+//    lp.push_back(i2tuple(1, 1));
+//    lp.push_back(i2tuple(1, 6));
+//    lp.push_back(i2tuple(1, 8));
+//    lp.push_back(i2tuple(1, 9));
+//    iter = lp.begin();
+//    ++iter;
+//    
+//    lp[iter-lp.begin()] = i2tuple(100,100);
+//    printf("pranal tsting");
     
 //        std::vector<int> lp;
 //        std::vector<int>::iterator iter = lp.begin();
@@ -778,13 +925,36 @@ int main(int argc, char** argv){
 //        lp.push_back( 9);
 //        lp.push_back( 10);
 //    
+//        iter = lp.begin();
 //    
+//        std::vector<int>::iterator itera = iter;
+//        itera = itera+1;
+//    printf("%d ", *itera);
+//        iter = lp.erase(iter);
+//    
+//    printf("%d\n", iter-lp.begin());
+//    printf("%d\n", itera-lp.begin());
+//    printf("%d ", *iter);
+//    printf("%d ", *itera);
+    
 //        iter  = lp.begin();
 //        iter++;
 //    
 //        lp.erase(iter+3);
-//        lp.insert(iter, 100);
+//        lp.erase(iter);
 //    
+//        lp.insert(iter, 100);
+//
+//        iter++;
+//        printf("%d\n", *iter);
+//        iter++;
+//        printf("%d\n", *iter);
+//        iter++;
+//        printf("%d\n", *iter);
+//        iter++;
+//        printf("%d\n", *iter);
+
+//
 //        printf("%d \n", *iter);
 //        iter++;
 //        printf("%d \n", *iter);
@@ -809,47 +979,51 @@ int main(int argc, char** argv){
     
     
     
-    Mat imga = imread("/Users/pranjal/Desktop/img3.png", CV_LOAD_IMAGE_GRAYSCALE);
-    Mat bw = imga > 128;
-    Mat img = bw > 120;
     
+    
+    
+    
+    
+    
+    imga = imread("/Users/pranjal/Desktop/img9.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    bw   = imga > 128;
+    img  = bw > 120;
+    
+    // get corner points using harris detector
+    get_corner_points(imga);
+    
+    while(merge_points() != 0){
+        merge_points();
+    }
     
     bitwise_not(bw, img);
     thinning(img);
-    map_slopes = sweepline(img);
-//    for(int i=0;i<10;++i){
-//        int mer  = mergelines();
-//        if(mer < 5)
-//            break;
+    //map_slopes = sweepline(img);
+
+//    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+//        i2tuple key = iterator->first;
+//        int theta = iterator->second;
+//        printf("(%d, %d)  => %d\n", get<0>(key), get<1>(key), theta);
 //    }
-//    mergelines();
 //    
+//    
+//    glutInit(&argc, argv);                 // Initialize GLUT
+//    glutInitWindowSize(sa_width, sa_height);
+//
+//    
+//    glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
+//    //glutInitWindowSize(320, 320);         // Set the window's initial width & height
+//    glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
+//    glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
+//    glutKeyboardFunc(handleKeypressa);
+//    glutTimerFunc(25, updatea, 0);
+//
+//    glutMainLoop();           // Enter the event-processing loop
     
-    
-    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-        i2tuple key = iterator->first;
-        int theta = iterator->second;
-        printf("(%d, %d)  => %d\n", get<0>(key), get<1>(key), theta);
-    }
-    
-    
-    glutInit(&argc, argv);                 // Initialize GLUT
-    glutInitWindowSize(sa_width, sa_height);
 
     
-    glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
-    //glutInitWindowSize(320, 320);   // Set the window's initial width & height
-    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
-    glutDisplayFunc(displayone); // Register display callback handler for window re-paint
-    glutKeyboardFunc(handleKeypressa);
-    glutTimerFunc(25, updatea, 0);
-
-    glutMainLoop();           // Enter the event-processing loop
     
-    
-    
-    
-    
+//
     
     
     
@@ -874,6 +1048,31 @@ int main(int argc, char** argv){
 //    
 //    cvWaitKey(0);
 //    cvDestroyWindow("Example1");
+    
+    
+    
+    
+    Mat dst, dst_norm;
+    dst = Mat::zeros( imga.size(), CV_32FC1 );
+    
+    cornerHarris( imga, dst, 5, 5, 0.05, BORDER_DEFAULT );
+    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
+    convertScaleAbs( dst_norm, dst_norm_scaled );
+    
+    
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        i2tuple pt = *it;
+        int i = get<0>(pt);
+        int j = get<1>(pt);
+        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
+    }
+    
+    
+    // Showing the result
+    namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
+    imshow( "corners_window", dst_norm_scaled );
+    waitKey(0);
+
     return 0;
 }
 #endif
