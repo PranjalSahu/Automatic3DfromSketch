@@ -17,7 +17,7 @@
 #define SLOPE_ITER_DIFF 1
 #define HARRIS_THRESH 130
 #define MERGE_POINT_THRESH 4.0        # threshold for merging points when
-
+#define PERPENDICULAR_THRESH 1
 
 #include <opencv2/opencv.hpp>
 #include "myutilities.h"
@@ -36,6 +36,7 @@ public:
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
     float get_perpendicular_distance(i2tuple a);
+    int check_within_line_segment(i2tuple a);
     float get_distance(const myline *ml) const;
     float get_line_length() const;
     

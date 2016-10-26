@@ -106,7 +106,7 @@ std::vector<i2tuple>  myline::pointliecount(std::vector<i2tuple> points_vector){
         int x = std::get<0>(pt);
         int y = std::get<1>(pt);
         
-        if ( this->get_perpendicular_distance(pt) <= 4){
+        if ( this->get_perpendicular_distance(pt) <= 4 && this->check_within_line_segment(pt) == 1){
             lying_count = lying_count+1;
             lying_vector.push_back(i2tuple(x, y));
         }
@@ -157,7 +157,8 @@ float myline::get_line_length() const{
     if(x2 == infvalue)
         return 1;
     else{
-        return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        float dist = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        return dist;
     }
 }
 
@@ -169,6 +170,25 @@ float myline::get_perpendicular_distance(i2tuple a){
     float dist = abs((y2-y1)*x_0-(x2-x1)*y_0+x2*y1-y2*x1)/sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));
     return dist;
 }
+
+// only call when line's both points are known
+// checks if the point's x and y are within this line segment
+int myline::check_within_line_segment(i2tuple a){
+    int x_0 = std::get<0>(a);
+    int y_0 = std::get<1>(a);
+    int mx1 = mymin(x1, x2);
+    int my1 = mymin(y1, y2);
+    int mx2 = mymax(x1, x2);
+    int my2 = mymax(y1, y2);
+    
+    if(x_0 >= mx1-PERPENDICULAR_THRESH && x_0 <= mx2+PERPENDICULAR_THRESH && y_0 >= my1-PERPENDICULAR_THRESH && y_0 <= my2+PERPENDICULAR_THRESH){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
 
 
 float myline::get_distance(const myline *ml) const {

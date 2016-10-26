@@ -1095,6 +1095,8 @@ int main(int argc, char** argv){
     
     std::vector<i2tuple> pp = ml->pointliecount(points_vector);
     
+    printf("SIZE OF POINT VECTOR IS %d LENGTH OF LINE IS %f \n", pp.size(), ml->get_line_length());
+    
     for(std::vector<i2tuple>::iterator it = pp.begin(); it != pp.end(); ++it){
         i2tuple pt = *it;
         int i = get<0>(pt);
