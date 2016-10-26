@@ -112,7 +112,6 @@ mypointa::mypointa(){
 
 
 // 2d hash for storing lines at each pixel
-typedef std::tuple<int,int> i2tuple;
 std::map<i2tuple, myline*> all_lines;
 std::map<i2tuple, int> map_slopes;
 std::vector<myline*> all_lines_to_merge;
@@ -362,7 +361,7 @@ int get_max_slopea(int x, int y, std::vector<i2tuple> points_vector){
         int count = 0;
         for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it){
             i2tuple pt = *it;
-            if ( a->checkpointlies(get<0>(pt), get<1>(pt)) == 1){
+            if ( a->checkpointlies(std::get<0>(pt), std::get<1>(pt)) == 1){
                 count = count+1;
             }
         }
@@ -378,10 +377,8 @@ int get_max_slopea(int x, int y, std::vector<i2tuple> points_vector){
     return max_slope;
 }
 
-
-// pass the matrix and perform the sweepline algorithm
-std::map<i2tuple, int> sweepline(Mat& im){
-    
+// fills the points_vector
+void fill_points_vector(Mat& im){
     // get all the non zero pixels
     if(points_vector.size() == 0){
         for(int i=1; i<im.rows; ++i){
@@ -392,6 +389,14 @@ std::map<i2tuple, int> sweepline(Mat& im){
             }
         }
     }
+    
+    return;
+}
+
+// pass the matrix and perform the sweepline algorithm
+std::map<i2tuple, int> sweepline(Mat& im){
+    
+    fill_points_vector(im);
     
     // stores the slopes for each pixel
     std::map<i2tuple, int> all_line_slopes;
@@ -900,6 +905,12 @@ void get_corner_points(Mat &imga){
 }
 
 
+void plotpoint(i2tuple pt){
+    int i = get<0>(pt);
+    int j = get<1>(pt);
+    circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
+    return;
+}
 
 int main(int argc, char** argv){
 //            std::vector<i2tuple> lp;
@@ -1064,9 +1075,33 @@ int main(int argc, char** argv){
         i2tuple pt = *it;
         int i = get<0>(pt);
         int j = get<1>(pt);
-        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
+        //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
+        printf("(%d, %d)\n", i, j);
     }
+
+    //        i2tuple pt = *it;
+    //        int i = get<0>(pt);
+    //        int j = get<1>(pt);
+
     
+    myline *ml = new myline(corner_points[18], corner_points[19]);
+    printf("slope is %f x1 = %d, y1 = %d x2 = %d y2 = %d\n", ml->m, ml->x1, ml->y1, ml->x2, ml->y2);
+    plotpoint(corner_points[18]);
+    plotpoint(corner_points[19]);
+    
+    fill_points_vector(img);
+    
+    //printf("COUNT OF POINT LYING %d\n", ml->pointliecount(points_vector));
+    
+    std::vector<i2tuple> pp = ml->pointliecount(points_vector);
+    
+    for(std::vector<i2tuple>::iterator it = pp.begin(); it != pp.end(); ++it){
+        i2tuple pt = *it;
+        int i = get<0>(pt);
+        int j = get<1>(pt);
+        circle( dst_norm_scaled, Point( j, i ), 2,  Scalar(0, 255, 0), 2, 8, 0 );
+        //printf("(%d, %d)\n", i, j);
+    }
     
     // Showing the result
     namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );

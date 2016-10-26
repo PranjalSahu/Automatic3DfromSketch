@@ -13,9 +13,26 @@
 #include "myline.h"
 #include <math.h>
 #include "myutilities.h"
+#include <opencv2/opencv.hpp>
+#include <vector>
 
 
 
+myline::myline(i2tuple a, i2tuple b){
+    x1 = std::get<0>(a);
+    y1 = std::get<1>(a);
+    x2 = std::get<0>(b);
+    y2 = std::get<1>(b);
+    
+    if (x1 == x2){
+        m = infslope;
+    }
+    else{
+        printf("debug message  is %d %d %d %d\n", x1, y1,  x2, y2);
+        m = (y2-y1)*1.0/(x2-x1);
+    }
+    printf("slope is a %f\n", m);
+}
 
 myline::myline(int a,int b, float ma){
     x1 = a;
@@ -51,7 +68,7 @@ myline::myline(int a1, int b1, int c1, int d1){
         m = infslope;
     }
     else{
-        m = (y2-y1)/(x2-x1);
+        m = (y2-y1)*1.0/(x2-x1);
     }
 }
 
@@ -66,17 +83,38 @@ int myline::checkpointlies(int x, int y){
         }
     }
     else{
-    // line equation in point slope form
-    float lhs = y-y1;
-    float rhs = m*(x-x1);
-    
-    if(lhs-rhs < MY_EPS)
-        return 1;
-    else
-        return 0;
+        // line equation in point slope form
+        float lhs = y-y1;
+        float rhs = m*(x-x1);
+        
+        if(abs(lhs-rhs) < MY_EPS)
+            return 1;
+        else
+            return 0;
     }
     return 0;
 }
+
+
+// returns the count of point lying on this line segment
+std::vector<i2tuple>  myline::pointliecount(std::vector<i2tuple> points_vector){
+    int lying_count = 0;
+    std::vector<i2tuple> lying_vector;
+    
+    for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it){
+        i2tuple pt = *it;
+        int x = std::get<0>(pt);
+        int y = std::get<1>(pt);
+        
+        if ( this->get_perpendicular_distance(pt) <= 4){
+            lying_count = lying_count+1;
+            lying_vector.push_back(i2tuple(x, y));
+        }
+    }
+    
+    return lying_vector;
+}
+
 
 int myabs(int a){
     return (a > 0 ? a : -1*a);
@@ -122,6 +160,16 @@ float myline::get_line_length() const{
         return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
     }
 }
+
+// only call when line's both points are known
+float myline::get_perpendicular_distance(i2tuple a){
+    int x_0 = std::get<0>(a);
+    int y_0 = std::get<1>(a);
+    
+    float dist = abs((y2-y1)*x_0-(x2-x1)*y_0+x2*y1-y2*x1)/sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));
+    return dist;
+}
+
 
 float myline::get_distance(const myline *ml) const {
     // when both are just points

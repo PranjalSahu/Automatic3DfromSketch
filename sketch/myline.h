@@ -20,7 +20,7 @@
 
 
 #include <opencv2/opencv.hpp>
-
+#include "myutilities.h"
 
 class myline{
 public:
@@ -31,12 +31,15 @@ public:
     float m; // slope
     
     int checkpointlies(int a, int b);
+    std::vector<i2tuple> pointliecount(std::vector<i2tuple> points_vector);
     void mergelines(myline *t);
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
+    float get_perpendicular_distance(i2tuple a);
     float get_distance(const myline *ml) const;
     float get_line_length() const;
-        
+    
+    myline(i2tuple a, i2tuple b);
     myline(int a, int b, float m);
     myline(myline *t);
     myline(int a1, int b1, int c1, int d1);

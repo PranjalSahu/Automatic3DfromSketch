@@ -20,7 +20,14 @@
 #endif
 
 #include <math.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
+
+
 #define IMG_SCALE 5.0
+
+typedef std::tuple<int,int> i2tuple;
 
 class mypoint{
 public:
