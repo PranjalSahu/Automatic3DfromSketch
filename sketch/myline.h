@@ -15,10 +15,10 @@
 #define SLOPE_DIFFERENCE 0.01
 #define DISTANCE_DIFFERENCE 1
 #define SLOPE_ITER_DIFF 1
-#define HARRIS_THRESH 130
+#define HARRIS_THRESH 80
 #define MERGE_POINT_THRESH 4.0        # threshold for merging points when
-#define PERPENDICULAR_THRESH 2
-#define POINT_PAIR_LYING_THRESH 1
+#define PERPENDICULAR_THRESH 3
+#define POINT_PAIR_LYING_THRESH 0.9
 
 #include <opencv2/opencv.hpp>
 #include "myutilities.h"

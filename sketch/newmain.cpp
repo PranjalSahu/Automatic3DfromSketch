@@ -912,7 +912,7 @@ std::vector<myline*> get_all_valid_lines(){
     
     // generate all line pairs
     for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
-        for(std::vector<i2tuple>::iterator ita = corner_points.begin(); ita != corner_points.end(); ++ita){
+        for(std::vector<i2tuple>::iterator ita = it+1; ita != corner_points.end(); ++ita){
             int x1 = get<0>(*it);
             int y1 = get<1>(*it);
             int x2 = get<0>(*ita);
@@ -928,14 +928,15 @@ std::vector<myline*> get_all_valid_lines(){
     for(std::vector<myline*>::iterator iterator = all_line_pairs.begin(); iterator != all_line_pairs.end();) {
         myline *ml = *iterator;
         std::vector<i2tuple> pp = ml->pointliecount(points_vector);
-        float ratio = pp.size()*1.0/ml->get_line_length();
-        printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
+        float ratio = (pp.size()*1.0)/ml->get_line_length();
+        //printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
         if( ratio < POINT_PAIR_LYING_THRESH){
             iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
-            printf("size after removal is %d\n", all_line_pairs.size());
+            //printf("size after removal is %d\n", all_line_pairs.size());
                                                 // is smaller than the threshold * distance between those two point
         }
         else{
+            printf("lying count %d length is %d ratio is %f\n", pp.size(), ml->get_line_length(), ratio);
             valid_count = valid_count +1;
             iterator++;
         }
@@ -1038,9 +1039,66 @@ int main(int argc, char** argv){
     
     
     
-    imga = imread("/Users/pranjal/Desktop/img9.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imga = imread("/Users/pranjal/Desktop/imgg.png", CV_LOAD_IMAGE_GRAYSCALE);
+    GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
+    
+//    Mat grad_x, grad_y, grad;
+//    Mat abs_grad_x, abs_grad_y;
+//
+//    int ddepth = CV_16S;
+//    int delta = 0;
+//    int scale = 1;
+//
+//    Sobel( imga, grad_x, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT );
+//    convertScaleAbs( grad_x, abs_grad_x );
+//    
+//    /// Gradient Y
+//    //Scharr( src_gray, grad_y, ddepth, 0, 1, scale, delta, BORDER_DEFAULT );
+//    Sobel( imga, grad_y, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT );
+//    convertScaleAbs( grad_y, abs_grad_y );
+//    
+//    /// Total Gradient (approximate)
+//    addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad );
+//    
+//    Mat src, erosion_dst, dilation_dst;
+//    
+//    int erosion_elem = 0;
+//    int erosion_size = 0;
+//    int dilation_elem = 0;
+//    int dilation_size = 1;
+//    int const max_elem = 2;
+//    int const max_kernel_size = 21;
+//    
+//    
     bw   = imga > 128;
     img  = bw > 120;
+//
+//    
+//    int dilation_type;
+//    if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
+//    else if( dilation_elem == 1 ){ dilation_type = MORPH_CROSS; }
+//    else if( dilation_elem == 2) { dilation_type = MORPH_ELLIPSE; }
+//    
+//    Mat element = getStructuringElement( dilation_type,
+//                                        Size( 2*dilation_size + 1, 2*dilation_size+1 ),
+//                                        Point( dilation_size, dilation_size ) );
+//    /// Apply the dilation operation
+//    dilate( bw, dilation_dst, element );
+//    imshow( "Dilation Demo", dilation_dst );
+//    
+//    
+//    
+//    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // get corner points using harris detector
     get_corner_points(imga);
@@ -1051,6 +1109,12 @@ int main(int argc, char** argv){
     
     bitwise_not(bw, img);
     thinning(img);
+    namedWindow( "corners_window_a", CV_WINDOW_AUTOSIZE );
+    
+    
+    
+    //bw = grad > 128;
+    //imshow( "corners_window_a", bw );
     //map_slopes = sweepline(img);
 
 //    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
@@ -1117,7 +1181,7 @@ int main(int argc, char** argv){
         i2tuple pt = *it;
         int i = get<0>(pt);
         int j = get<1>(pt);
-        //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
+        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
         printf("(%d, %d)\n", i, j);
     }
 
@@ -1143,7 +1207,7 @@ int main(int argc, char** argv){
         int y2 = pt->y2;
         line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
         //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
-        //printf("(%d, %d)\n", i, j);
+        printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
     
