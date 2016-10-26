@@ -917,20 +917,31 @@ std::vector<myline*> get_all_valid_lines(){
             int y1 = get<1>(*it);
             int x2 = get<0>(*ita);
             int y2 = get<1>(*ita);
-            all_line_pairs.push_back(new myline(x1, x2, y1, y2));
+            if(!(x1 == x2 && y1 == y2)){
+                all_line_pairs.push_back(new myline(x1, x2, y1, y2));
+            }
         }
     }
     
-    for(std::vector<myline*>::iterator iterator = all_line_pairs.begin(); iterator != all_line_pairs.end(); iterator++) {
+    printf("SIZE OF ALL LINES BEFORE %d\n", all_line_pairs.size());
+    int valid_count = 0;
+    for(std::vector<myline*>::iterator iterator = all_line_pairs.begin(); iterator != all_line_pairs.end();) {
         myline *ml = *iterator;
         std::vector<i2tuple> pp = ml->pointliecount(points_vector);
-        if(pp.size()*1.0/ml->get_line_length() < POINT_PAIR_LYING_THRESH){
-            all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
+        float ratio = pp.size()*1.0/ml->get_line_length();
+        printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
+        if( ratio < POINT_PAIR_LYING_THRESH){
+            iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
+            printf("size after removal is %d\n", all_line_pairs.size());
                                                 // is smaller than the threshold * distance between those two point
+        }
+        else{
+            valid_count = valid_count +1;
+            iterator++;
         }
     }
     
-    printf("SIZE OF ALL LINES %d\n", all_line_pairs.size());
+    printf("SIZE OF ALL LINES AFTER %d valid_count is %d\n", all_line_pairs.size(), valid_count);
     return all_line_pairs;
 }
 
@@ -1122,19 +1133,19 @@ int main(int argc, char** argv){
     
     fill_points_vector(img);
     
-    //printf("COUNT OF POINT LYING %d\n", ml->pointliecount(points_vector));
+    std::vector<myline*> valid_lines = get_all_valid_lines();
     
-    std::vector<i2tuple> pp = ml->pointliecount(points_vector);
-    
-    //printf("SIZE OF POINT VECTOR IS %d LENGTH OF LINE IS %f \n", pp.size(), ml->get_line_length());
-    
-    for(std::vector<i2tuple>::iterator it = pp.begin(); it != pp.end(); ++it){
-        i2tuple pt = *it;
-        int i = get<0>(pt);
-        int j = get<1>(pt);
-        circle( dst_norm_scaled, Point( j, i ), 2,  Scalar(0, 255, 0), 2, 8, 0 );
+    for(std::vector<myline*>::iterator it = valid_lines.begin(); it != valid_lines.end(); ++it){
+        myline* pt = *it;
+        int x1 = pt->x1;
+        int x2 = pt->x2;
+        int y1 = pt->y1;
+        int y2 = pt->y2;
+        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
+        //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
         //printf("(%d, %d)\n", i, j);
     }
+    
     
     // Showing the result
     namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );

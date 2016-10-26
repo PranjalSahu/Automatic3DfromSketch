@@ -106,7 +106,7 @@ std::vector<i2tuple>  myline::pointliecount(std::vector<i2tuple> points_vector){
         int x = std::get<0>(pt);
         int y = std::get<1>(pt);
         
-        if ( this->get_perpendicular_distance(pt) <= 4 && this->check_within_line_segment(pt) == 1){
+        if ( this->get_perpendicular_distance(pt) <= 6 && this->check_within_line_segment(pt) == 1){
             lying_count = lying_count+1;
             lying_vector.push_back(i2tuple(x, y));
         }
