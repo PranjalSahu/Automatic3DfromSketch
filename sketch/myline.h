@@ -18,6 +18,7 @@
 #define HARRIS_THRESH 130
 #define MERGE_POINT_THRESH 4.0        # threshold for merging points when
 #define PERPENDICULAR_THRESH 1
+#define POINT_PAIR_LYING_THRESH 0.9
 
 #include <opencv2/opencv.hpp>
 #include "myutilities.h"
