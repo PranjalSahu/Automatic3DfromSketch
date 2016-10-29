@@ -34,6 +34,8 @@ public:
     
     float m; // slope
     
+    bool is_equal_to(myline *);
+    bool is_reverse_of(myline *);
     int checkpointlies(int a, int b);
     std::vector<i2tuple> pointliecount(std::vector<i2tuple> points_vector);
     void mergelines(myline *t);
@@ -43,6 +45,7 @@ public:
     int check_within_line_segment(i2tuple a);
     float get_distance(const myline *ml) const;
     float get_line_length() const;
+    myline *get_reverse_line(std::vector<myline*> all_lines);
     
     myline(i2tuple a, i2tuple b);
     myline(int a, int b, float m);
@@ -54,7 +57,7 @@ public:
 
 
 float triangle_area(myline *first, myline *second);
-int ccw(myline *first, myline *second);
+bool ccw(myline *first, myline *second);
 
 
 

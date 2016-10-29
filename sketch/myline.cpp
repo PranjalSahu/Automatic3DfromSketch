@@ -226,6 +226,29 @@ int myline::get_intersection_count(cv::Mat &im){
 }
 
 
+// checks if both lines are same
+bool myline::is_equal_to(myline *a){
+    return (a->x1 == this->x1 && a->x2 == this->x2 && a->y1 == this->y1 && a->y2 == this->y2);
+}
+
+
+// checks if both lines are reverse of each other
+bool myline::is_reverse_of(myline *a){
+    return (a->x1 == this->x2 && a->x2 == this->x1 && a->y1 == this->y2 && a->y2 == this->y1);
+}
+
+
+// returns the reverse line out of all lines present for the current present
+myline *myline::get_reverse_line(std::vector<myline*> all_lines){
+    for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
+        myline *a = *iter;
+        if(this->is_reverse_of(a)){
+            return a;
+        }
+    }
+    return NULL;
+}
+
 
 // returns the area of triangle formed by two lines
 // end of first line and start of second line should be same
@@ -234,10 +257,11 @@ float triangle_area(myline *first, myline *second){
 }
 
 // Returns 1 if the lines first and second are in a counterclockwise order
-int ccw(myline *first, myline *second){
+bool ccw(myline *first, myline *second){
     int area = triangle_area(first, second);
     return (area > 0);
 }
+
 
 
 #endif

@@ -497,7 +497,7 @@ std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> 
     for(std::vector<myline*>::iterator iter = all_lines_to_check.begin(); iter != all_lines_to_check.end(); iter++){
         myline* a = *iter;
         // check if both lines are not same and check if either end of a is same as end of line a
-        if(!(a->x1 == start->x1 && a->x2 == start->x2 && a->y1 == start->y1 && a->y2 == start->y2) && !(a->x1 == start->x2 && a->x2 == start->x1 && a->y1 == start->y2 && a->y2 == start->y1) && (a->x1 == start->x2 && a->y1 == start->y2)){
+        if(!a->is_equal_to(start) && !a->is_reverse_of(start) && (a->x1 == start->x2 && a->y1 == start->y2)){
             adjacent_lines.push_back(a);
         }
     }
@@ -516,7 +516,7 @@ myline* get_next_line(myline *first){
     // get list of all clockwise and counter clock wise lines
     for(std::vector<myline*>::iterator iter = adjacent_lines.begin(); iter != adjacent_lines.end(); iter++){
         myline *second = *iter;
-        if(ccw(first, second) == 1){
+        if(ccw(first, second)){
             ccw_lines.push_back(second);
         }else{
             cw_lines.push_back(second);
@@ -530,6 +530,9 @@ myline* get_next_line(myline *first){
     else if(ccw_lines.size() > 1){
         std::sort(ccw_lines.begin(), ccw_lines.end(), sortbyangledesc(first));
         return ccw_lines[0];
+    }
+    else if (cw_lines.size() == 1){
+        return cw_lines[0];
     }
     else{
         std::sort(cw_lines.begin(), cw_lines.end(), sortbyangleasc(first));
@@ -558,10 +561,20 @@ void displayone() {
     //plot_lines(all_lines_to_merge);
     
     std::vector<myline*> test;
-    myline * nl = get_next_line(valid_lines[5]);
+    myline * start = valid_lines[5]->get_reverse_line(valid_lines);
+    test.push_back(start);
+    myline *sa = start;
     
-    test.push_back(valid_lines[5]);
-    test.push_back(nl);
+    while(1){
+        myline * nl = get_next_line(sa);
+        if(nl->is_equal_to(start)){
+            break;
+        }
+        else{
+            test.push_back(nl);
+        }
+        sa = nl;
+    }
     
     plot_lines(test);
     //plot_lines(valid_lines);
@@ -1199,7 +1212,6 @@ int main(int argc, char** argv){
     fill_points_vector(img);
     
     valid_lines = get_all_valid_lines();
-    valid_lines = get_reverse_lines(valid_lines);
     
     myfile << valid_lines.size();
     myfile << "\n";
