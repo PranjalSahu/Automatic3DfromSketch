@@ -85,31 +85,6 @@ char etext[100];
 Mat imga, bw, img;
 Mat dst_norm_scaled;
 
-class mypointa{
-public:
-    int x;
-    int y;
-    mypointa(int a, int b);
-    mypointa(mypointa *t);
-    mypointa();
-};
-mypointa starmean  = new mypointa(0, 0);		// star polygon mean coordinate
-// also for convex hull
-
-mypointa::mypointa(int a,int b){
-    x = a;
-    y = b;
-}
-mypointa::mypointa(mypointa *t){
-    x = t->x;
-    y = t->y;
-}
-mypointa::mypointa(){
-    x = 0;
-    y = 0;
-}
-
-
 
 // 2d hash for storing lines at each pixel
 std::map<i2tuple, myline*> all_lines;
@@ -118,24 +93,16 @@ std::vector<myline*> all_lines_to_merge;
 std::vector<myline*> all_lines_created;
 vector<i2tuple> points_vector;
 vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
-
+std::vector<myline*> valid_lines;   // all the valid lines finally obtained
 
 
 #define PI 3.14159265
-
-
-std::list<mypointa*> poly1;			// for storing the points of polygon
-std::list<mypointa*> poly2;
-std::list<mypointa*> convexpoly;		// for storing the points of convex polygon
-std::list<mypointa*> maskpoly;		// final list of points which are within the polygon
 
 int minpx = 100000;					// for polygon bounding box
 int minpy = 100000;
 int maxpx = -1;
 int maxpy = -1;
 
-std::queue<mypointa*> myq;
-std::queue<mypointa*> myq1;
 
 int win1;
 int win2 = -1;
@@ -154,74 +121,21 @@ unsigned char formaskpoly[MAXSIZE][MAXSIZE][3];			// for storing the inside pixe
 int newwidth, newheight;
 
 int polysize;						// for storing the size of the polygon
-mypointa points[MAXSIZE];
 std::queue<int> p1;					// for intersection points x coordinate
 
-std::list<int> scanq[1000];			// one queue for each scan line
 
-void myclear(){
-    for(int i=0;i<1000;++i)
-        scanq[i].clear();
-    return;
-}
-
-
-void drawpoint(int x, int y, int color){
-    y = h-y;
-    glPointSize(10);
-    if(color == 1)
-        glColor3f(0, 1, 0);
-    else
-        glColor3f(0, 0, 1);
-    
-    glBegin(GL_POINTS);
-    glVertex2f(-1+(x*2)/(w+0.0),-1+(2*y)/(h+0.0));
-    glEnd();
-    glutSwapBuffers();
-}
-
-void display1(void){
-    glDrawPixels(newwidth, newheight, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)image2);
-    glutSwapBuffers();
-}
-
-bool isleft(mypointa *a, mypointa *b, mypointa *c){
-    return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
-}
-
-bool isequal(mypointa *a, mypointa *b){
-    return (a->x==b->x)&&(a->y==b->y);
-}
-
-void copyit(mypointa *a, mypointa *b){
-    a->x = b->x;
-    a->y = b->y;
-}
-
-void reset(){
-    entertext = 0;
-    cropimage = 0;
-    drawline  = 0;
-    drawpoly  = 0;
-    donepoly  = 0;
-    unsigned char tempimage[w][h][3];    
-    unsigned int a;
-    int i, j;
-    
-    for(i=0;i<w;++i){
-        for(j=0;j<h;++j){
-            tempimage[i][j][0] = original[i][j][0];			
-            tempimage[i][j][1] = original[i][j][1];
-            tempimage[i][j][2] = original[i][j][2];
-            myimage[i][j][0]   = original[i][j][0];
-            myimage[i][j][1]   = original[i][j][1];
-            myimage[i][j][2]   = original[i][j][2];
-        }
-    }	 
-    glRasterPos2f(-1, -1);
-    glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*)tempimage);
-    glutSwapBuffers();
-}
+//bool isleft(mypointa *a, mypointa *b, mypointa *c){
+//    return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
+//}
+//
+//bool isequal(mypointa *a, mypointa *b){
+//    return (a->x==b->x)&&(a->y==b->y);
+//}
+//
+//void copyit(mypointa *a, mypointa *b){
+//    a->x = b->x;
+//    a->y = b->y;
+//}
 
 
 void thinningIteration(cv::Mat& im, int iter)
@@ -433,59 +347,10 @@ void updatea(int value) {
     glutTimerFunc(25, updatea, 0);
 }
 
-
-void displayone() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-    glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
-    
+void plot_points(vector<i2tuple> points_to_plot){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
-    glBegin( GL_POINTS );
-    glColor3f(1.0f, 0.0f, 0.0f);
-    
-    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-        i2tuple key = iterator->first;
-        GLfloat px = get<0>(key)*1.0/sa_width;
-        GLfloat py = get<1>(key)*1.0/sa_height;
-        glVertex2f(px, py);
-    }
-    glEnd();
-    
-    
-    for(std::vector<myline*>::iterator iterator = all_lines_to_merge.begin(); iterator != all_lines_to_merge.end(); iterator++) {
-        myline * linet = *iterator;
-        
-        if (linet->x2 == infvalue || linet->y2 ==infvalue){
-            glBegin( GL_POINTS );
-            glColor3f(1.0f, 0.0f, 0.0f);
-            GLfloat px = (linet->x1-100)*IMG_SCALE/sa_width;
-            GLfloat py = (linet->y1-100)*IMG_SCALE/sa_height;
-            glVertex2f(px, py);
-            glEnd();
-            continue;
-        }
-
-        glBegin(GL_LINE_LOOP);
-        
-        int r = 1;//rand()%4;
-        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
-        
-        GLfloat px = (linet->x1+10)*IMG_SCALE/sa_width;
-        GLfloat py = (linet->y1+10)*IMG_SCALE/sa_height;
-        
-        GLfloat qx = (linet->x2+10)*IMG_SCALE/sa_width;
-        GLfloat qy = (linet->y2+10)*IMG_SCALE/sa_height;
-        
-        glVertex2f(px, py);
-        glVertex2f(qx, qy);
-        
-        glEnd();
-    }
-
-    
-    
-    
-    for(std::vector<i2tuple>::iterator iterator = corner_points.begin(); iterator != corner_points.end(); iterator++) {
+    for(std::vector<i2tuple>::iterator iterator = points_to_plot.begin(); iterator != points_to_plot.end(); iterator++) {
         i2tuple p = *iterator;
         
         glBegin( GL_POINTS );
@@ -495,9 +360,68 @@ void displayone() {
         glVertex2f(px, py);
         glEnd();
     }
+    
+    return;
+}
 
+
+void plot_lines(std::vector<myline*> lines_to_plot){
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
+    for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
+        myline * linet = *iterator;
+        
+        if (linet->x2 == infvalue || linet->y2 ==infvalue){
+            glBegin( GL_POINTS );
+            glColor3f(1.0f, 0.0f, 0.0f);
+            GLfloat px = (linet->y1-100)*IMG_SCALE/sa_width;
+            GLfloat py = (linet->x1-100)*IMG_SCALE/sa_height;
+            glVertex2f(px, py);
+            glEnd();
+            continue;
+        }
+        
+        glBegin(GL_LINE_LOOP);
+        
+        int r = 1;//rand()%4;
+        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
+        
+        GLfloat px = (linet->y1)*IMG_SCALE/sa_width;
+        GLfloat py = (sa_height-linet->x1)*IMG_SCALE/sa_height;
+        
+        GLfloat qx = (linet->y2)*IMG_SCALE/sa_width;
+        GLfloat qy = (sa_height-linet->x2)*IMG_SCALE/sa_height;
+        
+        glVertex2f(px, py);
+        glVertex2f(qx, qy);
+        
+        glEnd();
+    }
     
+    return;
+}
+
+
+void displayone() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+    glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+    
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    
+//    glBegin( GL_POINTS );
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
+//        i2tuple key = iterator->first;
+//        GLfloat px = get<0>(key)*1.0/sa_width;
+//        GLfloat py = get<1>(key)*1.0/sa_height;
+//        glVertex2f(px, py);
+//    }
+//    glEnd();
+    
+    //plot_lines(all_lines_to_merge);
+    plot_lines(valid_lines);
+    plot_points(corner_points);
+
     
     //Drawing all_lines_created
 //    for(std::vector<myline*>::iterator iterator = all_lines_created.begin(); iterator != all_lines_created.end(); iterator++) {
@@ -955,6 +879,11 @@ void plotpoint(i2tuple pt){
 }
 
 int main(int argc, char** argv){
+    ofstream myfile;
+    myfile.open ("/Users/pranjal/Downloads/Graphics/imgg.txt");
+    
+    
+    
 //            std::vector<i2tuple> lp;
 //            std::vector<i2tuple>::iterator iter = lp.begin();
 //    
@@ -1176,11 +1105,16 @@ int main(int argc, char** argv){
     normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
     convertScaleAbs( dst_norm, dst_norm_scaled );
     
+    myfile << corner_points.size();
+    myfile << "\n";
+    
     
     for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
         i2tuple pt = *it;
         int i = get<0>(pt);
         int j = get<1>(pt);
+        myfile << i;  myfile << ",";  myfile << j; myfile << "\n";
+        
         circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
         printf("(%d, %d)\n", i, j);
     }
@@ -1197,7 +1131,10 @@ int main(int argc, char** argv){
     
     fill_points_vector(img);
     
-    std::vector<myline*> valid_lines = get_all_valid_lines();
+    valid_lines = get_all_valid_lines();
+    
+    myfile << valid_lines.size();
+    myfile << "\n";
     
     for(std::vector<myline*>::iterator it = valid_lines.begin(); it != valid_lines.end(); ++it){
         myline* pt = *it;
@@ -1206,9 +1143,13 @@ int main(int argc, char** argv){
         int y1 = pt->y1;
         int y2 = pt->y2;
         line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
+        myfile << x1; myfile << ","; myfile << y1; myfile << ","; myfile << x2; myfile << ","; myfile << y2; myfile << "\n";
         //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
         printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
+    
+    
+    myfile.close();
     
     
     // Showing the result
@@ -1216,6 +1157,29 @@ int main(int argc, char** argv){
     imshow( "corners_window", dst_norm_scaled );
     waitKey(0);
 
+    
+    
+    
+    
+    glutInit(&argc, argv);                 // Initialize GLUT
+    glutInitWindowSize(sa_width, sa_height);
+    glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
+    glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
+    glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
+    glutKeyboardFunc(handleKeypressa);
+    glutTimerFunc(25, updatea, 0);
+    glutMainLoop();                         // Enter the event-processing loop
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     return 0;
 }
 #endif

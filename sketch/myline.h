@@ -19,6 +19,9 @@
 #define MERGE_POINT_THRESH 4.0        # threshold for merging points when
 #define PERPENDICULAR_THRESH 3
 #define POINT_PAIR_LYING_THRESH 0.9
+#define SHOW_CORNER_POINTS 1                    # flag to display points using opengl
+
+
 
 #include <opencv2/opencv.hpp>
 #include "myutilities.h"

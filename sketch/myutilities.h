@@ -25,7 +25,7 @@
 #include <fstream>
 
 
-#define IMG_SCALE 5.0
+#define IMG_SCALE 1.0
 
 typedef std::tuple<int,int> i2tuple;
 
