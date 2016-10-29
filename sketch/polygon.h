@@ -20,7 +20,7 @@ public:
     polygon(std::vector<myline*> lines);
 };
 
-
+std::vector<polygon*> get_all_polygons(std::vector<myline*> all_lines);
 
 
 #endif /* polygon_h */

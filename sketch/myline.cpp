@@ -391,6 +391,8 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
     myline *start = this;
     myline *sa = start;
     
+    polygon_lines.push_back(start);
+    
     while(1){
         myline * nl = get_next_line(sa, valid_lines);
         if(nl->is_equal_to(start)){

@@ -46,6 +46,7 @@
 #include <list>
 #include <math.h>
 #include "myline.h"
+#include "polygon.h"
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -386,7 +387,7 @@ void get_correct_coord(std::vector<myline*> original_lines){
 }
 
 
-void plot_lines(std::vector<myline*> lines_to_plot){
+void plot_lines(std::vector<myline*> lines_to_plot, int color){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
     for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
@@ -404,7 +405,7 @@ void plot_lines(std::vector<myline*> lines_to_plot){
         
         glBegin(GL_LINE_LOOP);
         
-        int r = 1;//rand()%4;
+        int r = color;
         glColor3f(colors[r][0], colors[r][1], colors[r][2]);
         
         GLfloat px = (linet->x1)*IMG_SCALE/sa_width;
@@ -442,25 +443,16 @@ void displayone() {
     
     //plot_lines(all_lines_to_merge);
     
-    std::vector<myline*> test;
-    myline * start = valid_lines[5]->get_reverse_line(valid_lines);
-    test.push_back(start);
-    myline *sa = start;
-    
-    while(1){
-        myline * nl = get_next_line(sa, valid_lines);
-        if(nl->is_equal_to(start)){
-            break;
-        }
-        else{
-            test.push_back(nl);
-        }
-        sa = nl;
+    // get all the polygons by taking each line as starting point
+    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines);
+    int index  = 0;
+    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+        polygon* pl = *iter;
+        plot_lines(pl->lines, index%4);
+        ++index;
     }
     
-    plot_lines(test);
-    //plot_lines(valid_lines);
-    plot_points(corner_points);
+    //plot_points(corner_points);
     
     glFlush();  // Render now
 }
@@ -478,16 +470,6 @@ void handleResize(int w, int h) {
     gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-//struct Comparer : std::binary_function<int,int,bool> {
-//    Comparer( int base ) : m_base( base ) {}
-//    bool operator()( const int c1, const int c1 )
-//    {
-//        return abs(c1-m_base) < c2.arr[m_base];
-//    }
-//private:
-//    int m_base;
-//};
-
 
 class sorter_check {
     int test;
@@ -497,23 +479,6 @@ public:
         return abs(o1-test) < abs(o2-test);
     }
 };
-
-
-//struct sortbycheck {
-//    bool operator()(const int a, const int b) const {
-//        return
-//    }
-//};
-
-
-
-
-//struct sortbyangle {
-//    bool operator()(const myline* o1, const myline* o2) const {
-//        //return 100*(std::abs(o1->m-o2->m))+0.5*(o1->get_distance(o2));
-//        return o1->get_distance(o2);
-//    }
-//};
 
 
 struct sortbyxasc {
@@ -995,18 +960,7 @@ int main(int argc, char** argv){
 //    imshow( "Dilation Demo", dilation_dst );
 //    
 //    
-//    
-//    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+//
     
     // get corner points using harris detector
     get_corner_points(imga);
