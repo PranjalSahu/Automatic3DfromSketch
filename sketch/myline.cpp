@@ -235,7 +235,8 @@ float triangle_area(myline *first, myline *second){
 
 // Returns 1 if the lines first and second are in a counterclockwise order
 int ccw(myline *first, myline *second){
-    return (triangle_area(first, second) > 0);
+    int area = triangle_area(first, second);
+    return (area > 0);
 }
 
 

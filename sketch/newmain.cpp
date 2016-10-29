@@ -497,7 +497,7 @@ std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> 
     for(std::vector<myline*>::iterator iter = all_lines_to_check.begin(); iter != all_lines_to_check.end(); iter++){
         myline* a = *iter;
         // check if both lines are not same and check if either end of a is same as end of line a
-        if(start != a && (a->x1 == start->x2 && a->y1 == start->y2)){
+        if(!(a->x1 == start->x1 && a->x2 == start->x2 && a->y1 == start->y1 && a->y2 == start->y2) && !(a->x1 == start->x2 && a->x2 == start->x1 && a->y1 == start->y2 && a->y2 == start->y1) && (a->x1 == start->x2 && a->y1 == start->y2)){
             adjacent_lines.push_back(a);
         }
     }
@@ -516,10 +516,10 @@ myline* get_next_line(myline *first){
     // get list of all clockwise and counter clock wise lines
     for(std::vector<myline*>::iterator iter = adjacent_lines.begin(); iter != adjacent_lines.end(); iter++){
         myline *second = *iter;
-        if(triangle_area(first, second) == 1){
+        if(ccw(first, second) == 1){
             ccw_lines.push_back(second);
         }else{
-            cw_lines.push_back(first);
+            cw_lines.push_back(second);
         }
     }
     
@@ -528,12 +528,13 @@ myline* get_next_line(myline *first){
         return ccw_lines[0];
     }
     else if(ccw_lines.size() > 1){
-        std::sort(ccw_lines.begin(), ccw_lines.end(), sortbyangleasc(new myline(0, 0, 0, 5)));
+        std::sort(ccw_lines.begin(), ccw_lines.end(), sortbyangledesc(first));
+        return ccw_lines[0];
     }
     else{
-        
+        std::sort(cw_lines.begin(), cw_lines.end(), sortbyangleasc(first));
+        return cw_lines[0];
     }
-    
     
     return NULL;
 }
@@ -555,7 +556,15 @@ void displayone() {
 //    glEnd();
     
     //plot_lines(all_lines_to_merge);
-    plot_lines(valid_lines);
+    
+    std::vector<myline*> test;
+    myline * nl = get_next_line(valid_lines[5]);
+    
+    test.push_back(valid_lines[5]);
+    test.push_back(nl);
+    
+    plot_lines(test);
+    //plot_lines(valid_lines);
     plot_points(corner_points);
     
     glFlush();  // Render now
@@ -976,6 +985,17 @@ void get_corner_points(Mat &imga){
     return;
 }
 
+// returns the dual edges for all lines
+std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
+    std::vector<myline*> reverse_lines;
+    for(std::vector<myline*>::iterator iterator = vl.begin(); iterator != vl.end(); ++iterator) {
+        myline *t = *iterator;
+        reverse_lines.push_back(new myline(t->x2, t->x1, t->y2, t->y1));
+    }
+    return reverse_lines;
+}
+
+
 // this function will be changed later to incorporate sweeping line
 // at present we are only using the (number of points intersected)/(distane between this two points)
 // can be changed later
@@ -1117,23 +1137,6 @@ int main(int argc, char** argv){
 //    }
 //    
 //    
-//    glutInit(&argc, argv);                 // Initialize GLUT
-//    glutInitWindowSize(sa_width, sa_height);
-//
-//    
-//    glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
-//    //glutInitWindowSize(320, 320);         // Set the window's initial width & height
-//    glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
-//    glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
-//    glutKeyboardFunc(handleKeypressa);
-//    glutTimerFunc(25, updatea, 0);
-//
-//    glutMainLoop();           // Enter the event-processing loop
-    
-
-    
-    
-//
     
     
     
@@ -1196,6 +1199,7 @@ int main(int argc, char** argv){
     fill_points_vector(img);
     
     valid_lines = get_all_valid_lines();
+    valid_lines = get_reverse_lines(valid_lines);
     
     myfile << valid_lines.size();
     myfile << "\n";
@@ -1224,6 +1228,8 @@ int main(int argc, char** argv){
     
     
     get_correct_coord(valid_lines);
+    std::vector<myline*> rv = get_reverse_lines(valid_lines);
+    valid_lines.insert(valid_lines.end(), rv.begin(), rv.end());
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
@@ -1234,12 +1240,6 @@ int main(int argc, char** argv){
     glutKeyboardFunc(handleKeypressa);
     glutTimerFunc(25, updatea, 0);
     glutMainLoop();                         // Enter the event-processing loop
-    
-    
-    
-    
-    
-    
     
     
     
