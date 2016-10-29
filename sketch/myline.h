@@ -46,6 +46,8 @@ public:
     float get_distance(const myline *ml) const;
     float get_line_length() const;
     myline *get_reverse_line(std::vector<myline*> all_lines);
+    std::vector<myline*> get_polygon(std::vector<myline*> all_lines);
+
     
     myline(i2tuple a, i2tuple b);
     myline(int a, int b, float m);
@@ -58,7 +60,8 @@ public:
 
 float triangle_area(myline *first, myline *second);
 bool ccw(myline *first, myline *second);
-
+myline* get_next_line(myline *first, std::vector<myline*> valid_lines);
+std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> all_lines_to_check);
 
 
 #endif /* myline_h */

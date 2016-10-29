@@ -59,11 +59,18 @@ bool polygon::is_part_of(std::vector<polygon*> pvector){
 // returns all the polygons by traversing taking each line segment as starting point
 std::vector<polygon*> get_all_polygons(std::vector<myline*> all_lines){
     std::vector<polygon*> all_polygons;
-    
+    // loop for every line and take it as start and get the polygon by traversing over all valid lines
     for(std::vector<myline*>::iterator it = all_lines.begin(); it != all_lines.end(); ++it){
-        myline *a = *it;
+        myline *start = *it;
+        std::vector<myline*> polygon_lines = start->get_polygon(all_lines);
+        polygon* temp = new polygon(polygon_lines);
         
-        
+        // check if this polygon is already covered
+        // if not then insert it into list of polygons
+        if(!temp->is_part_of(all_polygons)){
+            all_polygons.push_back(temp);
+        }
     }
-    return NULL;
+    
+    return all_polygons;
 }

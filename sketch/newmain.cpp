@@ -139,74 +139,6 @@ std::queue<int> p1;					// for intersection points x coordinate
 
 
 
-// ascending
-// sorts the lines by the angle which they make from the base line
-// will be used for getting the next adjacent line
-struct sortbyangleasc : std::binary_function<myline*,myline*,bool> {
-    sortbyangleasc( myline* base ) : m_base( base ) {}
-    
-    float get_angle(const myline* c1, const myline* m_base){
-        int x1 = c1->x2-c1->x1;
-        int y1 = c1->y2-c1->y1;
-        float mod_1 = sqrt(x1*x1+y1*y1);
-        
-        int x3 = m_base->x2-m_base->x1;
-        int y3 = m_base->y2-m_base->y1;
-        float mod_3 = sqrt(x3*x3+y3*y3);
-        
-        int   dot1 = x1*x3+y1*y3;
-        float den1 = mod_1*mod_3;
-        float a1   = acos (dot1/den1) * 180.0 / PI;
-        
-        return a1;
-    }
-    
-    bool operator()( const myline* c1, const myline* c2 )
-    {
-        float a1 = get_angle(c1, m_base);
-        float a2 = get_angle(c2, m_base);
-        // check which angle is more
-        return a1 < a2;
-    }
-private:
-    myline* m_base;
-};
-
-//descending
-// sorts the lines by the angle which they make from the base line
-// will be used for getting the next adjacent line
-struct sortbyangledesc : std::binary_function<myline*,myline*,bool> {
-    sortbyangledesc( myline* base ) : m_base( base ) {}
-    
-    float get_angle(const myline* c1, const myline* m_base){
-        int x1 = c1->x2-c1->x1;
-        int y1 = c1->y2-c1->y1;
-        float mod_1 = sqrt(x1*x1+y1*y1);
-        
-        int x3 = m_base->x2-m_base->x1;
-        int y3 = m_base->y2-m_base->y1;
-        float mod_3 = sqrt(x3*x3+y3*y3);
-        
-        int   dot1 = x1*x3+y1*y3;
-        float den1 = mod_1*mod_3;
-        float a1   = acos (dot1/den1) * 180.0 / PI;
-        
-        return a1;
-    }
-    
-    bool operator()( const myline* c1, const myline* c2 )
-    {
-        float a1 = get_angle(c1, m_base);
-        float a2 = get_angle(c2, m_base);
-        // check which angle is more
-        return a1 > a2;
-    }
-private:
-    myline* m_base;
-};
-
-
-
 void thinningIteration(cv::Mat& im, int iter)
 {
     cv::Mat marker = cv::Mat::zeros(im.size(), CV_8UC1);
@@ -490,57 +422,7 @@ void plot_lines(std::vector<myline*> lines_to_plot){
     return;
 }
 
-// here start is directed
-// and all_lines_to_check is direted as well
-std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> all_lines_to_check){
-    std::vector<myline*> adjacent_lines;
-    for(std::vector<myline*>::iterator iter = all_lines_to_check.begin(); iter != all_lines_to_check.end(); iter++){
-        myline* a = *iter;
-        // check if both lines are not same and check if either end of a is same as end of line a
-        if(!a->is_equal_to(start) && !a->is_reverse_of(start) && (a->x1 == start->x2 && a->y1 == start->y2)){
-            adjacent_lines.push_back(a);
-        }
-    }
-    return adjacent_lines;
-}
 
-
-// for a given line returns the next line to traverse
-myline* get_next_line(myline *first){
-    // get all adjacent lines
-    std::vector<myline*> adjacent_lines = get_all_adjacent_lines(first, valid_lines);
-    
-    std::vector<myline*> ccw_lines; // counter clockwise lines
-    std::vector<myline*> cw_lines;  // clock wise lines
-    
-    // get list of all clockwise and counter clock wise lines
-    for(std::vector<myline*>::iterator iter = adjacent_lines.begin(); iter != adjacent_lines.end(); iter++){
-        myline *second = *iter;
-        if(ccw(first, second)){
-            ccw_lines.push_back(second);
-        }else{
-            cw_lines.push_back(second);
-        }
-    }
-    
-    // only one counter clock wise line
-    if(ccw_lines.size() == 1){
-        return ccw_lines[0];
-    }
-    else if(ccw_lines.size() > 1){
-        std::sort(ccw_lines.begin(), ccw_lines.end(), sortbyangledesc(first));
-        return ccw_lines[0];
-    }
-    else if (cw_lines.size() == 1){
-        return cw_lines[0];
-    }
-    else{
-        std::sort(cw_lines.begin(), cw_lines.end(), sortbyangleasc(first));
-        return cw_lines[0];
-    }
-    
-    return NULL;
-}
 
 void displayone() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -566,7 +448,7 @@ void displayone() {
     myline *sa = start;
     
     while(1){
-        myline * nl = get_next_line(sa);
+        myline * nl = get_next_line(sa, valid_lines);
         if(nl->is_equal_to(start)){
             break;
         }
