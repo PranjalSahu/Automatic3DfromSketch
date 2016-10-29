@@ -15,6 +15,7 @@
 #include "myutilities.h"
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <queue>
 
 
 
@@ -358,6 +359,12 @@ myline* get_next_line(myline *first, std::vector<myline*> valid_lines){
 
 
 
+// returns the area of triangle formed by 3 points lines
+float triangle_area(int x1, int y1, int x2, int y2, int x3, int y3){
+    return (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
+}
+
+
 // returns the area of triangle formed by two lines
 // end of first line and start of second line should be same
 float triangle_area(myline *first, myline *second){
@@ -369,6 +376,13 @@ bool ccw(myline *first, myline *second){
     int area = triangle_area(first, second);
     return (area > 0);
 }
+
+// Returns 1 if the points are in counterclockwise order
+bool ccw(int x1, int y1, int x2, int y2, int x3, int y3){
+    int area = triangle_area(x1, y1, x2, y2, x3, y3);
+    return (area > 0);
+}
+
 
 // here start is directed
 // and all_lines_to_check is direted as well
@@ -383,6 +397,8 @@ std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> 
     }
     return adjacent_lines;
 }
+
+
 
 // get polygon lines by traversing over the lines starting from this line
 std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
@@ -405,6 +421,80 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
     }
     
     return polygon_lines;
+}
+
+
+// checks if the line is an occluding edge or not by checking if all the points are on the right side of this line
+bool myline::check_if_occluding_edge(std::vector<i2tuple> corner_points){
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        i2tuple pt = *it;
+        int x3 = std::get<0>(pt);
+        int y3 = std::get<1>(pt);
+        
+        // return false if any of the point is in counter clockwise order
+        if(ccw(this->x1, this->y1, this->x2, this->y2, x3, y3)){
+            return false;
+        }
+    }
+    return true;
+}
+
+// returns the first occluding edge
+// which will be used to get all the occluding edges
+// which is the starting point for modified huffman labelling
+myline *get_first_occluding_edge(std::vector<myline*> valid_lines, std::vector<i2tuple> corner_points){
+    myline *temp = NULL;
+    for(std::vector<myline*>::iterator iter = valid_lines.begin(); iter != valid_lines.end(); iter++){
+        myline *t = *iter;
+        
+        // return if it is an occluding edge
+        if(t->check_if_occluding_edge(corner_points)){
+            return t;
+        }
+    }
+    return temp;
+}
+
+// returns the huffman label for all edges
+std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, std::vector<myline*> valid_lines_undirected, std::vector<i2tuple> corner_points){
+    
+    // get first occluding edge
+    myline *oe = get_first_occluding_edge(valid_lines_directed, corner_points);
+    
+    // traverse that polygon to get other occluding edges
+    std::vector<myline*> directed_occluding_edges =  oe->get_polygon(valid_lines_directed);
+
+    // iterate over all undirected edges
+    std::vector<myline*> undirected_occluding_edges;
+    for(std::vector<myline*>::iterator iter = directed_occluding_edges.begin(); iter != directed_occluding_edges.end(); iter++){
+        myline *t = *iter;
+        for(std::vector<myline*>::iterator itera = valid_lines_undirected.begin(); itera != valid_lines_undirected.end(); itera++){
+            myline *ta = *itera;
+            if(ta->is_equal_to(t) || ta->is_reverse_of(t)){
+                undirected_occluding_edges.push_back(ta);
+            }
+        }
+    }
+    
+    // FIFO for labelling purpose
+    std::queue<myline *> edges;
+    
+    // insert all edges in FIFO
+    for(std::vector<myline*>::iterator iter = undirected_occluding_edges.begin(); iter != undirected_occluding_edges.end(); iter++){
+        edges.push(*iter);
+    }
+
+//    while(1){
+//        if(edges.size() == 0)
+//            break;
+//        myline *sl = edges.front();
+//        std::vector<myline*> adjacent_lines = get_all_adjacent_lines(sl, valid_lines);
+//
+//        
+//        edges.pop();
+//    }
+    std::vector<int> a;
+    return a;
 }
 
 #endif

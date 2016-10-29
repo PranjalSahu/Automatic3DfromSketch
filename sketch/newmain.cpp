@@ -7,6 +7,7 @@
  * 1. http://felix.abecassis.me/2011/09/opencv-morphological-skeleton/
  * 2. https://web.archive.org/web/20160322113207/http://opencv-code.com/quick-tips/implementation-of-thinning-algorithm-in-opencv/
  * 3. http://opencvexamples.blogspot.com/2013/10/harris-corner-detection.html
+ * 4. Finding faces in a planar embedding of a graph
  * */
 
 #ifdef WIN32
@@ -94,7 +95,8 @@ std::vector<myline*> all_lines_to_merge;
 std::vector<myline*> all_lines_created;
 vector<i2tuple> points_vector;
 vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
-std::vector<myline*> valid_lines;   // all the valid lines finally obtained
+std::vector<myline*> valid_lines_undirected;  // all the valid lines finally obtained
+std::vector<myline*> valid_lines_directed;   // all the valid lines finally obtained
 
 
 #define PI 3.14159265
@@ -128,16 +130,6 @@ std::queue<int> p1;					// for intersection points x coordinate
 //bool isleft(mypointa *a, mypointa *b, mypointa *c){
 //    return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
 //}
-//
-//bool isequal(mypointa *a, mypointa *b){
-//    return (a->x==b->x)&&(a->y==b->y);
-//}
-//
-//void copyit(mypointa *a, mypointa *b){
-//    a->x = b->x;
-//    a->y = b->y;
-//}
-
 
 
 void thinningIteration(cv::Mat& im, int iter)
@@ -386,6 +378,21 @@ void get_correct_coord(std::vector<myline*> original_lines){
     return;
 }
 
+// corrects the coordinate such that x denotes x in both display and array
+// similary y denotes both y in display and array
+// helps in understanding
+std::vector<i2tuple> get_correct_coord(std::vector<i2tuple> original_points){
+    std::vector<i2tuple> temp;
+    
+    for(std::vector<i2tuple>::iterator iterator = original_points.begin(); iterator != original_points.end(); iterator++) {
+        i2tuple mp = *iterator;
+        int x = get<1>(mp);
+        int y = sa_height-get<0>(mp);
+        temp.push_back(i2tuple(x, y));
+    }
+    return temp;
+}
+
 
 void plot_lines(std::vector<myline*> lines_to_plot, int color){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
@@ -444,7 +451,7 @@ void displayone() {
     //plot_lines(all_lines_to_merge);
     
     // get all the polygons by taking each line as starting point
-    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines);
+    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines_directed);
     int index  = 0;
     for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
         polygon* pl = *iter;
@@ -452,6 +459,7 @@ void displayone() {
         ++index;
     }
     
+    get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     //plot_points(corner_points);
     
     glFlush();  // Render now
@@ -1035,10 +1043,6 @@ int main(int argc, char** argv){
         printf("(%d, %d)\n", i, j);
     }
 
-    //        i2tuple pt = *it;
-    //        int i = get<0>(pt);
-    //        int j = get<1>(pt);
-
     
     myline *ml = new myline(corner_points[18], corner_points[19]);
     printf("slope is %f x1 = %d, y1 = %d x2 = %d y2 = %d\n", ml->m, ml->x1, ml->y1, ml->x2, ml->y2);
@@ -1047,12 +1051,12 @@ int main(int argc, char** argv){
     
     fill_points_vector(img);
     
-    valid_lines = get_all_valid_lines();
+    valid_lines_undirected = get_all_valid_lines();
     
-    myfile << valid_lines.size();
+    myfile << valid_lines_undirected.size();
     myfile << "\n";
     
-    for(std::vector<myline*>::iterator it = valid_lines.begin(); it != valid_lines.end(); ++it){
+    for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
         myline* pt = *it;
         int x1 = pt->x1;
         int x2 = pt->x2;
@@ -1064,7 +1068,6 @@ int main(int argc, char** argv){
         printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
-    
     myfile.close();
     
     
@@ -1074,11 +1077,15 @@ int main(int argc, char** argv){
     waitKey(0);
 
     
+    get_correct_coord(valid_lines_undirected);  // remove it later should not be needed in future
+    corner_points = get_correct_coord(corner_points);
     
-    get_correct_coord(valid_lines);
-    std::vector<myline*> rv = get_reverse_lines(valid_lines);
+    std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
+    
+    // add original eges and
     // add the reverse edges for all edges
-    valid_lines.insert(valid_lines.end(), rv.begin(), rv.end());
+    valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
+    valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
@@ -1089,9 +1096,6 @@ int main(int argc, char** argv){
     glutKeyboardFunc(handleKeypressa);
     glutTimerFunc(25, updatea, 0);
     glutMainLoop();                         // Enter the event-processing loop
-    
-    
-    
     
     
     return 0;
