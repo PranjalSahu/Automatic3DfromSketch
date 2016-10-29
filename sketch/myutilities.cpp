@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include "myline.h"
 
 int mymin(int a, int b){
     return (a < b ? a : b);
@@ -29,6 +30,4 @@ float mymax(float a, float b){
 float get_point_distance(int x1, int y1, int x2, int y2){
     return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 }
-
-
 

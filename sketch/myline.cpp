@@ -224,5 +224,20 @@ int myline::get_intersection_count(cv::Mat &im){
     
     return 0;
 }
+
+
+
+// returns the area of triangle formed by two lines
+// end of first line and start of second line should be same
+float triangle_area(myline *first, myline *second){
+    return (first->x2 - first->x1)*(second->y2 - first->y1) - (first->y2 - first->y1)*(second->x2 - first->x1);
+}
+
+// Returns 1 if the lines first and second are in a counterclockwise order
+int ccw(myline *first, myline *second){
+    return (triangle_area(first, second) > 0);
+}
+
+
 #endif
 

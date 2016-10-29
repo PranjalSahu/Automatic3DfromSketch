@@ -53,6 +53,9 @@ public:
 
 
 
+float triangle_area(myline *first, myline *second);
+int ccw(myline *first, myline *second);
+
 
 
 #endif /* myline_h */

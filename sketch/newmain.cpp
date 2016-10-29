@@ -138,6 +138,75 @@ std::queue<int> p1;					// for intersection points x coordinate
 //}
 
 
+
+// ascending
+// sorts the lines by the angle which they make from the base line
+// will be used for getting the next adjacent line
+struct sortbyangleasc : std::binary_function<myline*,myline*,bool> {
+    sortbyangleasc( myline* base ) : m_base( base ) {}
+    
+    float get_angle(const myline* c1, const myline* m_base){
+        int x1 = c1->x2-c1->x1;
+        int y1 = c1->y2-c1->y1;
+        float mod_1 = sqrt(x1*x1+y1*y1);
+        
+        int x3 = m_base->x2-m_base->x1;
+        int y3 = m_base->y2-m_base->y1;
+        float mod_3 = sqrt(x3*x3+y3*y3);
+        
+        int   dot1 = x1*x3+y1*y3;
+        float den1 = mod_1*mod_3;
+        float a1   = acos (dot1/den1) * 180.0 / PI;
+        
+        return a1;
+    }
+    
+    bool operator()( const myline* c1, const myline* c2 )
+    {
+        float a1 = get_angle(c1, m_base);
+        float a2 = get_angle(c2, m_base);
+        // check which angle is more
+        return a1 < a2;
+    }
+private:
+    myline* m_base;
+};
+
+//descending
+// sorts the lines by the angle which they make from the base line
+// will be used for getting the next adjacent line
+struct sortbyangledesc : std::binary_function<myline*,myline*,bool> {
+    sortbyangledesc( myline* base ) : m_base( base ) {}
+    
+    float get_angle(const myline* c1, const myline* m_base){
+        int x1 = c1->x2-c1->x1;
+        int y1 = c1->y2-c1->y1;
+        float mod_1 = sqrt(x1*x1+y1*y1);
+        
+        int x3 = m_base->x2-m_base->x1;
+        int y3 = m_base->y2-m_base->y1;
+        float mod_3 = sqrt(x3*x3+y3*y3);
+        
+        int   dot1 = x1*x3+y1*y3;
+        float den1 = mod_1*mod_3;
+        float a1   = acos (dot1/den1) * 180.0 / PI;
+        
+        return a1;
+    }
+    
+    bool operator()( const myline* c1, const myline* c2 )
+    {
+        float a1 = get_angle(c1, m_base);
+        float a2 = get_angle(c2, m_base);
+        // check which angle is more
+        return a1 > a2;
+    }
+private:
+    myline* m_base;
+};
+
+
+
 void thinningIteration(cv::Mat& im, int iter)
 {
     cv::Mat marker = cv::Mat::zeros(im.size(), CV_8UC1);
@@ -421,6 +490,53 @@ void plot_lines(std::vector<myline*> lines_to_plot){
     return;
 }
 
+// here start is directed
+// and all_lines_to_check is direted as well
+std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> all_lines_to_check){
+    std::vector<myline*> adjacent_lines;
+    for(std::vector<myline*>::iterator iter = all_lines_to_check.begin(); iter != all_lines_to_check.end(); iter++){
+        myline* a = *iter;
+        // check if both lines are not same and check if either end of a is same as end of line a
+        if(start != a && (a->x1 == start->x2 && a->y1 == start->y2)){
+            adjacent_lines.push_back(a);
+        }
+    }
+    return adjacent_lines;
+}
+
+
+// for a given line returns the next line to traverse
+myline* get_next_line(myline *first){
+    // get all adjacent lines
+    std::vector<myline*> adjacent_lines = get_all_adjacent_lines(first, valid_lines);
+    
+    std::vector<myline*> ccw_lines; // counter clockwise lines
+    std::vector<myline*> cw_lines;  // clock wise lines
+    
+    // get list of all clockwise and counter clock wise lines
+    for(std::vector<myline*>::iterator iter = adjacent_lines.begin(); iter != adjacent_lines.end(); iter++){
+        myline *second = *iter;
+        if(triangle_area(first, second) == 1){
+            ccw_lines.push_back(second);
+        }else{
+            cw_lines.push_back(first);
+        }
+    }
+    
+    // only one counter clock wise line
+    if(ccw_lines.size() == 1){
+        return ccw_lines[0];
+    }
+    else if(ccw_lines.size() > 1){
+        std::sort(ccw_lines.begin(), ccw_lines.end(), sortbyangleasc(new myline(0, 0, 0, 5)));
+    }
+    else{
+        
+    }
+    
+    
+    return NULL;
+}
 
 void displayone() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -458,6 +574,42 @@ void handleResize(int w, int h) {
     gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
+//struct Comparer : std::binary_function<int,int,bool> {
+//    Comparer( int base ) : m_base( base ) {}
+//    bool operator()( const int c1, const int c1 )
+//    {
+//        return abs(c1-m_base) < c2.arr[m_base];
+//    }
+//private:
+//    int m_base;
+//};
+
+
+class sorter_check {
+    int test;
+public:
+    sorter_check(int type) : test(type) {}
+    bool operator()(const int o1, const int o2) const {
+        return abs(o1-test) < abs(o2-test);
+    }
+};
+
+
+//struct sortbycheck {
+//    bool operator()(const int a, const int b) const {
+//        return
+//    }
+//};
+
+
+
+
+//struct sortbyangle {
+//    bool operator()(const myline* o1, const myline* o2) const {
+//        //return 100*(std::abs(o1->m-o2->m))+0.5*(o1->get_distance(o2));
+//        return o1->get_distance(o2);
+//    }
+//};
 
 
 struct sortbyxasc {
@@ -877,90 +1029,6 @@ void plotpoint(i2tuple pt){
 int main(int argc, char** argv){
     ofstream myfile;
     myfile.open ("/Users/pranjal/Downloads/Graphics/imgg.txt");
-    
-    
-    
-//            std::vector<i2tuple> lp;
-//            std::vector<i2tuple>::iterator iter = lp.begin();
-//    
-//    lp.push_back(i2tuple(1, 1));
-//    lp.push_back(i2tuple(1, 6));
-//    lp.push_back(i2tuple(1, 8));
-//    lp.push_back(i2tuple(1, 9));
-//    iter = lp.begin();
-//    ++iter;
-//    
-//    lp[iter-lp.begin()] = i2tuple(100,100);
-//    printf("pranal tsting");
-    
-//        std::vector<int> lp;
-//        std::vector<int>::iterator iter = lp.begin();
-//    
-//        lp.push_back(5);
-//        lp.push_back( 6);
-//        lp.push_back( 7);
-//        lp.push_back( 8);
-//        lp.push_back( 9);
-//        lp.push_back( 10);
-//    
-//        iter = lp.begin();
-//    
-//        std::vector<int>::iterator itera = iter;
-//        itera = itera+1;
-//    printf("%d ", *itera);
-//        iter = lp.erase(iter);
-//    
-//    printf("%d\n", iter-lp.begin());
-//    printf("%d\n", itera-lp.begin());
-//    printf("%d ", *iter);
-//    printf("%d ", *itera);
-    
-//        iter  = lp.begin();
-//        iter++;
-//    
-//        lp.erase(iter+3);
-//        lp.erase(iter);
-//    
-//        lp.insert(iter, 100);
-//
-//        iter++;
-//        printf("%d\n", *iter);
-//        iter++;
-//        printf("%d\n", *iter);
-//        iter++;
-//        printf("%d\n", *iter);
-//        iter++;
-//        printf("%d\n", *iter);
-
-//
-//        printf("%d \n", *iter);
-//        iter++;
-//        printf("%d \n", *iter);
-//        iter++;
-//        printf("%d \n", *iter);
-//        iter++;
-//        printf("%d \n", *iter);
-//        iter++;
-//    printf("%d \n", *iter);
-//    iter++;
-//    if(iter == lp.end()){
-//        printf("pranjal");
-//    }
-//    printf("%d \n", *iter);
-//    iter++;
-//    printf("%d \n", *iter);
-//    iter++;
-//    printf("%d \n", *iter);
-//    iter++;
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
