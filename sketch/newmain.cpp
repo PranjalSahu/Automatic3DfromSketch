@@ -364,6 +364,26 @@ void plot_points(vector<i2tuple> points_to_plot){
     return;
 }
 
+// corrects the coordinate such that x denotes x in both display and array
+// similary y denotes both y in display and array
+// helps in understanding
+void get_correct_coord(std::vector<myline*> original_lines){
+    for(std::vector<myline*>::iterator iterator = original_lines.begin(); iterator != original_lines.end(); iterator++) {
+        myline * linet = *iterator;
+        int tp = linet->x1;
+        linet->x1 = linet->y1;
+        linet->y1 = tp;
+        tp = linet->x2;
+        linet->x2 = linet->y2;
+        linet->y2 = tp;
+        
+        linet->y1 = sa_height-linet->y1;
+        linet->y2 = sa_height-linet->y2;
+    }
+    
+    return;
+}
+
 
 void plot_lines(std::vector<myline*> lines_to_plot){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
@@ -386,11 +406,11 @@ void plot_lines(std::vector<myline*> lines_to_plot){
         int r = 1;//rand()%4;
         glColor3f(colors[r][0], colors[r][1], colors[r][2]);
         
-        GLfloat px = (linet->y1)*IMG_SCALE/sa_width;
-        GLfloat py = (sa_height-linet->x1)*IMG_SCALE/sa_height;
+        GLfloat px = (linet->x1)*IMG_SCALE/sa_width;
+        GLfloat py = (linet->y1)*IMG_SCALE/sa_height;
         
-        GLfloat qx = (linet->y2)*IMG_SCALE/sa_width;
-        GLfloat qy = (sa_height-linet->x2)*IMG_SCALE/sa_height;
+        GLfloat qx = (linet->x2)*IMG_SCALE/sa_width;
+        GLfloat qy = (linet->y2)*IMG_SCALE/sa_height;
         
         glVertex2f(px, py);
         glVertex2f(qx, qy);
@@ -421,31 +441,7 @@ void displayone() {
     //plot_lines(all_lines_to_merge);
     plot_lines(valid_lines);
     plot_points(corner_points);
-
     
-    //Drawing all_lines_created
-//    for(std::vector<myline*>::iterator iterator = all_lines_created.begin(); iterator != all_lines_created.end(); iterator++) {
-//        myline * linet = *iterator;
-//        glBegin(GL_LINE_LOOP);
-//        
-//        int r = 0;//rand()%4;
-//        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
-//        
-//        GLfloat px = (linet->x1+50)*IMG_SCALE/sa_width;
-//        GLfloat py = (linet->y1+50)*IMG_SCALE/sa_height;
-//        
-//        GLfloat qx = (linet->x2+50)*IMG_SCALE/sa_width;
-//        GLfloat qy = (linet->y2+50)*IMG_SCALE/sa_height;
-//        
-//        glVertex2f(px, py);
-//        glVertex2f(qx, qy);
-//        
-//        glEnd();
-//    }
-    
-    
-    
- //       }
     glFlush();  // Render now
 }
 
@@ -1159,6 +1155,7 @@ int main(int argc, char** argv){
 
     
     
+    get_correct_coord(valid_lines);
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
