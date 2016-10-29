@@ -1241,6 +1241,7 @@ int main(int argc, char** argv){
     
     get_correct_coord(valid_lines);
     std::vector<myline*> rv = get_reverse_lines(valid_lines);
+    // add the reverse edges for all edges
     valid_lines.insert(valid_lines.end(), rv.begin(), rv.end());
     
     
