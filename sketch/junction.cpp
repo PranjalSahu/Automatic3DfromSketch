@@ -7,7 +7,6 @@
 //
 
 #include <stdio.h>
-#include "myline.h"
 #include <stdlib.h>
 #include "junction.h"
 

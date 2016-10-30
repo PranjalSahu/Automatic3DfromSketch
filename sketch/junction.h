@@ -6,16 +6,19 @@
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
-#ifndef junction_h
-#define junction_h
+#ifndef junctiona_h
+#define junctiona_h
 
-#include <stdio.h>
-#include "myutilities.h"
-#include <queue>
+#include "myline.h"
+#include "junction.h"
+#include <stdlib.h>
+
+class myline;
 
 class junction{
 public:
     std::vector<myline*> lines;
+    //std::vector<myline*> lines;
     int x, y;
     // 0 for L, 1 for A, 2 for Y, 3 for T
     int junction_type;

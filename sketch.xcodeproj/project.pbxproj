@@ -15,13 +15,13 @@
 		F9074DE71DBD000F0023CF9A /* myline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DE61DBD000F0023CF9A /* myline.cpp */; };
 		F9074DE91DBD4C9F0023CF9A /* myutilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */; };
 		F9074DEB1DC50EDE0023CF9A /* polygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DEA1DC50EDE0023CF9A /* polygon.cpp */; };
-		F9074DEE1DC575940023CF9A /* junction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DED1DC575940023CF9A /* junction.cpp */; };
 		F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
 		F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
 		F9899BA01DA36EFA00F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
 		F9899BA11DA36FBA00F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
 		F9899BA21DA36FBE00F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
 		F9899BA31DA36FC500F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
+		F9BF94311DC5BC5100ECAC57 /* junction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9BF94301DC5BC5100ECAC57 /* junction.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,13 +57,13 @@
 		F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = myutilities.cpp; sourceTree = "<group>"; };
 		F9074DEA1DC50EDE0023CF9A /* polygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polygon.cpp; sourceTree = "<group>"; };
 		F9074DEC1DC50EED0023CF9A /* polygon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = polygon.h; sourceTree = "<group>"; };
-		F9074DED1DC575940023CF9A /* junction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = junction.cpp; sourceTree = "<group>"; };
-		F9074DEF1DC575A40023CF9A /* junction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = junction.h; sourceTree = "<group>"; };
 		F9899B861DA3660500F0A4C1 /* sketch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketch; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B941DA36D2800F0A4C1 /* sketcha */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketcha; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		F9BF94301DC5BC5100ECAC57 /* junction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = junction.cpp; sourceTree = "<group>"; };
+		F9BF94321DC5BC5A00ECAC57 /* junction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = junction.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,11 +119,11 @@
 		F9899B881DA3660500F0A4C1 /* sketch */ = {
 			isa = PBXGroup;
 			children = (
+				F9BF94321DC5BC5A00ECAC57 /* junction.h */,
+				F9BF94301DC5BC5100ECAC57 /* junction.cpp */,
 				F9074DDA1DB866EC0023CF9A /* myutilities.h */,
 				F9074DDB1DB877EC0023CF9A /* mypoint.cpp */,
 				F9074DDD1DBC47E40023CF9A /* newmain.cpp */,
-				F9074DED1DC575940023CF9A /* junction.cpp */,
-				F9074DEF1DC575A40023CF9A /* junction.h */,
 				F9074DE51DBCF6E10023CF9A /* myline.h */,
 				F9074DE61DBD000F0023CF9A /* myline.cpp */,
 				F9074DE81DBD4C9F0023CF9A /* myutilities.cpp */,
@@ -215,7 +215,7 @@
 				F9074DE91DBD4C9F0023CF9A /* myutilities.cpp in Sources */,
 				F9074DDC1DB877EC0023CF9A /* mypoint.cpp in Sources */,
 				F9074DE71DBD000F0023CF9A /* myline.cpp in Sources */,
-				F9074DEE1DC575940023CF9A /* junction.cpp in Sources */,
+				F9BF94311DC5BC5100ECAC57 /* junction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

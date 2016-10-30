@@ -27,6 +27,8 @@
 #include "myutilities.h"
 #include "junction.h"
 
+class junction;
+
 class myline{
 public:
     // points through which it passes

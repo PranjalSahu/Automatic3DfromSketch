@@ -514,7 +514,7 @@ myline *get_first_occluding_edge(std::vector<myline*> valid_lines, std::vector<i
 
 
 // given the line set counts the number of lines labelled with the given color
-int count_color(std::vector<myline*> all_lines, string color){
+int count_color(std::vector<myline*> all_lines, std::string color){
     int count = 0;
     for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
         myline *l = *iter;
@@ -544,7 +544,7 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
             this->label = "green";
             return true;
         }
-        else if(count_color(other_junction_lines, "green") == 1 |&& count_color(other_junction_lines, "blue") == 1){
+        else if(count_color(other_junction_lines, "green") == 1 && count_color(other_junction_lines, "blue") == 1){
             this->label = "blue";
             return true;
         }
@@ -555,7 +555,7 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
             this->label = "green";
             return true;
         }
-        else if(count_color(other_junction_lines, "green") == 1 |&& count_color(other_junction_lines, "blue") == 1){
+        else if(count_color(other_junction_lines, "green") == 1 && count_color(other_junction_lines, "blue") == 1){
             this->label = "blue";
             return true;
         }
@@ -618,10 +618,27 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
         std::vector<myline*> junction_lines = j->lines;
         for(std::vector<myline*>::iterator iter = junction_lines.begin(); iter != junction_lines.end(); iter++){
             myline *t = *iter;
-            // for each non labelled line
-            if(t->label.compare("nl")){
+            // for each non labelled line try to label it
+            if(t->label.compare("nl") == 0){
                 std::vector<myline*> rest_junction_lines = get_rest_of_junction_lines(t, junction_lines);
-                t->label_line(rest_junction_lines, j);
+                bool check = t->label_line(rest_junction_lines, j);
+                
+                // if it was labelled then enqueue its other junction
+                if(check){
+                    int xt, yt;
+                    if(j->x == t->x1 && j->y == t->y1){
+                        xt = t->x2;
+                        yt = t->y2;
+                    }
+                    else{
+                        xt = t->x1;
+                        yt = t->y1;
+                    }
+                    
+                    // push the opposite junction
+                    std::vector<myline*> junction_lines = get_all_lines_for_this_junction(xt, yt, valid_lines_undirected);
+                    junctions.push_back(new junction(junction_lines, xt, yt));
+                }
             }
         }
     }
