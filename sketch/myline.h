@@ -32,6 +32,9 @@ public:
     int x1, y1;
     int x2, y2;
     
+    // label for this line
+    std::string label;
+    
     float m; // slope
     
     bool is_equal_to(myline *);

@@ -923,6 +923,14 @@ int main(int argc, char** argv){
     imga = imread("/Users/pranjal/Desktop/imgg.png", CV_LOAD_IMAGE_GRAYSCALE);
     GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
     
+    
+//    std::vector<myline*> ap;
+//    myline *l = new myline(1, 1);
+//    ap.push_back(l);
+//    std::vector<myline*> apa;
+//    
+//    apa.push_back(ap[0]);
+    
 //    Mat grad_x, grad_y, grad;
 //    Mat abs_grad_x, abs_grad_y;
 //

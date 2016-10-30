@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "myline.h"
+#include "junction.h"
 #include <math.h>
 #include "myutilities.h"
 #include <opencv2/opencv.hpp>
@@ -100,6 +101,10 @@ myline::myline(i2tuple a, i2tuple b){
         printf("debug message  is %d %d %d %d\n", x1, y1,  x2, y2);
         m = (y2-y1)*1.0/(x2-x1);
     }
+    
+    // not labelled initially
+    label = "nl";
+    
     printf("slope is a %f\n", m);
 }
 
@@ -118,14 +123,21 @@ myline::myline(int a,int b, float ma){
     else{
         m = ma;
     }
+    
+    // not labelled initially
+    label = "nl";
 }
 myline::myline(myline *t){
     x1 = t->x1;
     y1 = t->y1;
+    // not labelled initially
+    label = "nl";
 }
 myline::myline(){
     x1 = 0;
     y1 = 0;
+    // not labelled initially
+    label = "nl";
 }
 myline::myline(int a1, int b1, int c1, int d1){
     x1 = a1;
@@ -139,6 +151,9 @@ myline::myline(int a1, int b1, int c1, int d1){
     else{
         m = (y2-y1)*1.0/(x2-x1);
     }
+    
+    // not labelled initially
+    label = "nl";
 }
 
 int myline::checkpointlies(int x, int y){
@@ -477,13 +492,31 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
     }
     
     // FIFO for labelling purpose
-    std::queue<myline *> edges;
+    std::list<junction *> junctions;
     
-    // insert all edges in FIFO
+    // insert all junctions corresponding to occuding edges in FIFO
     for(std::vector<myline*>::iterator iter = undirected_occluding_edges.begin(); iter != undirected_occluding_edges.end(); iter++){
-        edges.push(*iter);
+        myline *t = *iter;
+        
+        // set label to blue for occluding edges
+        t->label = "blue";
+        
+        int x1 = t->x1;
+        int y1 = t->y1;
+        int x2 = t->x2;
+        int y2 = t->y2;
+        
+        if(!check_if_junction_present(x1, y1, junctions)){
+            std::vector<myline*> junction_lines = get_all_lines_for_this_junction(x1, y1, valid_lines_undirected);
+            junctions.push_back(new junction(junction_lines, x1, y1));
+        }
+        if(!check_if_junction_present(x2, y2, junctions)){
+            std::vector<myline*> junction_lines = get_all_lines_for_this_junction(x2, y2, valid_lines_undirected);
+            junctions.push_back(new junction(junction_lines, x2, y2));
+        }
     }
-
+    
+    
 //    while(1){
 //        if(edges.size() == 0)
 //            break;
