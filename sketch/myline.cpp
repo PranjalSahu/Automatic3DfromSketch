@@ -513,9 +513,55 @@ myline *get_first_occluding_edge(std::vector<myline*> valid_lines, std::vector<i
 }
 
 
+// given the line set counts the number of lines labelled with the given color
+int count_color(std::vector<myline*> all_lines, string color){
+    int count = 0;
+    for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
+        myline *l = *iter;
+        if (l->label.compare(color) == 0){
+            count = count +1;
+        }
+    }
+    return count;
+}
+
+// RULE ENGINE
 // labels the current line if it has unique label given all the neighbour junction lines
-void myline::label_line(std::vector<myline*> junction_lines){
-    
+// returns true if the line has been labelled
+// which will be used to enqueue its opposite junction
+bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
+    // check for unique L label
+    if(j->junction_type == 0){
+        // if it L junction and one is green then other has to be blue
+        if(other_junction_lines[0]->label.compare("green") == 0){
+            this->label = "blue";
+            return true;
+        }
+    }
+    // A junction
+    else if(j->junction_type == 1){
+        if(count_color(other_junction_lines, "green") == 2 || count_color(other_junction_lines, "blue") == 2){
+            this->label = "green";
+            return true;
+        }
+        else if(count_color(other_junction_lines, "green") == 1 |&& count_color(other_junction_lines, "blue") == 1){
+            this->label = "blue";
+            return true;
+        }
+    }
+    // Y junction
+    else if(j->junction_type == 2){
+        if(count_color(other_junction_lines, "green") == 2 || count_color(other_junction_lines, "blue") == 2){
+            this->label = "green";
+            return true;
+        }
+        else if(count_color(other_junction_lines, "green") == 1 |&& count_color(other_junction_lines, "blue") == 1){
+            this->label = "blue";
+            return true;
+        }
+    }
+    // REMEBER TO ADD T junction later
+    return false;
 }
 
 
@@ -565,16 +611,21 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
         }
     }
     
+    while(junctions.size() > 0){
+        junction* j  = junctions.front();
+        junctions.pop_front();
+        
+        std::vector<myline*> junction_lines = j->lines;
+        for(std::vector<myline*>::iterator iter = junction_lines.begin(); iter != junction_lines.end(); iter++){
+            myline *t = *iter;
+            // for each non labelled line
+            if(t->label.compare("nl")){
+                std::vector<myline*> rest_junction_lines = get_rest_of_junction_lines(t, junction_lines);
+                t->label_line(rest_junction_lines, j);
+            }
+        }
+    }
     
-//    while(1){
-//        if(edges.size() == 0)
-//            break;
-//        myline *sl = edges.front();
-//        std::vector<myline*> adjacent_lines = get_all_adjacent_lines(sl, valid_lines);
-//
-//        
-//        edges.pop();
-//    }
     std::vector<int> a;
     return a;
 }

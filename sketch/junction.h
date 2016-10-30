@@ -26,5 +26,8 @@ public:
 
 bool check_if_junction_present(int x, int y, std::list<junction *> all_junctions);
 std::vector<myline*> get_all_lines_for_this_junction(int x, int y, std::vector<myline*> all_lines);
+std::vector<myline*> get_rest_of_junction_lines(myline* l, std::vector<myline*> la);
+
+
 
 #endif /* junction_h */

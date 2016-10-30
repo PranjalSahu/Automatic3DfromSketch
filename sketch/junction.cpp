@@ -66,6 +66,21 @@ std::vector<myline*> get_all_lines_for_this_junction(int x, int y, std::vector<m
     return temp;
 }
 
+// given a junction and a line returns the rest of lines at that junction
+std::vector<myline*> get_rest_of_junction_lines(myline* l, std::vector<myline*> junction_lines){
+    std::vector<myline*> temp;
+    for(std::vector<myline*>::iterator iterator = junction_lines.begin(); iterator != junction_lines.end(); ++iterator) {
+        myline *t = *iterator;
+        // ignore same line and insert the rest
+        if(!(t->is_equal_to(l) || t->is_reverse_of(l))){
+            temp.push_back(t);
+        }
+    }
+    
+    return temp;
+}
+
+
 // checks if a junction is alredy present the list
 bool check_if_junction_present(int x, int y, std::list<junction *> all_junctions){
     for(std::list<junction*>::iterator iterator = all_junctions.begin(); iterator != all_junctions.end(); ++iterator) {
