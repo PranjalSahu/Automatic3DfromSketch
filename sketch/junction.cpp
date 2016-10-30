@@ -15,6 +15,42 @@ junction::junction(std::vector<myline*> linesa, int a,int b){
     x = a;
     y = b;
     lines = linesa;
+    
+    
+    if(lines.size() == 2){
+        junction_type = 0; // L type junction
+    }
+    // can't have more than 3 lines
+    // trihedral assumption
+    // A and Y junction
+    else if(lines.size()== 3){
+        myline *l1 = linesa[0];
+        myline *l2 = linesa[1];
+        myline *l3 = linesa[2];
+        
+        float ang[3];
+        ang[0] = l1->get_angle(l2, x, y);
+        ang[1] = l1->get_angle(l3, x, y);
+        ang[2] = l2->get_angle(l3, x, y);
+        
+        // if two angles are more than 90 than it is Y junction
+        // else it is A junction
+        int count = 0;
+        for(int i=0;i<3;++i){
+            if(ang[i] > 90){
+                count = count+1;
+            }
+        }
+        
+        // Ignoring T junction at present
+        // REMEBER TO COMPLETE IT
+        if(count >=2){
+            junction_type = 2; // Y type junction
+        }
+        else{
+            junction_type = 1; // A type junction
+        }
+    }
 }
 
 // returns the lines for this junction

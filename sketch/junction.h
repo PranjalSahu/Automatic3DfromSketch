@@ -17,6 +17,9 @@ class junction{
 public:
     std::vector<myline*> lines;
     int x, y;
+    // 0 for L, 1 for A, 2 for Y, 3 for T
+    int junction_type;
+    
     junction(std::vector<myline*> lines, int xa, int ya);
 };
 

@@ -454,6 +454,48 @@ bool myline::check_if_occluding_edge(std::vector<i2tuple> corner_points){
     return true;
 }
 
+
+
+// returns the angle between this line and a
+// first makes their first point same
+// call it only if they have one junction in common
+// bx and by are the coord of the junction
+float myline::get_angle(myline *a, int bx, int by){
+    float angle = 0;
+    int   vx1, vy1, vx3, vy3;
+    float mod_1, mod_3;
+    
+    // 1st vector
+    if(bx == this->x1 && by == this->y1){
+        vx1 = this->x2-bx;
+        vy1 = this->y2-by;
+    }
+    else{
+        vx1 = this->x1-bx;
+        vy1 = this->y1-by;
+    }
+    
+    // 2nd vector
+    if(bx == a->x2 && by == a->y2){
+        vx3 = a->x1-bx;
+        vy3 = a->y1-by;
+    }
+    else{
+        vx3 = a->x2-bx;
+        vy3 = a->y2-by;
+    }
+    
+    mod_1 = sqrt(vx1*vx1+vy1*vy1);
+    mod_3 = sqrt(vx3*vx3+vy3*vy3);
+    
+    int   dot1 = vx1*vx3+vy1*vy3;
+    float den1 = mod_1*mod_3;
+    angle   = acos (dot1/den1) * 180.0 / PI;
+    
+    return angle;
+}
+
+
 // returns the first occluding edge
 // which will be used to get all the occluding edges
 // which is the starting point for modified huffman labelling
@@ -469,6 +511,13 @@ myline *get_first_occluding_edge(std::vector<myline*> valid_lines, std::vector<i
     }
     return temp;
 }
+
+
+// labels the current line if it has unique label given all the neighbour junction lines
+void myline::label_line(std::vector<myline*> junction_lines){
+    
+}
+
 
 // returns the huffman label for all edges
 std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, std::vector<myline*> valid_lines_undirected, std::vector<i2tuple> corner_points){
