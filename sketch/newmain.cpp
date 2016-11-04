@@ -457,16 +457,6 @@ void displayone() {
     
     //plot_lines(all_lines_to_merge);
     
-    // get all the polygons by taking each line as starting point
-    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines_directed);
-    int index  = 0;
-//    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
-//        polygon* pl = *iter;
-//        plot_lines(pl->lines, index%4);
-//        ++index;
-//    }
-    
-    get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
     plot_lines(valid_lines_undirected, line_colors);
     //plot_points(corner_points);
@@ -1099,11 +1089,21 @@ int main(int argc, char** argv){
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     
-    // add original eges and
+    // add original eges and then
     // add the reverse edges for all edges
     valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
+    // get all the polygons by taking each line as starting point
+    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines_directed);
+    int index  = 0;
+    //    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+    //        polygon* pl = *iter;
+    //        plot_lines(pl->lines, index%4);
+    //        ++index;
+    //    }
+    
+    get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitWindowSize(sa_width, sa_height);
