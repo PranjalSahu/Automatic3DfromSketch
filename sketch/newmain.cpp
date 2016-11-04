@@ -394,9 +394,29 @@ std::vector<i2tuple> get_correct_coord(std::vector<i2tuple> original_points){
 }
 
 
-void plot_lines(std::vector<myline*> lines_to_plot, int color){
+void plot_line(myline *linet, int color){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+
+    glBegin(GL_LINE_LOOP);
     
+    int r = color;
+    glColor3f(colors[r][0], colors[r][1], colors[r][2]);
+    
+    GLfloat px = (linet->x1)*IMG_SCALE/sa_width;
+    GLfloat py = (linet->y1)*IMG_SCALE/sa_height;
+    
+    GLfloat qx = (linet->x2)*IMG_SCALE/sa_width;
+    GLfloat qy = (linet->y2)*IMG_SCALE/sa_height;
+    
+    glVertex2f(px, py);
+    glVertex2f(qx, qy);
+    
+    glEnd();
+}
+
+void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
+    
+    int index = 0;
     for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
         myline * linet = *iterator;
         
@@ -410,21 +430,8 @@ void plot_lines(std::vector<myline*> lines_to_plot, int color){
             continue;
         }
         
-        glBegin(GL_LINE_LOOP);
-        
-        int r = color;
-        glColor3f(colors[r][0], colors[r][1], colors[r][2]);
-        
-        GLfloat px = (linet->x1)*IMG_SCALE/sa_width;
-        GLfloat py = (linet->y1)*IMG_SCALE/sa_height;
-        
-        GLfloat qx = (linet->x2)*IMG_SCALE/sa_width;
-        GLfloat qy = (linet->y2)*IMG_SCALE/sa_height;
-        
-        glVertex2f(px, py);
-        glVertex2f(qx, qy);
-        
-        glEnd();
+        plot_line(linet, color[index]);
+        index = index+1;
     }
     
     return;
@@ -453,13 +460,15 @@ void displayone() {
     // get all the polygons by taking each line as starting point
     std::vector<polygon*> all_polygons = get_all_polygons(valid_lines_directed);
     int index  = 0;
-    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
-        polygon* pl = *iter;
-        plot_lines(pl->lines, index%4);
-        ++index;
-    }
+//    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+//        polygon* pl = *iter;
+//        plot_lines(pl->lines, index%4);
+//        ++index;
+//    }
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
+    std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
+    plot_lines(valid_lines_undirected, line_colors);
     //plot_points(corner_points);
     
     glFlush();  // Render now

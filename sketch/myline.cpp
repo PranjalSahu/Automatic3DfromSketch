@@ -564,8 +564,26 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
     return false;
 }
 
+// returns the colors for the given lines
+std::vector<int> get_line_labels(std::vector<myline*> all_lines){
+    std::vector<int> all_colors;
+    for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
+        myline *t = *iter;
+        int color = 0;
+        if(t->label.compare("blue")){
+            color = 2;
+        }
+        else if(t->label.compare("green")){
+            color = 0;
+        }
+        all_colors.push_back(color);
+    }
+    return all_colors;
+}
+
 
 // returns the huffman label for all edges
+// labels all the lines in valid_lines_undirected
 std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, std::vector<myline*> valid_lines_undirected, std::vector<i2tuple> corner_points){
     
     // get first occluding edge
@@ -574,7 +592,7 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
     // traverse that polygon to get other occluding edges
     std::vector<myline*> directed_occluding_edges =  oe->get_polygon(valid_lines_directed);
 
-    // iterate over all undirected edges
+    // get all undirected occluding edges by iterating over all directed occluding edges
     std::vector<myline*> undirected_occluding_edges;
     for(std::vector<myline*>::iterator iter = directed_occluding_edges.begin(); iter != directed_occluding_edges.end(); iter++){
         myline *t = *iter;
@@ -643,8 +661,7 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
         }
     }
     
-    std::vector<int> a;
-    return a;
+    return get_line_labels(valid_lines_undirected);
 }
 
 #endif

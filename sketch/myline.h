@@ -70,6 +70,7 @@ float triangle_area(myline *first, myline *second);
 bool ccw(myline *first, myline *second);
 myline* get_next_line(myline *first, std::vector<myline*> valid_lines);
 std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> all_lines_to_check);
+std::vector<int> get_line_labels(std::vector<myline*> all_lines);
 std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, std::vector<myline*> valid_lines_undirected, std::vector<i2tuple> corner_points);
 
 #endif /* myline_h */
