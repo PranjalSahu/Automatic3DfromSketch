@@ -574,16 +574,20 @@ void displayone() {
 
         polygon* p = all_polygons[3];
         std::vector<mypoint *> po = p->get_points();
-        po[0]->x = 0; po[0]->z = 0; po[0]->y = 0;
-        po[1]->x = 0; po[1]->z = 300; po[1]->y = 0;
-        po[2]->x = 300; po[2]->z = 300; po[2]->y = 0;
-        po[3]->x = 300; po[3]->z = 0; po[3]->y = 0;
+        po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
+        po[1]->y = 0; po[1]->z = 300; po[1]->x = 0;
+        po[2]->y = -300; po[2]->z = 400; po[2]->x = 0;
+        po[3]->y = -300; po[3]->z = 100; po[3]->x = 0;
 //
         int i = 2;
+        std::vector<mypoint *> axis_line;
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 0, 1);
         std::vector<mypoint *> pp = temp->project_polygon(po);
         printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-        //plot_line(pp, 0);
+        
+        axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
+        axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
+        plot_line(axis_line, 0);
         
         
         glBegin(GL_QUADS);
