@@ -129,12 +129,15 @@ int polysize;						// for storing the size of the polygon
 std::queue<int> p1;					// for intersection points x coordinate
 
 // different display types for labelled lines, polygons, and projected polygon
-int display_type = 3;
+int display_type = 2;
 
 // plane to project for demo
 plane* plane_to_project;
 
 int angle_p = 0;
+float tr_x = 0;
+float tr_y = 0;
+float tr_z = 0;
 
 // all the polygons present in the given image
 std::vector<polygon*> all_polygons;
@@ -540,6 +543,14 @@ void displayone() {
     
     //plot_lines(all_lines_to_merge);
     
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
+    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+    
+    // Render a color-cube consisting of 6 quads with different colors
+    glLoadIdentity();                 // Reset the model-view matrix
+    glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
+
+    
     if(display_type == 0){
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
         plot_lines(valid_lines_undirected, line_colors);
@@ -557,51 +568,35 @@ void displayone() {
         plot_lines(p->lines, 0);
     }
     else if(display_type == 3){
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-        glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
         
-        // Render a color-cube consisting of 6 quads with different colors
-        glLoadIdentity();                 // Reset the model-view matrix
-        glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
+        gluLookAt(-5, -5, 5, 0, 0, 0, 0, 0, 1);
+        //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
 
-        gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
-
-        
         polygon* p = all_polygons[3];
         std::vector<mypoint *> po = p->get_points();
-        po[0]->x = 0; po[0]->y = 0; po[0]->z = 0;
-        po[1]->x = 0; po[1]->y = 200; po[1]->z = 0;
-        po[2]->x = 200; po[2]->y = 200; po[2]->z = 0;
-        po[3]->x = 200; po[3]->y = 0; po[3]->z = 0;
-        
-        int i = 0;
-        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
+        po[0]->x = 0; po[0]->z = 0; po[0]->y = 0;
+        po[1]->x = 0; po[1]->z = 300; po[1]->y = 0;
+        po[2]->x = 300; po[2]->z = 300; po[2]->y = 0;
+        po[3]->x = 300; po[3]->z = 0; po[3]->y = 0;
+//
+        int i = 2;
+        plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 0, 1);
         std::vector<mypoint *> pp = temp->project_polygon(po);
         printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
         //plot_line(pp, 0);
-
         
         
         glBegin(GL_QUADS);
-//        glVertex3f( 0, 0, 0);
-//        glVertex3f( 0, 0.5, 0);
-//        glVertex3f( 0.5, 0.5, 0);
-//        glVertex3f( 0.5, 0, 0);
-
         for(int i=0;i<4;++i){
-            glVertex3f( pp[i]->x/300.0, pp[i]->y/300.0, pp[i]->z/300.0);
+            glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
         }
         glEnd();
         
-//        po[0]->x = 0;
-//        po[0]->y = 0;
-//        po[1]->x = 0;
-//        po[1]->y = 500;
-//        po[2]->x = 500;
-//        po[2]->y = 500;
-//        po[3]->x = 500;
-//        po[3]->y = 0;
-//        
+        glPushMatrix();
+        glTranslatef(tr_x, tr_y, tr_z);
+        drawmycuboid(1, 2, 5);
+        glPopMatrix();
+//
 //        int i = 0;
 //        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
 //        std::vector<mypoint *> pp = temp->project_polygon(po);
@@ -990,6 +985,15 @@ void handleKeypressa(unsigned char key, int x, int y) {
         case 'q':
             angle_p = angle_p+1;
             break;
+        case 'x':
+            tr_x = tr_x+0.5;
+            break;
+        case 'y':
+            tr_y = tr_y+0.5;
+            break;
+        case 'z':
+            tr_z = tr_z+0.5;
+            break;
         case 27: //Escape key
             exit(0);
     }
@@ -1306,7 +1310,7 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
 
-    plane_to_project = new plane(0, 0, 1, new mypoint());
+    plane_to_project = new plane(0, 1, 0, new mypoint());
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
