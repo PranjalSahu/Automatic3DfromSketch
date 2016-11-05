@@ -99,17 +99,17 @@ void handleKeypress(unsigned char key, int x, int y) {
 }
 
 //Initializes 3D rendering
-//void initRendering() {
-//    glEnable( GL_POINT_SMOOTH );
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_COLOR_MATERIAL);
-//    glEnable(GL_LIGHTING); //Enable lighting
-//    glEnable(GL_LIGHT0); //Enable light #0
-//    glEnable(GL_LIGHT1); //Enable light #1
-//    glEnable(GL_NORMALIZE); //Automatically normalize normals
-//    
-//    //glShadeModel(GL_SMOOTH); //Enable smooth shading
-//}
+void initRendering() {
+    glEnable( GL_POINT_SMOOTH );
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); //Enable lighting
+    glEnable(GL_LIGHT0); //Enable light #0
+    glEnable(GL_LIGHT1); //Enable light #1
+    glEnable(GL_NORMALIZE); //Automatically normalize normals
+    
+    //glShadeModel(GL_SMOOTH); //Enable smooth shading
+}
 
 //Called when the window is resized
 void handleResizea(int w, int h) {
@@ -565,74 +565,74 @@ void setup_view(){
     current_view = new view();
 }
 
-//int main(int argc, char** argv) {
-//    
-//    
-//    
-//    setup_view();
-//    
-//        
-//    
-//    
-//    //Initialize GLUT
-//    glutInit(&argc, argv);
-//    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-//    glutInitWindowSize(600, 600);
-//    
-//    //Create the window
-//    win_menu = glutCreateWindow("Sketch");
-//    createmymenu();
-//    
-//    
-//    initRendering();
-//    
-//    //Set handler functions
-//    glutDisplayFunc(drawScene);
-//    glutKeyboardFunc(handleKeypress);
-//    glutReshapeFunc(handleResizea);
-//    glutMouseFunc(mousemotion);
-//    
-//    //Add a timer
-//    glutTimerFunc(25, update, 0);
-//    
-//    
-//    
-//    
-//    int    image;
-//    
-//    /* Initialization of DevIL */
-//    if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION){
-//        printf("wrong DevIL version \n");
-//        return -1;
-//    }
-//    ilInit();
-//    /* load the file picture with DevIL */
-//    image = LoadImagea("/Users/pranjal/Downloads/oven.png");
-//    if ( image == -1 )
-//    {
-//        printf("Can't load picture file %s by DevIL \n", argv[1]);
-//        return -1;
-//    }
-//    
-//    /* OpenGL texture binding of the image loaded by DevIL  */
-//    glGenTextures(1, &texid); /* Texture name generation */
-//    glBindTexture(GL_TEXTURE_2D, texid); /* Binding of texture name */
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear interpolation for magnification filter */
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear interpolation for minifying filter */
-//    glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
-//                 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData()); /* Texture specification */
-//    
-//    
-//
-//    
-//    glutMainLoop();
-//    
-//    
-//    
-//    
-//    glDeleteTextures(1, &texid);
-//    return 0;
-//}
+int main(int argc, char** argv) {
+    
+    
+    
+    setup_view();
+    
+        
+    
+    
+    //Initialize GLUT
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(600, 600);
+    
+    //Create the window
+    win_menu = glutCreateWindow("Sketch");
+    createmymenu();
+    
+    
+    initRendering();
+    
+    //Set handler functions
+    glutDisplayFunc(drawScene);
+    glutKeyboardFunc(handleKeypress);
+    glutReshapeFunc(handleResizea);
+    glutMouseFunc(mousemotion);
+    
+    //Add a timer
+    glutTimerFunc(25, update, 0);
+    
+    
+    
+    
+    int    image;
+    
+    /* Initialization of DevIL */
+    if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION){
+        printf("wrong DevIL version \n");
+        return -1;
+    }
+    ilInit();
+    /* load the file picture with DevIL */
+    image = LoadImagea("/Users/pranjal/Downloads/oven.png");
+    if ( image == -1 )
+    {
+        printf("Can't load picture file %s by DevIL \n", argv[1]);
+        return -1;
+    }
+    
+    /* OpenGL texture binding of the image loaded by DevIL  */
+    glGenTextures(1, &texid); /* Texture name generation */
+    glBindTexture(GL_TEXTURE_2D, texid); /* Binding of texture name */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear interpolation for magnification filter */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear interpolation for minifying filter */
+    glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+                 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData()); /* Texture specification */
+    
+    
+
+    
+    glutMainLoop();
+    
+    
+    
+    
+    glDeleteTextures(1, &texid);
+    return 0;
+}
 
 
 

@@ -129,7 +129,7 @@ int polysize;						// for storing the size of the polygon
 std::queue<int> p1;					// for intersection points x coordinate
 
 // different display types for labelled lines, polygons, and projected polygon
-int display_type = 0;
+int display_type = 3;
 
 // plane to project for demo
 plane* plane_to_project;
@@ -336,17 +336,17 @@ float mytan(int degree){
 
 
 //Initializes 3D rendering
-void initRendering() {
-    glEnable( GL_POINT_SMOOTH );
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING); //Enable lighting
-    glEnable(GL_LIGHT0); //Enable light #0
-    glEnable(GL_LIGHT1); //Enable light #1
-    glEnable(GL_NORMALIZE); //Automatically normalize normals
-    
-    //glShadeModel(GL_SMOOTH); //Enable smooth shading
-}
+//void initRenderinga() {
+//    glEnable( GL_POINT_SMOOTH );
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_COLOR_MATERIAL);
+//    glEnable(GL_LIGHTING); //Enable lighting
+//    glEnable(GL_LIGHT0); //Enable light #0
+//    glEnable(GL_LIGHT1); //Enable light #1
+//    glEnable(GL_NORMALIZE); //Automatically normalize normals
+//    
+//    //glShadeModel(GL_SMOOTH); //Enable smooth shading
+//}
 
 void updatea(int value) {
     glutPostRedisplay();
@@ -471,9 +471,60 @@ void plot_lines(std::vector<myline*> lines_to_plot, int color){
 }
 
 
+void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
+    glBegin(GL_QUADS);
+    
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    
+    // THIS CUBOID IS OF DIMENSION 6 x 4 x 2
+    // FRONT
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(0.0f, l, -1*b);
+    glVertex3f(0.0f, 0.0f, -b);
+    
+    // SHIFT FRONT BY 2 IN -X TO GET BACK
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    
+    // TOP
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(0.0f, l, -1*b);
+    
+    // SHIFT TOP BY -6 IN Y TO GET BOTTOM
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    glVertex3f(0.0f, 0.0f, -1*b);
+    
+    // OPPOSITE HIDDEN
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, l, 0.0f);
+    glVertex3f(-1*h, l, 0.0f);
+    glVertex3f(-1*h, 0.0f, 0.0f);
+    
+    // HIDDEN
+    glVertex3f(0.0f, 0.0f, -1*b);
+    glVertex3f(0.0f, l, -1*b);
+    glVertex3f(-1*h, l, -1*b);
+    glVertex3f(-1*h, 0.0f, -1*b);
+    
+    glEnd();
+    return;
+}
+
+
+
 void displayone() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-    glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+    
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
@@ -506,27 +557,61 @@ void displayone() {
         plot_lines(p->lines, 0);
     }
     else if(display_type == 3){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
+        glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+        
+        // Render a color-cube consisting of 6 quads with different colors
+        glLoadIdentity();                 // Reset the model-view matrix
+        glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
+
+        gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
+
+        
         polygon* p = all_polygons[3];
         std::vector<mypoint *> po = p->get_points();
-        po[0]->x = 0;
-        po[0]->y = 0;
-        po[1]->x = 0;
-        po[1]->y = 500;
-        po[2]->x = 500;
-        po[2]->y = 500;
-        po[3]->x = 500;
-        po[3]->y = 0;
+        po[0]->x = 0; po[0]->y = 0; po[0]->z = 0;
+        po[1]->x = 0; po[1]->y = 200; po[1]->z = 0;
+        po[2]->x = 200; po[2]->y = 200; po[2]->z = 0;
+        po[3]->x = 200; po[3]->y = 0; po[3]->z = 0;
         
         int i = 0;
         plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
         std::vector<mypoint *> pp = temp->project_polygon(po);
         printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-        plot_line(pp, 0);
+        //plot_line(pp, 0);
+
+        
+        
+        glBegin(GL_QUADS);
+//        glVertex3f( 0, 0, 0);
+//        glVertex3f( 0, 0.5, 0);
+//        glVertex3f( 0.5, 0.5, 0);
+//        glVertex3f( 0.5, 0, 0);
+
+        for(int i=0;i<4;++i){
+            glVertex3f( pp[i]->x/300.0, pp[i]->y/300.0, pp[i]->z/300.0);
+        }
+        glEnd();
+        
+//        po[0]->x = 0;
+//        po[0]->y = 0;
+//        po[1]->x = 0;
+//        po[1]->y = 500;
+//        po[2]->x = 500;
+//        po[2]->y = 500;
+//        po[3]->x = 500;
+//        po[3]->y = 0;
+//        
+//        int i = 0;
+//        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
+//        std::vector<mypoint *> pp = temp->project_polygon(po);
+//        printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
+//        plot_line(pp, 0);
     }
     
     //plot_points(corner_points);
-    
-    glFlush();  // Render now
+    glutSwapBuffers();
+    //glFlush();  // Render now
 }
 
 //Called when the window is resized
@@ -1006,6 +1091,32 @@ int maina(int argc, char **argv){
 }
 
 
+void initGL() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+    glClearDepth(1.0f);                   // Set background depth to farthest
+    glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
+    glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
+    glShadeModel(GL_SMOOTH);   // Enable smooth shading
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+}
+
+
+
+void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integer
+    // Compute aspect ratio of the new window
+    if (height == 0) height = 1;                // To prevent divide by 0
+    GLfloat aspect = (GLfloat)width / (GLfloat)height;
+    
+    // Set the viewport to cover the new window
+    glViewport(0, 0, width, height);
+    
+    // Set the aspect ratio of the clipping volume to match the viewport
+    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+    glLoadIdentity();             // Reset
+    // Enable perspective projection with fovy, aspect, zNear and zFar
+    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+}
+
 
 int main(int argc, char** argv){
     ofstream myfile;
@@ -1080,7 +1191,7 @@ int main(int argc, char** argv){
     
     bitwise_not(bw, img);
     thinning(img);
-    namedWindow( "corners_window_a", CV_WINDOW_AUTOSIZE );
+    //namedWindow( "corners_window_a", CV_WINDOW_AUTOSIZE );
     
     
     
@@ -1173,9 +1284,9 @@ int main(int argc, char** argv){
     
     
     // Showing the result
-    namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
-    imshow( "corners_window", dst_norm_scaled );
-    waitKey(0);
+    //namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
+    //imshow( "corners_window", dst_norm_scaled );
+    //waitKey(0);
 
     
     get_correct_coord(valid_lines_undirected);  // remove it later should not be needed in future
@@ -1198,13 +1309,21 @@ int main(int argc, char** argv){
     plane_to_project = new plane(0, 0, 1, new mypoint());
     
     glutInit(&argc, argv);                 // Initialize GLUT
+    glutInitDisplayMode(GLUT_DOUBLE);
     glutInitWindowSize(sa_width, sa_height);
+    
+    //initRenderinga();
+    
     glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
-    glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
+    //glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
     glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);
     glutTimerFunc(25, updatea, 0);
-    glutMainLoop();                         // Enter the event-processing loop
+    glutReshapeFunc(reshape);
+    initGL();                       // Our own OpenGL initialization
+    glutMainLoop();
+    
+    
     
     
     return 0;
