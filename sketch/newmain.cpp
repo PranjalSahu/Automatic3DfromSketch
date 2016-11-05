@@ -48,6 +48,8 @@
 #include <math.h>
 #include "myline.h"
 #include "polygon.h"
+#include "plane.h"
+
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -126,6 +128,16 @@ int newwidth, newheight;
 int polysize;						// for storing the size of the polygon
 std::queue<int> p1;					// for intersection points x coordinate
 
+// different display types for labelled lines, polygons, and projected polygon
+int display_type = 0;
+
+// plane to project for demo
+plane* plane_to_project;
+
+int angle_p = 0;
+
+// all the polygons present in the given image
+std::vector<polygon*> all_polygons;
 
 //bool isleft(mypointa *a, mypointa *b, mypointa *c){
 //    return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
@@ -393,12 +405,23 @@ std::vector<i2tuple> get_correct_coord(std::vector<i2tuple> original_points){
     return temp;
 }
 
+void plot_line(std::vector<mypoint*> all_points, int color){
+    glBegin(GL_LINE_LOOP);
+    for(std::vector<mypoint*>::iterator iterator = all_points.begin(); iterator != all_points.end(); iterator++) {
+        mypoint *m = *iterator;
+        GLfloat px = (m->x)*IMG_SCALE/sa_width;
+        GLfloat py = (m->y)*IMG_SCALE/sa_height;
+        glVertex2f(px, py);
+    }
+    glEnd();
+    
+    return;
+}
 
 void plot_line(myline *linet, int color){
+    glBegin(GL_LINE_LOOP);
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
 
-    glBegin(GL_LINE_LOOP);
-    
     int r = color;
     glColor3f(colors[r][0], colors[r][1], colors[r][2]);
     
@@ -415,7 +438,8 @@ void plot_line(myline *linet, int color){
 }
 
 void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
-    
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+
     int index = 0;
     for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
         myline * linet = *iterator;
@@ -437,6 +461,14 @@ void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
     return;
 }
 
+void plot_lines(std::vector<myline*> lines_to_plot, int color){
+    std::vector<int> colors;
+    for(int i=0;i<lines_to_plot.size();++i){
+        colors.push_back(color);
+    }
+    plot_lines(lines_to_plot, colors);
+    return;
+}
 
 
 void displayone() {
@@ -457,8 +489,41 @@ void displayone() {
     
     //plot_lines(all_lines_to_merge);
     
-    std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
-    plot_lines(valid_lines_undirected, line_colors);
+    if(display_type == 0){
+        std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
+        plot_lines(valid_lines_undirected, line_colors);
+    }
+    else if(display_type == 1){
+        int index  = 0;
+        for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+            polygon* pl = *iter;
+            plot_lines(pl->lines, index%4);
+            ++index;
+        }
+    }
+    else if(display_type == 2){
+        polygon* p = all_polygons[3];
+        plot_lines(p->lines, 0);
+    }
+    else if(display_type == 3){
+        polygon* p = all_polygons[3];
+        std::vector<mypoint *> po = p->get_points();
+        po[0]->x = 0;
+        po[0]->y = 0;
+        po[1]->x = 0;
+        po[1]->y = 500;
+        po[2]->x = 500;
+        po[2]->y = 500;
+        po[3]->x = 500;
+        po[3]->y = 0;
+        
+        int i = 0;
+        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
+        std::vector<mypoint *> pp = temp->project_polygon(po);
+        printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
+        plot_line(pp, 0);
+    }
+    
     //plot_points(corner_points);
     
     glFlush();  // Render now
@@ -824,6 +889,22 @@ void handleKeypressa(unsigned char key, int x, int y) {
         case 'm':
             merge_points();
             break;
+        case 'p':
+            display_type = 1;       // show polygons
+            break;
+        case 'l':
+            display_type = 0;       // show lines
+            break;
+        case 'o':
+            display_type = 2;       // show projected polygon
+            break;
+        case 'r':                   // display the project polygon
+            display_type = 3;
+            angle_p  = 1-angle_p;       // on each key press increases the angle by 1
+            break;
+        case 'q':
+            angle_p = angle_p+1;
+            break;
         case 27: //Escape key
             exit(0);
     }
@@ -912,6 +993,19 @@ void plotpoint(i2tuple pt){
     circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
     return;
 }
+
+int maina(int argc, char **argv){
+    plane* p = new plane(0, 0, 1, new mypoint());
+    
+    printf("%f %f %f\n", p->a, p->b, p->c);
+    p->rotate_it(90, 0, 1, 0);
+    printf("%f %f %f\n", p->a, p->b, p->c);
+    
+    printf("cos is %f\n", cos(90 * PI/180.0));
+    return 0;
+}
+
+
 
 int main(int argc, char** argv){
     ofstream myfile;
@@ -1095,15 +1189,13 @@ int main(int argc, char** argv){
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
     // get all the polygons by taking each line as starting point
-    std::vector<polygon*> all_polygons = get_all_polygons(valid_lines_directed);
-    int index  = 0;
-    //    for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
-    //        polygon* pl = *iter;
-    //        plot_lines(pl->lines, index%4);
-    //        ++index;
-    //    }
+    all_polygons = get_all_polygons(valid_lines_directed);
+    
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
+    
+
+    plane_to_project = new plane(0, 0, 1, new mypoint());
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitWindowSize(sa_width, sa_height);

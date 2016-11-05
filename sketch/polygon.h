@@ -10,13 +10,14 @@
 #define polygon_h
 
 #include "myline.h"
+#include "mypoint.h"
 
 class polygon{
 public:
     std::vector<myline*> lines;
     bool is_equal_to(polygon *);
     bool is_part_of(std::vector<polygon*> pvector);
-
+    std::vector<mypoint*> get_points();
     polygon(std::vector<myline*> lines);
 };
 

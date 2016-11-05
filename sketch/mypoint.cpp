@@ -18,9 +18,10 @@
 #endif
 
 #include <stdio.h>
+#include "mypoint.h"
 #include "myutilities.h"
 
-mypoint::mypoint(GLfloat a,GLfloat b, GLfloat c){
+mypoint::mypoint(float  a,float b, float c){
     x = a;
     y = b;
     z = c;

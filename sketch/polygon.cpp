@@ -74,3 +74,14 @@ std::vector<polygon*> get_all_polygons(std::vector<myline*> all_lines){
     
     return all_polygons;
 }
+
+
+// returns the points of a polygon by traversing over the lines
+std::vector<mypoint*> polygon::get_points(){
+    std::vector<mypoint*> all_points;
+    for(std::vector<myline*>::iterator it = lines.begin(); it != lines.end(); ++it){
+        myline *l = *it;
+        all_points.push_back(new mypoint(l->x1, l->y1, 0));
+    }
+    return all_points;
+}

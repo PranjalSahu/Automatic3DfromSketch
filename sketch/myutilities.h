@@ -29,16 +29,6 @@
 
 typedef std::tuple<int,int> i2tuple;
 
-class mypoint{
-public:
-    GLfloat x, y, z;
-    mypoint(GLfloat a, GLfloat b, GLfloat c);
-    mypoint(mypoint *t);
-    mypoint();
-};
-
-
-
 int mymin(int a, int b);
 float mymin(float a, float b);
 int mymax(int a, int b);
