@@ -156,6 +156,25 @@ std::vector<polygon*> all_polygons;
 int zglut = 100;
 
 
+// Camera matrix
+glm::mat4 View = glm::lookAt(
+                             glm::vec3(-5,5,5), // Camera is at (4,3,3), in World Space
+                             glm::vec3(0,0,0), // and looks at the origin
+                             glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                             );
+
+
+glm::mat4 ViewI = glm::inverse(View);
+
+
+
+
+
+// points in the camera plane
+// get the world space coordinates for these
+// then project these coordinates onto hinging plane to get the best plane and the projected polygon will be the final
+std::vector<glm::vec4> points_in_camera;
+
 void thinningIteration(cv::Mat& im, int iter)
 {
     cv::Mat marker = cv::Mat::zeros(im.size(), CV_8UC1);
@@ -601,7 +620,6 @@ void displayone() {
         
         int i = 2;
         std::vector<mypoint *> axis_line;
-        plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 0, 1);
         //std::vector<mypoint *> pp = temp->project_polygon(po);
 //        std::vector<mypoint *> pp = temp->project_polygon(po, -5, -5, 5);
 //        printf("1> %f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
@@ -619,36 +637,36 @@ void displayone() {
         
         
         // plot the hingin plane's normal line
-        axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
-        axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
-        plot_line(axis_line, 0);
+//        axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
+//        axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
+//        plot_line(axis_line, 0);
+//        
         
+//        glBegin(GL_QUADS);
+//        for(int i=0;i<4;++i){
+//            glVertex3f( po[i]->x, po[i]->y, po[i]->z);
+//            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
+//        }
+//        glEnd();
         
-        glBegin(GL_QUADS);
-        for(int i=0;i<4;++i){
-            glVertex3f( po[i]->x, po[i]->y, po[i]->z);
-            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
-        }
-        glEnd();
-        
-        
-        
-        
-        
-        
-        // Camera matrix
-        glm::mat4 View = glm::lookAt(
-                                     glm::vec3(-5,-5,5), // Camera is at (4,3,3), in World Space
-                                     glm::vec3(0,0,0), // and looks at the origin
-                                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                                     );
-        
-        glm::mat4 Model = glm::mat4(1.0f);
-        std::vector<glm::vec4> tp;
-        tp.push_back(glm::vec4(0,0,0, 1));
-        tp.push_back(glm::vec4(5,0,0, 1));
-        tp.push_back(glm::vec4(5,1,0, 1));
-        tp.push_back(glm::vec4(0,1,0, 1));
+//        
+//        
+//        
+//        
+//        
+//        // Camera matrix
+//        glm::mat4 View = glm::lookAt(
+//                                     glm::vec3(-5,-5,5), // Camera is at (4,3,3), in World Space
+//                                     glm::vec3(0,0,0), // and looks at the origin
+//                                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+//                                     );
+//        
+//        glm::mat4 Model = glm::mat4(1.0f);
+//        std::vector<glm::vec4> tp;
+//        tp.push_back(glm::vec4(0,0,0, 1));
+//        tp.push_back(glm::vec4(5,0,0, 1));
+//        tp.push_back(glm::vec4(5,1,0, 1));
+//        tp.push_back(glm::vec4(0,1,0, 1));
         
 //        glBegin(GL_QUADS);
 //        
@@ -660,11 +678,19 @@ void displayone() {
 //        }
 //        glEnd();
         
-        
-        
-        
-        
-        
+        std::vector<mypoint*> points_to_render;
+
+        plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+        printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
+        points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
+        glBegin(GL_QUADS);
+        for(int i=0;i<4;++i){
+            printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
+            glVertex3f( points_to_render[i]->x/20, points_to_render[i]->y/20, points_to_render[i]->z/20);
+            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
+        }
+        glEnd();
+
         
         
         glPushMatrix();
@@ -1205,16 +1231,6 @@ int mainabh(int argc, char** argv){
     int height = 1;
     glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
     
-    // Camera matrix
-    glm::mat4 View = glm::lookAt(
-            glm::vec3(-5,5,5), // Camera is at (4,3,3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-    
-    
-    glm::mat4 ViewI = glm::inverse(View);
-    
     
     
     glm::mat4 Model = glm::mat4(1.0f);
@@ -1434,7 +1450,35 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
 
-    plane_to_project = new plane(0, 1, 0, new mypoint());
+    // we start with yz = 0 then rotate this plane till we get the best plane to project
+    plane_to_project = new plane(1, 0, 0, new mypoint());
+    
+    // points in the world camera
+    points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
+    points_in_camera.push_back(glm::vec4(50, 0, 0, 1));
+    points_in_camera.push_back(glm::vec4(50, 20, 0, 1));
+    points_in_camera.push_back(glm::vec4(0, 20, 0, 1));
+    
+    
+    // get the points in the camera plane and make its depth equal to 0 since we have lost that information
+    // in that image
+    for(int i=0;i<4;++i){
+        points_in_camera[i] = View*points_in_camera[i];
+        points_in_camera[i][3] = 0;
+    }
+    
+    
+    // get world coordinates for these points
+    for(int i=0;i<4;++i){
+        points_in_camera[i] = ViewI*points_in_camera[i];
+    }
+    
+    
+    
+    
+    
+    
+    
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
