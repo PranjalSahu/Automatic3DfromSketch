@@ -142,39 +142,3 @@ float get_point_distance(int x1, int y1, int x2, int y2);
 //    printf("%d \n", *iter);
 //    iter++;
 
-
-
-
-
-
-//    std::cout<<glm::to_string(v)<<std::endl;
-//    std::cout<<glm::to_string(result)<<std::endl;
-
-//
-//
-//int mainabh(int argc, char** argv){
-//    int width = 1;
-//    int height = 1;
-//    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
-//    
-//    
-//    
-//    glm::mat4 Model = glm::mat4(1.0f);
-//    glm::mat4 mvp = Projection * View * Model;
-//    
-//    std::vector<glm::vec4> tp;
-//    std::vector<glm::vec4> orig;
-//    
-//    tp.push_back(glm::vec4(0,0,0, 1));
-//    tp.push_back(glm::vec4(5,0,0, 1));
-//    tp.push_back(glm::vec4(5,1,0, 1));
-//    tp.push_back(glm::vec4(0,1,0, 1));
-//    
-//    
-//    for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
-//        glm::vec4 v =  *iterator;
-//        std::cout<<glm::to_string(ViewI*(View*v))<<std::endl;
-//    }
-//    
-//    return 0;
-//}
