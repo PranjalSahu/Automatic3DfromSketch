@@ -153,7 +153,7 @@ std::vector<polygon*> all_polygons;
 
 
 // glut look at z position
-float zglut = 23;
+int zglut = 100;
 
 
 
@@ -578,49 +578,37 @@ void set_lighting(){
 
 
 void displayone() {
-
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
+    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
     
+    // iterate over 4 viewports
     
     for(int v=0;v<1;++v){
         
         
-        // iterate over 4 viewports
-        // set the 4 viewports on which different views and cost will be displayed
+        //set the 4 viewports on which different views and cost will be displayed
         // right bottom
-        if(v == 0){
-            glViewport(0, 0, sa_width, sa_height);
-            //glViewport(sa_width/2+1, sa_height/2+1, sa_width, sa_height);
-            //glViewport(0, 0, sa_width/2, sa_height/2);
-            //glViewport(sa_width/2, sa_height/2, sa_width, sa_height);
-            //glViewport(sa_width/2, 0, sa_width, sa_height/2);
-        }
-        // left bottom
-        else if(v == 1){
-            //glViewport(0, 0, sa_width/2, sa_height/2);
-            glViewport(sa_width/2, sa_height/2, sa_width, sa_height);
-        }
-        // top right
-        else if(v == 2){
-            glViewport(sa_width/2, 0, sa_width, sa_height/2);
-        }
-        // top left
-        else if(v == 3){
-            glViewport(0, 0, sa_width/2, sa_height/2);
-        }
-        
-        //glClear(GL_DEPTH_BUFFER_BIT);
-        //glMatrixMode(GL_PROJECTION);
-        //glLoadIdentity();
-        //gluPerspective(45.0, 400.0 / 400.0, 1.0, 200.0);
-        //glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+//        if(v == 0){
+//            glViewport(0, 0, sa_width, sa_height);
+//            //glViewport(sa_width/2, sa_height/2, sa_width, sa_height);
+//        }
+//        // left bottom
+//        else if(v == 1){
+//            glViewport(0, sa_height/2, sa_width, sa_height);
+//        }
+//        // top right
+//        else if(v == 2){
+//            glViewport(sa_width/2, 0, sa_width, sa_height/2);
+//        }
+//        // top left
+//        else if(v == 3){
+//            glViewport(0, 0, sa_width/2, sa_height/2);
+//        }
         
         
         
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-        //glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
-        //glLoadIdentity();
         
         
         if(display_type == 0){
@@ -643,12 +631,10 @@ void displayone() {
             
             // Camera position angle
             if(v == 0){
-                //gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
                 gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
             }
             else if(v == 1){
-                gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
-                //gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
+                gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
             }
             else if(v == 2){
                 gluLookAt(0, 5, 0, 0, 0, 0, 0, 1, 0);
@@ -666,7 +652,7 @@ void displayone() {
             std::vector<mypoint*> points_to_render;
             
             plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
-            //printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
+            printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
             points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
             
             glColor3f(0.9f, 0.9f, 0.9f);
@@ -674,7 +660,7 @@ void displayone() {
             
             glBegin(GL_QUADS);
             for(int i=0;i<4;++i){
-                //printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
+                printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
                 glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
                 //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
             }
@@ -687,12 +673,11 @@ void displayone() {
             drawmycuboid(1, 2, 5);
             glPopMatrix();
             
-            
+            glutSwapBuffers();
         }
     }
     
-    //glFlush();
-    glutSwapBuffers();
+    
 }
 
 //Called when the window is resized
@@ -1089,27 +1074,21 @@ void handleKeypressa(unsigned char key, int x, int y) {
             break;
         case '1':
             xview = xview+0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case '2':
             yview = yview +0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case '3':
             zview = zview+0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case '4':
             xview = xview-0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case '5':
             yview = yview-0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case '6':
             zview = zview-0.5;
-            printf("view parameters: %f %f %f\n", xview, yview, zview);
             break;
         case 27: //Escape key
             exit(0);
