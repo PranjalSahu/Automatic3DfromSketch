@@ -563,181 +563,121 @@ void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
 }
 
 
+void set_lighting(){
+    //Add ambient light
+    GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    
+    // Lighting from different position
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColors[0]);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos[0]);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
+    return;
+}
+
 
 void displayone() {
-    
-    
-    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
-    
-//    glBegin( GL_POINTS );
-//    glColor3f(1.0f, 0.0f, 0.0f);
-//    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-//        i2tuple key = iterator->first;
-//        GLfloat px = get<0>(key)*1.0/sa_width;
-//        GLfloat py = get<1>(key)*1.0/sa_height;
-//        glVertex2f(px, py);
-//    }
-//    glEnd();
-    
-    //plot_lines(all_lines_to_merge);
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
-    // Render a color-cube consisting of 6 quads with different colors
-    glLoadIdentity();                 // Reset the model-view matrix
-    glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
-
     
-    if(display_type == 0){
-        std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
-        plot_lines(valid_lines_undirected, line_colors);
-    }
-    else if(display_type == 1){
-        int index  = 0;
-        for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
-            polygon* pl = *iter;
-            plot_lines(pl->lines, index%4);
-            ++index;
+    // iterate over 4 viewports
+    
+    for(int v=0;v<1;++v){
+        
+        
+        //set the 4 viewports on which different views and cost will be displayed
+        // right bottom
+//        if(v == 0){
+//            glViewport(0, 0, sa_width, sa_height);
+//            //glViewport(sa_width/2, sa_height/2, sa_width, sa_height);
+//        }
+//        // left bottom
+//        else if(v == 1){
+//            glViewport(0, sa_height/2, sa_width, sa_height);
+//        }
+//        // top right
+//        else if(v == 2){
+//            glViewport(sa_width/2, 0, sa_width, sa_height/2);
+//        }
+//        // top left
+//        else if(v == 3){
+//            glViewport(0, 0, sa_width/2, sa_height/2);
+//        }
+        
+        
+        
+        
+        
+        if(display_type == 0){
+            std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
+            plot_lines(valid_lines_undirected, line_colors);
+        }
+        else if(display_type == 1){
+            int index  = 0;
+            for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+                polygon* pl = *iter;
+                plot_lines(pl->lines, index%4);
+                ++index;
+            }
+        }
+        else if(display_type == 2){
+            polygon* p = all_polygons[3];
+            plot_lines(p->lines, 0);
+        }
+        else if(display_type == 3){
+            
+            // Camera position angle
+            if(v == 0){
+                gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
+            }
+            else if(v == 1){
+                gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
+            }
+            else if(v == 2){
+                gluLookAt(0, 5, 0, 0, 0, 0, 0, 1, 0);
+            }
+            else if(v == 3){
+                // use cost here
+                gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
+            }
+            
+            set_lighting();
+            
+            polygon* p = all_polygons[3];
+            std::vector<mypoint *> po = p->get_points();
+            
+            std::vector<mypoint*> points_to_render;
+            
+            plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+            printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
+            points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
+            
+            glColor3f(0.9f, 0.9f, 0.9f);
+            glNormal3f(temp->a, temp->b, temp->c);
+            
+            glBegin(GL_QUADS);
+            for(int i=0;i<4;++i){
+                printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
+                glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
+                //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
+            }
+            glEnd();
+            
+            
+            
+            glPushMatrix();
+            glTranslatef(tr_x, tr_y, tr_z);
+            drawmycuboid(1, 2, 5);
+            glPopMatrix();
+            
+            glutSwapBuffers();
         }
     }
-    else if(display_type == 2){
-        polygon* p = all_polygons[3];
-        plot_lines(p->lines, 0);
-    }
-    else if(display_type == 3){
-        
-        
-        // Camera position angle
-        gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
-        //gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
-        //gluLookAt(-5, 5, 5, 0, 0, 0, 0, 1, 0);
-        //gluLookAt(-5, -5, 0, 0, 0, 0, 0, 0, 1);
-        //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
-
-        
-        
-        
-        //Add ambient light
-        GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
-        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-        
-        // Lighting from different position
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColors[0]);
-        glLightfv(GL_LIGHT0, GL_POSITION, lightPos[0]);
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
-        glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
-
-        
-        
-        
-        polygon* p = all_polygons[3];
-        std::vector<mypoint *> po = p->get_points();
-//        po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
-//        po[1]->y = 0; po[1]->z = 300; po[1]->x = 0;
-//        po[2]->y = 300; po[2]->z = 400; po[2]->x = 0;
-//        po[3]->y = 300; po[3]->z = 100; po[3]->x = 0;
-
-                po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
-                po[1]->y = 1; po[1]->z = 0; po[1]->x = 5;
-                po[2]->y = 2; po[2]->z = 0; po[2]->x = 5;
-                po[3]->y = 1; po[3]->z = 0; po[3]->x = 0;
-
-        
-        int i = 2;
-        std::vector<mypoint *> axis_line;
-        //std::vector<mypoint *> pp = temp->project_polygon(po);
-//        std::vector<mypoint *> pp = temp->project_polygon(po, -5, -5, 5);
-//        printf("1> %f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-//        printf("2> %f %f %f\n", pp[1]->x, pp[1]->y, pp[1]->z);
-//        printf("3> %f %f %f\n", pp[2]->x, pp[2]->y, pp[2]->z);
-//        printf("4> %f %f %f\n", pp[3]->x, pp[3]->y, pp[3]->z);
-        
-//        glBegin(GL_QUADS);
-//        glColor3f(1,0,0);
-//        glVertex3f(0, 0, 0);
-//        glVertex3f(10000, 0, 0);
-//        glVertex3f(10000, 10, 0);
-//        glVertex3f(0, 10, 0);
-//        glEnd();
-        
-        
-        // plot the hingin plane's normal line
-//        axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
-//        axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
-//        plot_line(axis_line, 0);
-//        
-        
-//        glBegin(GL_QUADS);
-//        for(int i=0;i<4;++i){
-//            glVertex3f( po[i]->x, po[i]->y, po[i]->z);
-//            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
-//        }
-//        glEnd();
-        
-//        
-//        
-//        
-//        
-//        
-//        // Camera matrix
-//        glm::mat4 View = glm::lookAt(
-//                                     glm::vec3(-5,-5,5), // Camera is at (4,3,3), in World Space
-//                                     glm::vec3(0,0,0), // and looks at the origin
-//                                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                                     );
-//        
-//        glm::mat4 Model = glm::mat4(1.0f);
-//        std::vector<glm::vec4> tp;
-//        tp.push_back(glm::vec4(0,0,0, 1));
-//        tp.push_back(glm::vec4(5,0,0, 1));
-//        tp.push_back(glm::vec4(5,1,0, 1));
-//        tp.push_back(glm::vec4(0,1,0, 1));
-        
-//        glBegin(GL_QUADS);
-//        
-//        //    glm::vec4 result = v * m;
-//        for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
-//            glm::vec4 v =  *iterator;
-//            glVertex3f( v[0], v[1], v[2]);
-//            //std::cout<<glm::to_string(View*v)<<std::endl;
-//        }
-//        glEnd();
-        
-        std::vector<mypoint*> points_to_render;
-
-        plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
-        printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
-        points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
-        
-        glColor3f(0.9f, 0.9f, 0.9f);
-        glNormal3f(temp->a, temp->b, temp->c);
-        
-        glBegin(GL_QUADS);
-        for(int i=0;i<4;++i){
-            printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
-            glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
-            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
-        }
-        glEnd();
-
-        
-        
-        glPushMatrix();
-        glTranslatef(tr_x, tr_y, tr_z);
-        drawmycuboid(1, 2, 5);
-        glPopMatrix();
-//
-//        int i = 0;
-//        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
-//        std::vector<mypoint *> pp = temp->project_polygon(po);
-//        printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-//        plot_line(pp, 0);
-    }
     
-    //plot_points(corner_points);
-    glutSwapBuffers();
-    //glFlush();  // Render now
+    
 }
 
 //Called when the window is resized
@@ -1286,39 +1226,7 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
 }
 
 
-int mainabh(int argc, char** argv){
-    int width = 1;
-    int height = 1;
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
-    
-    
-    
-    glm::mat4 Model = glm::mat4(1.0f);
-    glm::mat4 mvp = Projection * View * Model;
-    
-    std::vector<glm::vec4> tp;
-    std::vector<glm::vec4> orig;
-    
-    tp.push_back(glm::vec4(0,0,0, 1));
-    tp.push_back(glm::vec4(5,0,0, 1));
-    tp.push_back(glm::vec4(5,1,0, 1));
-    tp.push_back(glm::vec4(0,1,0, 1));
-    
-    
-//    glm::vec4 result = v * m;
-    for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
-        glm::vec4 v =  *iterator;
-        std::cout<<glm::to_string(ViewI*(View*v))<<std::endl;
-        //orig.push_back(<#const_reference __x#>)
-    }
-    
-    
-    
-//    std::cout<<glm::to_string(v)<<std::endl;
-//    std::cout<<glm::to_string(result)<<std::endl;
-    
-    return 0;
-}
+
 
 
 
@@ -1533,17 +1441,11 @@ int main(int argc, char** argv){
         points_in_camera[i] = ViewI*points_in_camera[i];
     }
     
-    //qqqqqqqqqqqqqqqqqqplane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
-
-    
-    
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
     
     glutInitWindowSize(sa_width, sa_height);
-    
-    //initRenderinga();
-    
+
     glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glEnable( GL_BLEND );
