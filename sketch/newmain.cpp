@@ -597,7 +597,8 @@ void displayone() {
     }
     else if(display_type == 3){
         
-        gluLookAt(-5, 5, 5, 0, 0, 0, 0, 1, 0);
+        gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
+        //gluLookAt(-5, 5, 5, 0, 0, 0, 0, 1, 0);
         //gluLookAt(-5, -5, 0, 0, 0, 0, 0, 0, 1);
         //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
 
@@ -1101,6 +1102,7 @@ void handleKeypressa(unsigned char key, int x, int y) {
             break;
         case 'j':
             zglut = zglut-1;
+            printf("zglut is %f\n", zglut);
             break;
         case 27: //Escape key
             exit(0);
@@ -1456,6 +1458,7 @@ int main(int argc, char** argv){
 
     // we start with x = 0 then rotate this plane till we get the best plane to project
     plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
+    //plane_to_project = new plane(-5, 5, 5, new mypoint(-5, 5, 5));
     
     // points in the world camera
     points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
@@ -1466,23 +1469,18 @@ int main(int argc, char** argv){
     
     // get the points in the camera plane and make its depth equal to 0 since we have lost that information
     // in that image
-//    for(int i=0;i<4;++i){
-//        points_in_camera[i] = View*points_in_camera[i];
-//        points_in_camera[i][3] = 0;
-//    }
-    
-    std::cout<<glm::to_string(View*glm::vec4(0, 0, 0, 1))<<std::endl;
+    for(int i=0;i<4;++i){
+        points_in_camera[i] = View*points_in_camera[i];
+        points_in_camera[i][2] = 0;
+    }
     
     // get world coordinates for these points
     for(int i=0;i<4;++i){
         points_in_camera[i] = ViewI*points_in_camera[i];
     }
     
-    
-    
-    
-    
-    
+    //qqqqqqqqqqqqqqqqqqplane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
+
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
