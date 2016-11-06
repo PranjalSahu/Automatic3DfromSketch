@@ -22,6 +22,11 @@
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/ext.hpp>
 
 #else
 #include <GL/glut.h>
@@ -134,7 +139,7 @@ int display_type = 2;
 // plane to project for demo
 plane* plane_to_project;
 
-int angle_p = 0;
+float angle_p = 0;
 float tr_x = 0;
 float tr_y = 0;
 float tr_z = 0;
@@ -145,6 +150,10 @@ std::vector<polygon*> all_polygons;
 //bool isleft(mypointa *a, mypointa *b, mypointa *c){
 //    return ((b->x - a->x)*(c->y - a->y) - (b->y - a->y)*(c->x - a->x)) > 0;
 //}
+
+
+// glut look at z position
+int zglut = 100;
 
 
 void thinningIteration(cv::Mat& im, int iter)
@@ -569,22 +578,47 @@ void displayone() {
     }
     else if(display_type == 3){
         
-        gluLookAt(-5, -5, 5, 0, 0, 0, 0, 0, 1);
+        gluLookAt(5, 0, zglut, 0, 0, 0, 0, 1, 0);
+        //gluLookAt(-5, -5, 0, 0, 0, 0, 0, 0, 1);
         //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
 
+        
+        
+        
+        
         polygon* p = all_polygons[3];
         std::vector<mypoint *> po = p->get_points();
-        po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
-        po[1]->y = 0; po[1]->z = 300; po[1]->x = 0;
-        po[2]->y = -300; po[2]->z = 400; po[2]->x = 0;
-        po[3]->y = -300; po[3]->z = 100; po[3]->x = 0;
-//
+//        po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
+//        po[1]->y = 0; po[1]->z = 300; po[1]->x = 0;
+//        po[2]->y = 300; po[2]->z = 400; po[2]->x = 0;
+//        po[3]->y = 300; po[3]->z = 100; po[3]->x = 0;
+
+                po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
+                po[1]->y = 1; po[1]->z = 0; po[1]->x = 5;
+                po[2]->y = 2; po[2]->z = 0; po[2]->x = 5;
+                po[3]->y = 1; po[3]->z = 0; po[3]->x = 0;
+
+        
         int i = 2;
         std::vector<mypoint *> axis_line;
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 0, 1);
-        std::vector<mypoint *> pp = temp->project_polygon(po);
-        printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
+        //std::vector<mypoint *> pp = temp->project_polygon(po);
+//        std::vector<mypoint *> pp = temp->project_polygon(po, -5, -5, 5);
+//        printf("1> %f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
+//        printf("2> %f %f %f\n", pp[1]->x, pp[1]->y, pp[1]->z);
+//        printf("3> %f %f %f\n", pp[2]->x, pp[2]->y, pp[2]->z);
+//        printf("4> %f %f %f\n", pp[3]->x, pp[3]->y, pp[3]->z);
         
+//        glBegin(GL_QUADS);
+//        glColor4f(.23,.78,.32,1.0);
+//        glVertex3f(0, 0, 0);
+//        glVertex3f(10000, 10000, temp->get_z(10000, 10000));
+//        glVertex3f(10000, 0, temp->get_z(10000, 0));
+//        glVertex3f(0, 10000, temp->get_z(0, 10000));
+//        glEnd();
+        
+        
+        // plot the hingin plane's normal line
         axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
         axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
         plot_line(axis_line, 0);
@@ -592,13 +626,50 @@ void displayone() {
         
         glBegin(GL_QUADS);
         for(int i=0;i<4;++i){
-            glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
+            glVertex3f( po[i]->x, po[i]->y, po[i]->z);
+            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
         }
         glEnd();
         
+        
+        
+        
+        
+        
+        // Camera matrix
+        glm::mat4 View = glm::lookAt(
+                                     glm::vec3(-5,-5,5), // Camera is at (4,3,3), in World Space
+                                     glm::vec3(0,0,0), // and looks at the origin
+                                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                                     );
+        
+        glm::mat4 Model = glm::mat4(1.0f);
+        std::vector<glm::vec4> tp;
+        tp.push_back(glm::vec4(0,0,0, 1));
+        tp.push_back(glm::vec4(5,0,0, 1));
+        tp.push_back(glm::vec4(5,1,0, 1));
+        tp.push_back(glm::vec4(0,1,0, 1));
+        
+//        glBegin(GL_QUADS);
+//        
+//        //    glm::vec4 result = v * m;
+//        for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
+//            glm::vec4 v =  *iterator;
+//            glVertex3f( v[0], v[1], v[2]);
+//            //std::cout<<glm::to_string(View*v)<<std::endl;
+//        }
+//        glEnd();
+        
+        
+        
+        
+        
+        
+        
+        
         glPushMatrix();
         glTranslatef(tr_x, tr_y, tr_z);
-        drawmycuboid(1, 2, 5);
+        //drawmycuboid(1, 2, 5);
         glPopMatrix();
 //
 //        int i = 0;
@@ -987,7 +1058,7 @@ void handleKeypressa(unsigned char key, int x, int y) {
             angle_p  = 1-angle_p;       // on each key press increases the angle by 1
             break;
         case 'q':
-            angle_p = angle_p+1;
+            angle_p = angle_p+0.5;
             break;
         case 'x':
             tr_x = tr_x+0.5;
@@ -997,6 +1068,9 @@ void handleKeypressa(unsigned char key, int x, int y) {
             break;
         case 'z':
             tr_z = tr_z+0.5;
+            break;
+        case 'j':
+            zglut = zglut-1;
             break;
         case 27: //Escape key
             exit(0);
@@ -1087,7 +1161,7 @@ void plotpoint(i2tuple pt){
     return;
 }
 
-int maina(int argc, char **argv){
+int mainabs(int argc, char **argv){
     plane* p = new plane(0, 0, 1, new mypoint());
     
     printf("%f %f %f\n", p->a, p->b, p->c);
@@ -1124,6 +1198,52 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
     // Enable perspective projection with fovy, aspect, zNear and zFar
     gluPerspective(45.0f, aspect, 0.1f, 100.0f);
 }
+
+
+int mainabh(int argc, char** argv){
+    int width = 1;
+    int height = 1;
+    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
+    
+    // Camera matrix
+    glm::mat4 View = glm::lookAt(
+            glm::vec3(-5,5,5), // Camera is at (4,3,3), in World Space
+            glm::vec3(0,0,0), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+    
+    
+    glm::mat4 ViewI = glm::inverse(View);
+    
+    
+    
+    glm::mat4 Model = glm::mat4(1.0f);
+    glm::mat4 mvp = Projection * View * Model;
+    
+    std::vector<glm::vec4> tp;
+    std::vector<glm::vec4> orig;
+    
+    tp.push_back(glm::vec4(0,0,0, 1));
+    tp.push_back(glm::vec4(5,0,0, 1));
+    tp.push_back(glm::vec4(5,1,0, 1));
+    tp.push_back(glm::vec4(0,1,0, 1));
+    
+    
+//    glm::vec4 result = v * m;
+    for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
+        glm::vec4 v =  *iterator;
+        std::cout<<glm::to_string(ViewI*(View*v))<<std::endl;
+        //orig.push_back(<#const_reference __x#>)
+    }
+    
+    
+    
+//    std::cout<<glm::to_string(v)<<std::endl;
+//    std::cout<<glm::to_string(result)<<std::endl;
+    
+    return 0;
+}
+
 
 
 int main(int argc, char** argv){
@@ -1318,11 +1438,15 @@ int main(int argc, char** argv){
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
+    
     glutInitWindowSize(sa_width, sa_height);
     
     //initRenderinga();
     
     glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable( GL_BLEND );
+    
     //glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
     glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);

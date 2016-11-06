@@ -17,6 +17,7 @@
 		F9074DEB1DC50EDE0023CF9A /* polygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9074DEA1DC50EDE0023CF9A /* polygon.cpp */; };
 		F90F02CE1DCD50EE0078F4B0 /* plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90F02CD1DCD50EE0078F4B0 /* plane.cpp */; };
 		F90F02D21DCD91F40078F4B0 /* testm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90F02D11DCD91F40078F4B0 /* testm.cpp */; };
+		F90F02D41DCE50940078F4B0 /* cost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F90F02D31DCE50940078F4B0 /* cost.cpp */; };
 		F9899B9C1DA36ED100F0A4C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */; };
 		F9899B9E1DA36ED900F0A4C1 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9D1DA36ED900F0A4C1 /* GLUT.framework */; };
 		F9899BA01DA36EFA00F0A4C1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9899B9F1DA36EFA00F0A4C1 /* OpenGL.framework */; };
@@ -63,6 +64,8 @@
 		F90F02C61DCD4E290078F4B0 /* mypoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mypoint.h; sourceTree = "<group>"; };
 		F90F02CD1DCD50EE0078F4B0 /* plane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plane.cpp; sourceTree = "<group>"; };
 		F90F02D11DCD91F40078F4B0 /* testm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testm.cpp; sourceTree = "<group>"; };
+		F90F02D31DCE50940078F4B0 /* cost.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cost.cpp; sourceTree = "<group>"; };
+		F90F02D51DCE50A10078F4B0 /* cost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cost.h; sourceTree = "<group>"; };
 		F9899B861DA3660500F0A4C1 /* sketch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketch; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B941DA36D2800F0A4C1 /* sketcha */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sketcha; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9899B9B1DA36ED100F0A4C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -139,6 +142,8 @@
 				F90F02C51DCD4C960078F4B0 /* plane.h */,
 				F90F02CD1DCD50EE0078F4B0 /* plane.cpp */,
 				F90F02D11DCD91F40078F4B0 /* testm.cpp */,
+				F90F02D31DCE50940078F4B0 /* cost.cpp */,
+				F90F02D51DCE50A10078F4B0 /* cost.h */,
 			);
 			path = sketch;
 			sourceTree = "<group>";
@@ -222,6 +227,7 @@
 			files = (
 				F9074DEB1DC50EDE0023CF9A /* polygon.cpp in Sources */,
 				F9074DDE1DBC47E40023CF9A /* newmain.cpp in Sources */,
+				F90F02D41DCE50940078F4B0 /* cost.cpp in Sources */,
 				F90F02CE1DCD50EE0078F4B0 /* plane.cpp in Sources */,
 				F9074DE91DBD4C9F0023CF9A /* myutilities.cpp in Sources */,
 				F9074DDC1DB877EC0023CF9A /* mypoint.cpp in Sources */,
