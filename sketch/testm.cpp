@@ -1,11 +1,14 @@
 //
-//  testm.cpp
+//  main.cpp
 //  sketch
 //
-//  Created by Pranjal Sahu on 11/5/16.
+//  Created by Pranjal Sahu on 10/4/16.
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
 //
 
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 #include <stdlib.h>
 #include <iostream>
@@ -23,160 +26,198 @@
 #endif
 
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <math.h>
 #include <queue>
 #include <list>
 #include <vector>
 #include <fstream>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <iostream>
-#include <queue>
-#include <list>
-#include <math.h>
-#include "myline.h"
-#include "polygon.h"
-#include "plane.h"
 
 
+//void renderScene(void) {
+//
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//    glBegin(GL_TRIANGLES);
+//    glVertex3f(-0.5,-0.5,0.0);
+//    glVertex3f(0.5,0.0,0.0);
+//    glVertex3f(0.0,0.5,0.0);
+//    glEnd();
+//
+//    glutSwapBuffers();
+//}
+//
+//int main(int argc, char **argv) {
+//
+//
+//
+//    // init GLUT and create Window
+//    glutInit(&argc, argv);
+//    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+//    glutInitWindowPosition(100,100);
+//    glutInitWindowSize(320,320);
+//    glutCreateWindow("Lighthouse3D - GLUT Tutorial");
+//
+//    // register callbacks
+//    glutDisplayFunc(renderScene);
+//
+//
+//    // get opengl version
+//    // printf("%s", glGetString(GL_VERSION));
+//
+//    // enter GLUT event processing cycle
+//    glutMainLoop();
+//
+//    return 1;
+//}
 
-/* Global variables */
-char title[] = "3D Shapes";
 
-/* Initialize OpenGL Graphics */
-void initGLa() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-    glClearDepth(1.0f);                   // Set background depth to farthest
-    glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
-    glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
-    glShadeModel(GL_SMOOTH);   // Enable smooth shading
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+using namespace std;
+
+
+//Called when a key is pressed
+void handleKeypress(unsigned char key, int x, int y) {
+    switch (key) {
+        case 27: //Escape key
+            exit(0);
+    }
 }
 
-/* Handler for window-repaint event. Called back when the window first appears and
- whenever the window needs to be re-painted. */
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
-    
-    // Render a color-cube consisting of 6 quads with different colors
-    glLoadIdentity();                 // Reset the model-view matrix
-    glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
-    
-    glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
-    // Top face (y = 1.0f)
-    // Define vertices in counter-clockwise (CCW) order with normal pointing out
-    glColor3f(0.0f, 1.0f, 0.0f);     // Green
-    glVertex3f( 1.0f, 1.0f, -1.0f);
-    glVertex3f(-1.0f, 1.0f, -1.0f);
-    glVertex3f(-1.0f, 1.0f,  1.0f);
-    glVertex3f( 1.0f, 1.0f,  1.0f);
-    
-    // Bottom face (y = -1.0f)
-    glColor3f(1.0f, 0.5f, 0.0f);     // Orange
-    glVertex3f( 1.0f, -1.0f,  1.0f);
-    glVertex3f(-1.0f, -1.0f,  1.0f);
-    glVertex3f(-1.0f, -1.0f, -1.0f);
-    glVertex3f( 1.0f, -1.0f, -1.0f);
-    
-    // Front face  (z = 1.0f)
-    glColor3f(1.0f, 0.0f, 0.0f);     // Red
-    glVertex3f( 1.0f,  1.0f, 1.0f);
-    glVertex3f(-1.0f,  1.0f, 1.0f);
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-    glVertex3f( 1.0f, -1.0f, 1.0f);
-    
-    // Back face (z = -1.0f)
-    glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
-    glVertex3f( 1.0f, -1.0f, -1.0f);
-    glVertex3f(-1.0f, -1.0f, -1.0f);
-    glVertex3f(-1.0f,  1.0f, -1.0f);
-    glVertex3f( 1.0f,  1.0f, -1.0f);
-    
-    // Left face (x = -1.0f)
-    glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-    glVertex3f(-1.0f,  1.0f,  1.0f);
-    glVertex3f(-1.0f,  1.0f, -1.0f);
-    glVertex3f(-1.0f, -1.0f, -1.0f);
-    glVertex3f(-1.0f, -1.0f,  1.0f);
-    
-    // Right face (x = 1.0f)
-    glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
-    glVertex3f(1.0f,  1.0f, -1.0f);
-    glVertex3f(1.0f,  1.0f,  1.0f);
-    glVertex3f(1.0f, -1.0f,  1.0f);
-    glVertex3f(1.0f, -1.0f, -1.0f);
-    glEnd();  // End of drawing color-cube
-    
-    // Render a pyramid consists of 4 triangles
-    glLoadIdentity();                  // Reset the model-view matrix
-    glTranslatef(-1.5f, 0.0f, -6.0f);  // Move left and into the screen
-    
-    glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
-    // Front
-    glColor3f(1.0f, 0.0f, 0.0f);     // Red
-    glVertex3f( 0.0f, 1.0f, 0.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);     // Green
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-    glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-    glVertex3f(1.0f, -1.0f, 1.0f);
-    
-    // Right
-    glColor3f(1.0f, 0.0f, 0.0f);     // Red
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-    glVertex3f(1.0f, -1.0f, 1.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);     // Green
-    glVertex3f(1.0f, -1.0f, -1.0f);
-    
-    // Back
-    glColor3f(1.0f, 0.0f, 0.0f);     // Red
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);     // Green
-    glVertex3f(1.0f, -1.0f, -1.0f);
-    glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-    glVertex3f(-1.0f, -1.0f, -1.0f);
-    
-    // Left
-    glColor3f(1.0f,0.0f,0.0f);       // Red
-    glVertex3f( 0.0f, 1.0f, 0.0f);
-    glColor3f(0.0f,0.0f,1.0f);       // Blue
-    glVertex3f(-1.0f,-1.0f,-1.0f);
-    glColor3f(0.0f,1.0f,0.0f);       // Green
-    glVertex3f(-1.0f,-1.0f, 1.0f);
-    glEnd();   // Done drawing the pyramid
-    
-    glutSwapBuffers();  // Swap the front and back frame buffers (double buffering)
+//Initializes 3D rendering
+void initRendering() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); //Enable lighting
+    glEnable(GL_LIGHT0); //Enable light #0
+    glEnable(GL_LIGHT1); //Enable light #1
+    glEnable(GL_NORMALIZE); //Automatically normalize normals
+    //glShadeModel(GL_SMOOTH); //Enable smooth shading
 }
 
-/* Handler for window re-size event. Called back when the window first appears and
- whenever the window is re-sized with its new width and height */
-void reshapea(GLsizei width, GLsizei height) {  // GLsizei for non-negative integer
-    // Compute aspect ratio of the new window
-    if (height == 0) height = 1;                // To prevent divide by 0
-    GLfloat aspect = (GLfloat)width / (GLfloat)height;
-    
-    // Set the viewport to cover the new window
-    glViewport(0, 0, width, height);
-    
-    // Set the aspect ratio of the clipping volume to match the viewport
-    glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
-    glLoadIdentity();             // Reset
-    // Enable perspective projection with fovy, aspect, zNear and zFar
-    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+//Called when the window is resized
+void handleResizeab(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-/* Main function: GLUT runs as a console application starting at main() */
-int mainapl(int argc, char** argv) {
-    glutInit(&argc, argv);            // Initialize GLUT
-    glutInitDisplayMode(GLUT_DOUBLE); // Enable double buffered mode
-    glutInitWindowSize(640, 480);   // Set the window's initial width & height
-    glutInitWindowPosition(50, 50); // Position the window's initial top-left corner
-    glutCreateWindow(title);          // Create window with the given title
-    glutDisplayFunc(display);       // Register callback handler for window re-paint event
-    //glutReshapeFunc(reshapea);       // Register callback handler for window re-size event
-    initGLa();                       // Our own OpenGL initialization
-    glutMainLoop();                 // Enter the infinite event-processing loop
+float _angle = -70.0f;
+
+//Draws the 3D scene
+void drawScene() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    glTranslatef(0.0f, 0.0f, -8.0f);
+    
+    //Add ambient light
+    GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+    
+    //Add positioned light
+    GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f}; //Color (0.5, 0.5, 0.5)
+    GLfloat lightPos0[] = {4.0f, 0.0f, 8.0f, 1.0f}; //Positioned at (4, 0, 8)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+    
+    //Add directed light
+    GLfloat lightColor1[] = {0.5f, 0.2f, 0.2f, 1.0f}; //Color (0.5, 0.2, 0.2)
+    //Coming from the direction (-1, 0.5, 0.5)
+    GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+    
+    glRotatef(_angle, 0.0f, 1.0f, 1.0f);
+    //Set the colour here
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_QUADS);
+    
+    //Front
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    //glNormal3f(-1.0f, 0.0f, 1.0f);
+    glVertex3f(-1.5f, -1.0f, 1.5f);
+    //glNormal3f(1.0f, 0.0f, 1.0f);
+    glVertex3f(1.5f, -1.0f, 1.5f);
+    //glNormal3f(1.0f, 0.0f, 1.0f);
+    glVertex3f(1.5f, 1.0f, 1.5f);
+    //glNormal3f(-1.0f, 0.0f, 1.0f);
+    glVertex3f(-1.5f, 1.0f, 1.5f);
+    
+    //Right
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    //glNormal3f(1.0f, 0.0f, -1.0f);
+    glVertex3f(1.5f, -1.0f, -1.5f);
+    //glNormal3f(1.0f, 0.0f, -1.0f);
+    glVertex3f(1.5f, 1.0f, -1.5f);
+    //glNormal3f(1.0f, 0.0f, 1.0f);
+    glVertex3f(1.5f, 1.0f, 1.5f);
+    //glNormal3f(1.0f, 0.0f, 1.0f);
+    glVertex3f(1.5f, -1.0f, 1.5f);
+    
+    //Back
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    //glNormal3f(-1.0f, 0.0f, -1.0f);
+    glVertex3f(-1.5f, -1.0f, -1.5f);
+    //glNormal3f(-1.0f, 0.0f, -1.0f);
+    glVertex3f(-1.5f, 1.0f, -1.5f);
+    //glNormal3f(1.0f, 0.0f, -1.0f);
+    glVertex3f(1.5f, 1.0f, -1.5f);
+    //glNormal3f(1.0f, 0.0f, -1.0f);
+    glVertex3f(1.5f, -1.0f, -1.5f);
+    
+    //Left
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    //glNormal3f(-1.0f, 0.0f, -1.0f);
+    glVertex3f(-1.5f, -1.0f, -1.5f);
+    //glNormal3f(-1.0f, 0.0f, 1.0f);
+    glVertex3f(-1.5f, -1.0f, 1.5f);
+    //glNormal3f(-1.0f, 0.0f, 1.0f);
+    glVertex3f(-1.5f, 1.0f, 1.5f);
+    //glNormal3f(-1.0f, 0.0f, -1.0f);
+    glVertex3f(-1.5f, 1.0f, -1.5f);
+    
+    glEnd();
+    
+    glutSwapBuffers();
+}
+
+void update(int value) {
+    _angle += 1.5f;
+    if (_angle > 360) {
+        _angle -= 360;
+    }
+    
+    glutPostRedisplay();
+    glutTimerFunc(25, update, 0);
+}
+
+int mainpqr(int argc, char** argv) {
+    //Initialize GLUT
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(400, 400);
+    
+    //Create the window
+    glutCreateWindow("Rotating 3D Cuboid");
+    initRendering();
+    
+    //Set handler functions
+    glutDisplayFunc(drawScene);
+    glutKeyboardFunc(handleKeypress);
+    glutReshapeFunc(handleResizeab);
+    
+    //Add a timer
+    glutTimerFunc(25, update, 0);
+    
+    glutMainLoop();
     return 0;
 }
+
+

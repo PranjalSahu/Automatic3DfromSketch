@@ -156,6 +156,10 @@ std::vector<polygon*> all_polygons;
 int zglut = 100;
 
 
+
+
+float xview = 0, yview = 0, zview = 0;
+
 // Camera matrix
 glm::mat4 View = glm::lookAt(
                              glm::vec3(-5,5,5), // Camera is at (4,3,3), in World Space
@@ -166,6 +170,12 @@ glm::mat4 View = glm::lookAt(
 
 glm::mat4 ViewI = glm::inverse(View);
 
+
+
+
+//Add positioned light
+GLfloat lightColors[][4] = {{1.f, 1.f, 1.f, 1.0f}, {0.5f, 0.2f, 0.2f, 1.0f}};
+GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   // Positioned at (4, 0, 8)
 
 
 
@@ -597,12 +607,27 @@ void displayone() {
     }
     else if(display_type == 3){
         
-        gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
+        
+        // Camera position angle
+        gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
+        //gluLookAt(0, 0, zglut, 0, 0, 0, 0, 1, 0);
         //gluLookAt(-5, 5, 5, 0, 0, 0, 0, 1, 0);
         //gluLookAt(-5, -5, 0, 0, 0, 0, 0, 0, 1);
         //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
 
         
+        
+        
+        //Add ambient light
+        GLfloat ambientColor[] = {0.2f, 0.2f, 0.2f, 1.0f}; //Color (0.2, 0.2, 0.2)
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+        
+        // Lighting from different position
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColors[0]);
+        glLightfv(GL_LIGHT0, GL_POSITION, lightPos[0]);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
+        glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
+
         
         
         
@@ -628,13 +653,13 @@ void displayone() {
 //        printf("3> %f %f %f\n", pp[2]->x, pp[2]->y, pp[2]->z);
 //        printf("4> %f %f %f\n", pp[3]->x, pp[3]->y, pp[3]->z);
         
-        glBegin(GL_QUADS);
-        glColor3f(1,0,0);
-        glVertex3f(0, 0, 0);
-        glVertex3f(10000, 0, 0);
-        glVertex3f(10000, 10, 0);
-        glVertex3f(0, 10, 0);
-        glEnd();
+//        glBegin(GL_QUADS);
+//        glColor3f(1,0,0);
+//        glVertex3f(0, 0, 0);
+//        glVertex3f(10000, 0, 0);
+//        glVertex3f(10000, 10, 0);
+//        glVertex3f(0, 10, 0);
+//        glEnd();
         
         
         // plot the hingin plane's normal line
@@ -684,8 +709,11 @@ void displayone() {
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
         printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
         points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
+        
+        glColor3f(0.9f, 0.9f, 0.9f);
+        glNormal3f(temp->a, temp->b, temp->c);
+        
         glBegin(GL_QUADS);
-        glColor3f(0,0,1);
         for(int i=0;i<4;++i){
             printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
             glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
@@ -1104,6 +1132,24 @@ void handleKeypressa(unsigned char key, int x, int y) {
             zglut = zglut-1;
             printf("zglut is %f\n", zglut);
             break;
+        case '1':
+            xview = xview+0.5;
+            break;
+        case '2':
+            yview = yview +0.5;
+            break;
+        case '3':
+            zview = zview+0.5;
+            break;
+        case '4':
+            xview = xview-0.5;
+            break;
+        case '5':
+            yview = yview-0.5;
+            break;
+        case '6':
+            zview = zview-0.5;
+            break;
         case 27: //Escape key
             exit(0);
     }
@@ -1206,12 +1252,20 @@ int mainabs(int argc, char **argv){
 
 
 void initGL() {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+    int back = 1;
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 0.0f, 0.0f } };
+    glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f); // Set background color to black and opaque
     glClearDepth(1.0f);                   // Set background depth to farthest
-    glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
     glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
     glShadeModel(GL_SMOOTH);   // Enable smooth shading
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+    glEnable( GL_POINT_SMOOTH );
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING); //Enable lighting
+    glEnable(GL_LIGHT0); //Enable light #0
+    glEnable(GL_LIGHT1); //Enable light #1
+    glEnable(GL_NORMALIZE); //Automatically normalize normal
 }
 
 
