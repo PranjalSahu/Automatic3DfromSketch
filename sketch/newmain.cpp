@@ -597,7 +597,7 @@ void displayone() {
     }
     else if(display_type == 3){
         
-        gluLookAt(5, 0, zglut, 0, 0, 0, 0, 1, 0);
+        gluLookAt(-5, 5, 5, 0, 0, 0, 0, 1, 0);
         //gluLookAt(-5, -5, 0, 0, 0, 0, 0, 0, 1);
         //gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1);
 
@@ -627,13 +627,13 @@ void displayone() {
 //        printf("3> %f %f %f\n", pp[2]->x, pp[2]->y, pp[2]->z);
 //        printf("4> %f %f %f\n", pp[3]->x, pp[3]->y, pp[3]->z);
         
-//        glBegin(GL_QUADS);
-//        glColor4f(.23,.78,.32,1.0);
-//        glVertex3f(0, 0, 0);
-//        glVertex3f(10000, 10000, temp->get_z(10000, 10000));
-//        glVertex3f(10000, 0, temp->get_z(10000, 0));
-//        glVertex3f(0, 10000, temp->get_z(0, 10000));
-//        glEnd();
+        glBegin(GL_QUADS);
+        glColor3f(1,0,0);
+        glVertex3f(0, 0, 0);
+        glVertex3f(10000, 0, 0);
+        glVertex3f(10000, 10, 0);
+        glVertex3f(0, 10, 0);
+        glEnd();
         
         
         // plot the hingin plane's normal line
@@ -684,9 +684,10 @@ void displayone() {
         printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
         points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
         glBegin(GL_QUADS);
+        glColor3f(0,0,1);
         for(int i=0;i<4;++i){
             printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
-            glVertex3f( points_to_render[i]->x/20, points_to_render[i]->y/20, points_to_render[i]->z/20);
+            glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
             //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
         }
         glEnd();
@@ -695,7 +696,7 @@ void displayone() {
         
         glPushMatrix();
         glTranslatef(tr_x, tr_y, tr_z);
-        //drawmycuboid(1, 2, 5);
+        drawmycuboid(1, 2, 5);
         glPopMatrix();
 //
 //        int i = 0;
@@ -1064,9 +1065,9 @@ void handleKeypressa(unsigned char key, int x, int y) {
         case 'f':
             mergelines(1);
             break;
-        case 'a':
-            mergelinesa(img);
-            break;
+        //case 'a':
+        //    mergelinesa(img);
+        //    break;
         case 'm':
             merge_points();
             break;
@@ -1085,6 +1086,9 @@ void handleKeypressa(unsigned char key, int x, int y) {
             break;
         case 'q':
             angle_p = angle_p+0.5;
+            break;
+        case 'a':
+            angle_p = angle_p-0.5;
             break;
         case 'x':
             tr_x = tr_x+0.5;
@@ -1450,23 +1454,24 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
 
-    // we start with yz = 0 then rotate this plane till we get the best plane to project
-    plane_to_project = new plane(1, 0, 0, new mypoint());
+    // we start with x = 0 then rotate this plane till we get the best plane to project
+    plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
     
     // points in the world camera
     points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
-    points_in_camera.push_back(glm::vec4(50, 0, 0, 1));
-    points_in_camera.push_back(glm::vec4(50, 20, 0, 1));
-    points_in_camera.push_back(glm::vec4(0, 20, 0, 1));
+    points_in_camera.push_back(glm::vec4(5, 0, 0, 1));
+    points_in_camera.push_back(glm::vec4(5, 2, 0, 1));
+    points_in_camera.push_back(glm::vec4(0, 2, 0, 1));
     
     
     // get the points in the camera plane and make its depth equal to 0 since we have lost that information
     // in that image
-    for(int i=0;i<4;++i){
-        points_in_camera[i] = View*points_in_camera[i];
-        points_in_camera[i][3] = 0;
-    }
+//    for(int i=0;i<4;++i){
+//        points_in_camera[i] = View*points_in_camera[i];
+//        points_in_camera[i][3] = 0;
+//    }
     
+    std::cout<<glm::to_string(View*glm::vec4(0, 0, 0, 1))<<std::endl;
     
     // get world coordinates for these points
     for(int i=0;i<4;++i){
