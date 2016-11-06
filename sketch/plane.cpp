@@ -73,7 +73,7 @@ mypoint* plane::project_point(float x, float y, float z, float n1, float n2, flo
     float num = a*p->x-a*x+b*p->y-b*y+c*p->z-c*z;
     float den = a*n1+b*n2+c*n3;
     t = num/den;
-    return new mypoint(x+t*a, y+t*b, z+t*c);
+    return new mypoint(x+t*n1, y+t*n2, z+t*n3);
 }
 
 // returns the point obtained after projecting x,y,z onto this plane
@@ -92,7 +92,10 @@ mypoint* plane::project_point(glm::vec4 vertex, float n1, float n2, float n3){
     float num = a*p->x-a*x+b*p->y-b*y+c*p->z-c*z;
     float den = a*n1+b*n2+c*n3;
     t = num/den;
-    return new mypoint(x+t*a, y+t*b, z+t*c);
+    float px = x+t*n1;
+    float py = y+t*n2;
+    float pz = z+t*n3;
+    return new mypoint(px, py, pz);
 }
 
 
