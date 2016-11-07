@@ -492,6 +492,7 @@ void plot_line(std::vector<mypoint*> all_points, int color){
 
 void plot_line(myline *linet, int color){
     glBegin(GL_LINE_LOOP);
+    glLineWidth(5);
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
 
     int r = color;
