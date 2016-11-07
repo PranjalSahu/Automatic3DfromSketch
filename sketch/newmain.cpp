@@ -520,8 +520,11 @@ void plot_line(myline *linet, int color){
 }
 
 void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
-    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    GLfloat colors[][3] = { { 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
 
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+
+    
     int index = 0;
     for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
         myline * linet = *iterator;
@@ -668,6 +671,7 @@ void displayone() {
     }
     else if(display_type == 3){
         
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         // Camera position angle
         gluLookAt(-5+xview, 5+yview, 5+zview, 0, 0, 0, 0, 1, 0);
@@ -702,10 +706,22 @@ void displayone() {
         printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(p2d, points_to_render_vec));
         
         
+        
+        int render_scale = 30;
+
+        glBegin(GL_LINE_LOOP);
+        glLineWidth(105);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        for(int i=0;i<points_to_render_vec.size();++i){
+            glVertex3f(points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
+        }
+        glEnd();
+        
+        
         glColor3f(0.9f, 0.9f, 0.9f);
         glNormal3f(temp->a, temp->b, temp->c);
         
-        int render_scale = 30;
+        
         glBegin(GL_QUADS);
         for(int i=0;i<points_to_render_vec.size();++i){
             //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
@@ -1245,7 +1261,7 @@ int mainabs(int argc, char **argv){
 
 
 void initGL() {
-    int back = 2;
+    int back = 1;
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 0.0f, 0.0f } };
     glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f); // Set background color to black and opaque
     glClearDepth(1.0f);                   // Set background depth to farthest
