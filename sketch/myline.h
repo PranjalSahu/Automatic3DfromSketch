@@ -15,7 +15,7 @@
 #define SLOPE_DIFFERENCE 0.01
 #define DISTANCE_DIFFERENCE 1
 #define SLOPE_ITER_DIFF 1
-#define HARRIS_THRESH 60              // threshold for choosing the corner points using harris
+#define HARRIS_THRESH 50              // threshold for choosing the corner points using harris
 #define MERGE_POINT_THRESH 4.0        // threshold for merging points when
 #define PERPENDICULAR_THRESH 10
 #define POINT_PAIR_LYING_THRESH 0.95

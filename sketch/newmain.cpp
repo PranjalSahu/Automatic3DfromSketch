@@ -1428,11 +1428,11 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 
 int main(int argc, char** argv){
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
     
     
     
-    imga = imread("/Users/pranjal/Desktop/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imga = imread("/Users/pranjal/Desktop/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
     //GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
     
     

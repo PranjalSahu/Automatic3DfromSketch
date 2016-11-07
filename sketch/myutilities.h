@@ -31,7 +31,7 @@
 
 
 #define PI 3.14159265
-#define IMG_SCALE 5.0
+#define IMG_SCALE 3.0
 
 typedef std::tuple<int,int> i2tuple;
 
