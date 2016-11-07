@@ -17,8 +17,8 @@
 #define SLOPE_ITER_DIFF 1
 #define HARRIS_THRESH 50              // threshold for choosing the corner points using harris
 #define MERGE_POINT_THRESH 4.0        // threshold for merging points when
-#define PERPENDICULAR_THRESH 1
-#define POINT_PAIR_LYING_THRESH 0.95
+#define PERPENDICULAR_THRESH 6
+#define POINT_PAIR_LYING_THRESH 0.8
 #define SHOW_CORNER_POINTS 1                    // flag to display points using opengl
 
 
