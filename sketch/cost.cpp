@@ -79,7 +79,10 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     return total_cost;
 }
 
-cost::cost(glm::vec2 point_2d_axis[]){
+
+// takes as input the point in 2d axis
+// 4 points must be provided
+cost::cost(std::vector<glm::vec2> point_2d_axis){
     
     axis_3d[0][0] = 1;
     axis_3d[0][1] = 0;
@@ -94,12 +97,12 @@ cost::cost(glm::vec2 point_2d_axis[]){
     axis_3d[2][2] = 0;
     
     
-    // tale 4 points as input from user
+    // take 4 points as input from user
     glm::vec2 px  = point_2d_axis[1]-point_2d_axis[0];
     glm::vec2 py  = point_2d_axis[2]-point_2d_axis[0];
     glm::vec2 pz  = point_2d_axis[3]-point_2d_axis[0];
     
-    axis_2d[0] = px;
-    axis_2d[1] = py;
-    axis_2d[2] = pz;
+    axis_2d[0] = px/px.length();
+    axis_2d[1] = py/py.length();
+    axis_2d[2] = pz/pz.length();
 }

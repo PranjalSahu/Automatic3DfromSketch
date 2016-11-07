@@ -54,7 +54,7 @@
 #include "myline.h"
 #include "polygon.h"
 #include "plane.h"
-
+#include "cost.h"
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -155,6 +155,9 @@ std::vector<polygon*> all_polygons;
 // glut look at z position
 int zglut = 100;
 
+std::vector<glm::vec2> axis_2d_points;
+
+cost* cost_obj;
 
 ofstream myfile;
 
@@ -184,6 +187,11 @@ GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   /
 // get the world space coordinates for these
 // then project these coordinates onto hinging plane to get the best plane and the projected polygon will be the final
 std::vector<glm::vec4> points_in_camera;
+
+
+
+// sequence of polygon which are going to be placed
+int poly_seq[2];
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -601,17 +609,6 @@ void displayone() {
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
-//    glBegin( GL_POINTS );
-//    glColor3f(1.0f, 0.0f, 0.0f);
-//    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-//        i2tuple key = iterator->first;
-//        GLfloat px = get<0>(key)*1.0/sa_width;
-//        GLfloat py = get<1>(key)*1.0/sa_height;
-//        glVertex2f(px, py);
-//    }
-//    glEnd();
-    
-    //plot_lines(all_lines_to_merge);
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
@@ -665,77 +662,8 @@ void displayone() {
         
         polygon* p = all_polygons[3];
         std::vector<mypoint *> po = p->get_points();
-//        po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
-//        po[1]->y = 0; po[1]->z = 300; po[1]->x = 0;
-//        po[2]->y = 300; po[2]->z = 400; po[2]->x = 0;
-//        po[3]->y = 300; po[3]->z = 100; po[3]->x = 0;
-
-                po[0]->y = 0; po[0]->z = 0; po[0]->x = 0;
-                po[1]->y = 1; po[1]->z = 0; po[1]->x = 5;
-                po[2]->y = 2; po[2]->z = 0; po[2]->x = 5;
-                po[3]->y = 1; po[3]->z = 0; po[3]->x = 0;
-
-        
         int i = 2;
         std::vector<mypoint *> axis_line;
-        //std::vector<mypoint *> pp = temp->project_polygon(po);
-//        std::vector<mypoint *> pp = temp->project_polygon(po, -5, -5, 5);
-//        printf("1> %f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-//        printf("2> %f %f %f\n", pp[1]->x, pp[1]->y, pp[1]->z);
-//        printf("3> %f %f %f\n", pp[2]->x, pp[2]->y, pp[2]->z);
-//        printf("4> %f %f %f\n", pp[3]->x, pp[3]->y, pp[3]->z);
-        
-//        glBegin(GL_QUADS);
-//        glColor3f(1,0,0);
-//        glVertex3f(0, 0, 0);
-//        glVertex3f(10000, 0, 0);
-//        glVertex3f(10000, 10, 0);
-//        glVertex3f(0, 10, 0);
-//        glEnd();
-        
-        
-        // plot the hingin plane's normal line
-//        axis_line.push_back(new mypoint(-10000*temp->a, -10000*temp->b, -10000*temp->c));
-//        axis_line.push_back(new mypoint(10000*temp->a, 10000*temp->b, 10000*temp->c));
-//        plot_line(axis_line, 0);
-//        
-        
-//        glBegin(GL_QUADS);
-//        for(int i=0;i<4;++i){
-//            glVertex3f( po[i]->x, po[i]->y, po[i]->z);
-//            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
-//        }
-//        glEnd();
-        
-//        
-//        
-//        
-//        
-//        
-//        // Camera matrix
-//        glm::mat4 View = glm::lookAt(
-//                                     glm::vec3(-5,-5,5), // Camera is at (4,3,3), in World Space
-//                                     glm::vec3(0,0,0), // and looks at the origin
-//                                     glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                                     );
-//        
-//        glm::mat4 Model = glm::mat4(1.0f);
-//        std::vector<glm::vec4> tp;
-//        tp.push_back(glm::vec4(0,0,0, 1));
-//        tp.push_back(glm::vec4(5,0,0, 1));
-//        tp.push_back(glm::vec4(5,1,0, 1));
-//        tp.push_back(glm::vec4(0,1,0, 1));
-        
-//        glBegin(GL_QUADS);
-//        
-//        //    glm::vec4 result = v * m;
-//        for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
-//            glm::vec4 v =  *iterator;
-//            glVertex3f( v[0], v[1], v[2]);
-//            //std::cout<<glm::to_string(View*v)<<std::endl;
-//        }
-//        glEnd();
-        
         std::vector<mypoint*> points_to_render;
 
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
@@ -1329,44 +1257,6 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
 }
 
 
-int mainabh(int argc, char** argv){
-    int width = 1;
-    int height = 1;
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
-    
-    
-    
-    glm::mat4 Model = glm::mat4(1.0f);
-    glm::mat4 mvp = Projection * View * Model;
-    
-    std::vector<glm::vec4> tp;
-    std::vector<glm::vec4> orig;
-    
-    tp.push_back(glm::vec4(0,0,0, 1));
-    tp.push_back(glm::vec4(5,0,0, 1));
-    tp.push_back(glm::vec4(5,1,0, 1));
-    tp.push_back(glm::vec4(0,1,0, 1));
-    
-    
-//    glm::vec4 result = v * m;
-    for(std::vector<glm::vec4>::iterator iterator = tp.begin(); iterator != tp.end(); ++iterator) {
-        glm::vec4 v =  *iterator;
-        std::cout<<glm::to_string(ViewI*(View*v))<<std::endl;
-        //orig.push_back(<#const_reference __x#>)
-    }
-    
-    
-    
-//    std::cout<<glm::to_string(v)<<std::endl;
-//    std::cout<<glm::to_string(result)<<std::endl;
-    
-    return 0;
-}
-
-
-
-
-
 
 void write_to_file(std::vector<i2tuple> corner_points, std::vector<myline*> valid_lines_undirected){
     // writing to file for future use
@@ -1417,7 +1307,30 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 
 
 
+// first is origin
+// then x, y, z
+void mousemotion(int button, int state, int x, int y){
+    if(state == GLUT_DOWN){
+        printf("mouse >> %d %d\n", x, sa_height-y);
+        axis_2d_points.push_back(glm::vec2(x, sa_height-y));
+        
+        // instantiate cost object when 4 points have been clicked
+        if(axis_2d_points.size() == 4){
+            cost_obj = new cost(axis_2d_points);
+        }
+    }
+}
+
+
+void init_values(){
+    // sequence of polygons to be placed this will be done automatically later
+    poly_seq[0] = 3;
+    poly_seq[1] = 5;
+}
+
 int main(int argc, char** argv){
+    
+    init_values();
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
     imga = imread("/Users/pranjal/Desktop/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
@@ -1470,7 +1383,7 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
     
-    // we start with yz = 0 then rotate this plane till we get the best plane to project
+    // we start lwith yz = 0 then rotate this plane till we get the best plane to project
     plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
     
     // points in the world camera
@@ -1509,6 +1422,7 @@ int main(int argc, char** argv){
     //glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
     glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);
+    glutMouseFunc(mousemotion);
     glutTimerFunc(25, updatea, 0);
     glutReshapeFunc(reshape);
     initGL();                       // Our own OpenGL initialization
