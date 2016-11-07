@@ -1420,66 +1420,10 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 int main(int argc, char** argv){
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
-    
-    
-    
     imga = imread("/Users/pranjal/Desktop/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
-    //GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
     
-    
-//    std::vector<myline*> ap;
-//    myline *l = new myline(1, 1);
-//    ap.push_back(l);
-//    std::vector<myline*> apa;
-//    
-//    apa.push_back(ap[0]);
-    
-//    Mat grad_x, grad_y, grad;
-//    Mat abs_grad_x, abs_grad_y;
-//
-//    int ddepth = CV_16S;
-//    int delta = 0;
-//    int scale = 1;
-//
-//    Sobel( imga, grad_x, ddepth, 1, 0, 3, scale, delta, BORDER_DEFAULT );
-//    convertScaleAbs( grad_x, abs_grad_x );
-//    
-//    /// Gradient Y
-//    //Scharr( src_gray, grad_y, ddepth, 0, 1, scale, delta, BORDER_DEFAULT );
-//    Sobel( imga, grad_y, ddepth, 0, 1, 3, scale, delta, BORDER_DEFAULT );
-//    convertScaleAbs( grad_y, abs_grad_y );
-//    
-//    /// Total Gradient (approximate)
-//    addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad );
-//    
-//    Mat src, erosion_dst, dilation_dst;
-//    
-//    int erosion_elem = 0;
-//    int erosion_size = 0;
-//    int dilation_elem = 0;
-//    int dilation_size = 1;
-//    int const max_elem = 2;
-//    int const max_kernel_size = 21;
-//    
-//    
     bw   = imga > 128;
     img  = bw > 120;
-//
-//    
-//    int dilation_type;
-//    if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
-//    else if( dilation_elem == 1 ){ dilation_type = MORPH_CROSS; }
-//    else if( dilation_elem == 2) { dilation_type = MORPH_ELLIPSE; }
-//    
-//    Mat element = getStructuringElement( dilation_type,
-//                                        Size( 2*dilation_size + 1, 2*dilation_size+1 ),
-//                                        Point( dilation_size, dilation_size ) );
-//    /// Apply the dilation operation
-//    dilate( bw, dilation_dst, element );
-//    imshow( "Dilation Demo", dilation_dst );
-//    
-//    
-//
     
     // get corner points using harris detector
     get_corner_points(imga);
@@ -1490,49 +1434,7 @@ int main(int argc, char** argv){
     
     bitwise_not(bw, img);
     thinning(img);
-    //namedWindow( "corners_window_a", CV_WINDOW_AUTOSIZE );
     
-    
-    
-    //bw = grad > 128;
-    //imshow( "corners_window_a", bw );
-    //map_slopes = sweepline(img);
-
-//    for(std::map<i2tuple, int>::iterator iterator = map_slopes.begin(); iterator != map_slopes.end(); iterator++) {
-//        i2tuple key = iterator->first;
-//        int theta = iterator->second;
-//        printf("(%d, %d)  => %d\n", get<0>(key), get<1>(key), theta);
-//    }
-//    
-//    
-    
-    
-    
-//    
-//    
-//    printf("rows = %d cols = %d\n", img.rows, img.cols);
-//    //IplImage* img = cvLoadImage( "/Users/pranjal/Desktop/img2_2.png" , CV_LOAD_IMAGE_GRAYSCALE);
-//    cvNamedWindow("Example1", CV_WINDOW_AUTOSIZE );
-//    namedWindow( "sketch", WINDOW_AUTOSIZE );// Create a window for display.
-//    imshow( "sketch", img );                   // Show our image inside it.
-//
-//    
-//    
-//    cvWaitKey(0);
-//    cvDestroyWindow("Example1");
-    
-    
-    
-    
-//    Mat dst, dst_norm;
-//    dst = Mat::zeros( imga.size(), CV_32FC1 );
-//    
-//    cornerHarris( imga, dst, 5, 5, 0.03, BORDER_DEFAULT );
-//    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
-//    convertScaleAbs( dst_norm, dst_norm_scaled );
-    
-    
-
     fill_points_vector(img);
     
     
@@ -1563,21 +1465,13 @@ int main(int argc, char** argv){
     valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
-    
-//    for(int i=0;i< corner_points.size();++i){
-//        printf(">>>>> %d %d\n", get<0>(corner_points[i]), get<1>(corner_points[i]));
-//    }
-//    // get all the polygons by taking each line as starting point
     all_polygons = get_all_polygons(valid_lines_directed);
-    
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
     
-    
-    // we start with x = 0 then rotate this plane till we get the best plane to project
+    // we start with yz = 0 then rotate this plane till we get the best plane to project
     plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
-    //plane_to_project = new plane(-5, 5, 5, new mypoint(-5, 5, 5));
     
     // points in the world camera
     points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
