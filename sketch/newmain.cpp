@@ -697,16 +697,18 @@ void displayone() {
         
         points_to_render_vec = temp->project_polygon(points_in_camera, -5, 5, 5);
         
-        printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(all_polygons[3]->get_points_vec(), points_to_render_vec));
+        std::vector<glm::vec2> p2d = all_polygons[current_polygon]->get_points_vec();
+        
+        printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(p2d, points_to_render_vec));
         
         
         glColor3f(0.9f, 0.9f, 0.9f);
         glNormal3f(temp->a, temp->b, temp->c);
         
-        int render_scale = 10;
+        int render_scale = 30;
         glBegin(GL_QUADS);
         for(int i=0;i<points_to_render_vec.size();++i){
-            printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
+            //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
             glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
         }
         glEnd();
@@ -1372,7 +1374,23 @@ void init_values(){
 
 
 int main(int argc, char** argv){
-    
+//    printf("sin is %f\n", sin(2.34));
+//    return 0;
+//    glm::vec2 pl = glm::vec2(-199, -113);
+//    glm::vec2 pla = pl/glm::length(pl);
+//    
+//    
+//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(0.9, 0.4), -1*pla))/PI);
+//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(0.01, 0.99), pla))/PI);
+//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(-0.88, 0.47), pla))/PI);
+//
+//    
+//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(0.9, 0.4))/PI);
+//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), -1*glm::vec2(0.9, 0.4))/PI);
+//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(0.01, 0.99))/PI);
+//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(-0.88, 0.47))/PI);
+//    
+//
     init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length

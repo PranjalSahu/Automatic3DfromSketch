@@ -23,21 +23,6 @@ float gaussian(float angle){
 }
 
 
-void get_line(std::vector<glm::vec2> points_2d, std::vector<glm::vec3> points_3d, std::vector<glm::vec2> line_2d,
-              std::vector<glm::vec3> line_3d, int i, int j){
-    // get line vector in 3d and 2d
-    line_2d.push_back(points_2d[j]-points_2d[i]);
-    line_3d.push_back(points_3d[j]-points_3d[i]);
-    
-    float mod2 = sqrt(line_2d[i][0]*line_2d[i][0]+line_2d[i][1]*line_2d[i][1]);
-    float mod3 = sqrt(line_3d[i][0]*line_3d[i][0]+line_3d[i][1]*line_3d[i][1]+line_3d[i][2]*line_3d[i][2]);
-    
-    // normalize
-    //line_2d[i] = line_2d[i]/mod2;
-    line_3d[i] = line_3d[i]/mod3;
-}
-
-
 // returns the cost for the points
 // points in 2d and in 3d have to be in same order
 float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::vec3> points_3d){
@@ -49,11 +34,19 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     std::vector<int> axis_mapping; // best axis in 2d 0 -> x, 1 -> y, 2 -> z
     
     for(int i=0;i<points_2d.size()-1;++i){
-        get_line(points_2d, points_3d, line_2d, line_3d, i, i+1);
+        // get line vector in 3d and 2d
+        line_2d.push_back(points_2d[i+1]-points_2d[i]);
+        line_3d.push_back(points_3d[i+1]-points_3d[i]);
+        line_3d[i] = line_3d[i]/glm::length(line_3d[i]);
     }
-    get_line(points_2d, points_3d, line_2d, line_3d, points_2d.size()-1, 0);
     
+    // get line vector in 3d and 2d
+    line_2d.push_back(points_2d[0]-points_2d[points_2d.size()-1]);
+    line_3d.push_back(points_3d[0]-points_3d[points_2d.size()-1]);
+    line_3d[points_2d.size()-1] = line_3d[points_2d.size()-1]/glm::length(line_3d[points_2d.size()-1]);
    
+    
+    
     // getting weights for each 2d line
     for(int i=0;i<line_2d.size();++i){
    
@@ -62,9 +55,11 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
         int index = -1;
         
         for(int j=0;j<3;++j){
+            float a = 180*acos(glm::dot(line_2d[i]/glm::length(line_2d[i]), -1*axis_2d[j]))/PI;
+            float b = 180*acos(glm::dot(line_2d[i]/glm::length(line_2d[i]), axis_2d[j]))/PI;
             
-            float a = glm::angle(line_2d[i], axis_2d[j]);
-            float v = gaussian(a*180/PI);
+            float angle = a < b ? a : b;
+            float v = gaussian(angle);
             if(v > maxv){
                 maxv   = v;
                 index  = j;
@@ -76,13 +71,32 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     }
 
     
-    
     // refer axis alignment cost functions
     float total_cost = 0;
+    float cost_v[4];
+    float angle_v[4];
+    float dot_values[4];
     for(int i=0;i<line_3d.size();++i){
-        float angle = glm::angle(line_3d[i], axis_3d[axis_mapping[i]]);
-        total_cost  = total_cost + weights[i]*sin(angle);
+        float dot_value = 0;
+        for(int q = 0;q<3;++q){
+            dot_value = dot_value+axis_3d[axis_mapping[i]][q]*line_3d[i][q];
+        }
+        
+        dot_values[i] = dot_value;
+        float angle = acos(dot_value);
+        angle_v[i] = angle;
+        float cross = fabs(sin(angle));
+        float edge_weight = weights[i]*cross;
+        cost_v[i] = edge_weight;
+        total_cost  = total_cost + edge_weight;
     }
+    
+    //for(int i=0;i<4;++i){
+        //std::cout<<glm::to_string(line_3d[i]/glm::length(line_3d[i]))<<std::endl;
+    printf("Dot values  are : %f %f %f %f \n", dot_values[0], dot_values[1], dot_values[2], dot_values[3]);
+    printf("angles  are : %f %f %f %f \n", angle_v[0], angle_v[1], angle_v[2], angle_v[3]);
+        printf("Edge costs are : %f %f %f %f \n", cost_v[0], cost_v[1], cost_v[2], cost_v[3]);
+    //}
     
     return total_cost;
 }
@@ -101,8 +115,8 @@ cost::cost(std::vector<glm::vec2> point_2d_axis){
     axis_3d[1][2] = 0;
     
     axis_3d[2][0] = 0;
-    axis_3d[2][1] = 1;
-    axis_3d[2][2] = 0;
+    axis_3d[2][1] = 0;
+    axis_3d[2][2] = 1;
     
     
     // take 4 points as input from user
@@ -110,7 +124,7 @@ cost::cost(std::vector<glm::vec2> point_2d_axis){
     glm::vec2 py  = point_2d_axis[2]-point_2d_axis[0];
     glm::vec2 pz  = point_2d_axis[3]-point_2d_axis[0];
     
-    axis_2d[0] = px/px.length();
-    axis_2d[1] = py/py.length();
-    axis_2d[2] = pz/pz.length();
+    axis_2d[0] = px/glm::length(px);
+    axis_2d[1] = py/glm::length(py);
+    axis_2d[2] = pz/glm::length(pz);
 }
