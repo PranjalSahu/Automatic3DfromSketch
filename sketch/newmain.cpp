@@ -1419,8 +1419,8 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 
 int main(int argc, char** argv){
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
-    imga = imread("/Users/pranjal/Desktop/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    imga = imread("/Users/pranjal/Desktop/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
     
     bw   = imga > 128;
     img  = bw > 120;
