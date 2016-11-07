@@ -531,7 +531,7 @@ void plot_line(myline *linet, int color){
 }
 
 void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
-    GLfloat colors[][3] = { { 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    GLfloat colors[][3] = { { 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } ,{1.0f, 1.0f, 0.0f } };
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 
@@ -639,7 +639,7 @@ void prepare_points_to_project(polygon *pt){
 
 // checks if for a polygon three points are already placed or not
 bool check_3_points_already(polygon *pt){
-    if(pt->lines.size()>4)
+    if(pt->lines.size()>6)
         return false;
         
     std::vector<glm::vec2> twod_temp = pt->get_points_vec();
@@ -819,10 +819,10 @@ void displayone() {
         
        
         
-        glPushMatrix();
-        glTranslatef(tr_x, tr_y, tr_z);
-        drawmycuboid(1, 2, 5);
-        glPopMatrix();
+//        glPushMatrix();
+//        glTranslatef(tr_x, tr_y, tr_z);
+//        drawmycuboid(1, 2, 5);
+//        glPopMatrix();
     }
     
     glutSwapBuffers();
@@ -1492,12 +1492,12 @@ void mousemotion(int button, int state, int x, int y){
 
 void init_values(){
     // sequence of polygons to be placed this will be done automatically later
-    poly_seq[0] = 2;
-    poly_seq[1] = 3;
+    poly_seq[0] = 3;
+    poly_seq[1] = 5;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman1.txt");
-    imga = imread("/Users/pranjal/Desktop/huffman1.png", CV_LOAD_IMAGE_GRAYSCALE);
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
+    imga = imread("/Users/pranjal/Desktop/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
     
     bw   = imga > 128;
     img  = bw > 120;
