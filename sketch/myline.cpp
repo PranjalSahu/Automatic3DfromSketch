@@ -4,7 +4,7 @@
 //
 //  Created by Pranjal Sahu on 10/23/16.
 //  Copyright © 2016 Pranjal Sahu. All rights reserved.
-//
+// Refer: Finding faces in a planar embedding of a graph Sophie Schneider and Ivo F. Sbalzarini
 
 #ifndef MYLINE_H
 #define MYLINE_H

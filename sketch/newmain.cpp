@@ -189,10 +189,12 @@ GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   /
 std::vector<glm::vec4> points_in_camera;
 
 
+std::vector<glm::vec3> points_to_render_vec_global;
+
 
 // sequence of polygon which are going to be placed
 int poly_seq[2];
-int current_polygon = 2;
+int current_polygon = 0;
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -619,7 +621,7 @@ void prepare_points_to_project(){
     //    points_in_camera.push_back(glm::vec4(0, 2, 0, 1));
     
     // points in the camera reference
-    std::vector<mypoint*>polygon_points  = all_polygons[current_polygon]->get_points();
+    std::vector<mypoint*>polygon_points  = all_polygons[poly_seq[current_polygon]]->get_points();
     for(int i=0;i<polygon_points.size();++i){
         points_in_camera.push_back(glm::vec4(polygon_points[i]->x, polygon_points[i]->y, 0, 1));
     }
@@ -700,8 +702,9 @@ void displayone() {
         prepare_points_to_project();
         
         points_to_render_vec = temp->project_polygon(points_in_camera, -5, 5, 5);
-        
-        std::vector<glm::vec2> p2d = all_polygons[current_polygon]->get_points_vec();
+        points_to_render_vec_global =  points_to_render_vec;
+
+        std::vector<glm::vec2> p2d = all_polygons[poly_seq[current_polygon]]->get_points_vec();
         
         printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(p2d, points_to_render_vec));
         
@@ -717,7 +720,6 @@ void displayone() {
         }
         glEnd();
         
-        
         glColor3f(0.9f, 0.9f, 0.9f);
         glNormal3f(temp->a, temp->b, temp->c);
         
@@ -728,6 +730,30 @@ void displayone() {
             glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
         }
         glEnd();
+        
+        
+        for(int i =0;i<all_polygons.size();++i){
+            if(all_polygons[i]->placed){
+                glBegin(GL_LINE_LOOP);
+                glLineWidth(105);
+                glColor3f(1.0f, 0.0f, 0.0f);
+                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+                }
+                glEnd();
+                
+                
+                glBegin(GL_QUADS);
+                glColor3f(0.4f, 0.4f, 0.4f);
+                glNormal3f(1.0f, 1.0f, 1.0f);
+                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+                    glVertex3f( all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+                }
+                glEnd();
+            }
+        }
+        
+       
         
         glPushMatrix();
         glTranslatef(tr_x, tr_y, tr_z);
@@ -1148,6 +1174,16 @@ void handleKeypressa(unsigned char key, int x, int y) {
         case '6':
             zview = zview-0.5;
             break;
+        case 'g':
+            all_polygons[poly_seq[current_polygon]]->placed = true;
+            for(int i=0;i<points_to_render_vec_global.size();++i){
+                glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
+                all_polygons[poly_seq[current_polygon]]->points_to_render_vec.push_back(tp);
+            }
+            current_polygon = current_polygon+1;
+            if(current_polygon >=2)
+                current_polygon = 1;
+            break;
         case 27: //Escape key
             exit(0);
     }
@@ -1362,8 +1398,8 @@ void mousemotion(int button, int state, int x, int y){
 
 void init_values(){
     // sequence of polygons to be placed this will be done automatically later
-    poly_seq[0] = 3;
-    poly_seq[1] = 5;
+    poly_seq[0] = 2;
+    poly_seq[1] = 3;
     
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman1.txt");
@@ -1452,7 +1488,7 @@ int main(int argc, char** argv){
     
     //initRenderinga();
     
-    glutCreateWindow("OpenGL Setup Test");  // Create a window with the given title
+    glutCreateWindow("3D Model");  // Create a window with the given title
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glEnable( GL_BLEND );
     

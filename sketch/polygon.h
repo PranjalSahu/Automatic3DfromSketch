@@ -11,6 +11,7 @@
 
 #include "myline.h"
 #include "mypoint.h"
+//#include "plane.h"
 #include <glm/vec2.hpp> // glm::vec2
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
@@ -23,6 +24,11 @@ public:
     std::vector<myline*> lines;
     bool is_equal_to(polygon *);
     bool is_part_of(std::vector<polygon*> pvector);
+    bool placed;
+    
+    //plane* plane_placed;
+    std::vector<glm::vec3> points_to_render_vec;
+    
     std::vector<mypoint*> get_points();
     std::vector<glm::vec2> get_points_vec();
     polygon(std::vector<myline*> lines);

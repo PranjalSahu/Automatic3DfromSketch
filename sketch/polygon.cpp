@@ -13,6 +13,7 @@
 
 polygon::polygon(std::vector<myline*> tlines){
     this->lines = tlines;
+    placed = false;
 }
 
 
