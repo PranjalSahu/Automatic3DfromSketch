@@ -15,11 +15,11 @@
 #define SLOPE_DIFFERENCE 0.01
 #define DISTANCE_DIFFERENCE 1
 #define SLOPE_ITER_DIFF 1
-#define HARRIS_THRESH 80
-#define MERGE_POINT_THRESH 4.0        # threshold for merging points when
-#define PERPENDICULAR_THRESH 3
-#define POINT_PAIR_LYING_THRESH 0.9
-#define SHOW_CORNER_POINTS 1                    # flag to display points using opengl
+#define HARRIS_THRESH 60              // threshold for choosing the corner points using harris
+#define MERGE_POINT_THRESH 4.0        // threshold for merging points when
+#define PERPENDICULAR_THRESH 10
+#define POINT_PAIR_LYING_THRESH 0.95
+#define SHOW_CORNER_POINTS 1                    // flag to display points using opengl
 
 
 
@@ -48,7 +48,7 @@ public:
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
     float get_perpendicular_distance(i2tuple a);
-    int check_within_line_segment(i2tuple a);
+    bool check_within_line_segment(i2tuple a);
     float get_distance(const myline *ml) const;
     float get_line_length() const;
     myline *get_reverse_line(std::vector<myline*> all_lines);

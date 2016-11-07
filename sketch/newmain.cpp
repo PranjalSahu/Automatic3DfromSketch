@@ -156,7 +156,7 @@ std::vector<polygon*> all_polygons;
 int zglut = 100;
 
 
-
+ofstream myfile;
 
 float xview = 0, yview = 0, zview = 0;
 
@@ -431,23 +431,54 @@ void get_correct_coord(std::vector<myline*> original_lines){
     return;
 }
 
+
 // corrects the coordinate such that x denotes x in both display and array
 // similary y denotes both y in display and array
 // helps in understanding
-std::vector<i2tuple> get_correct_coord(std::vector<i2tuple> original_points){
+// also it subtracts the minimum y coordinate from each point
+// therefore the bottom point is our origin
+
+std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> original_points, std::vector<myline*> valid_lines_undirected){
     std::vector<i2tuple> temp;
+    
+    int minx = 100000;
+    int miny  = 100000;
     
     for(std::vector<i2tuple>::iterator iterator = original_points.begin(); iterator != original_points.end(); iterator++) {
         i2tuple mp = *iterator;
         int x = get<1>(mp);
         int y = sa_height-get<0>(mp);
         temp.push_back(i2tuple(x, y));
+        printf(">> %d, %d\n", x, y);
+        if(miny > y){
+            miny  = y;
+            minx = x;
+        }
     }
+    
+    // shift the points so that the bottom most point is origin
+    for(std::vector<i2tuple>::iterator iterator = temp.begin(); iterator != temp.end(); iterator++) {
+        i2tuple mp = *iterator;
+        *iterator = i2tuple(get<0>(mp)-minx, get<1>(mp)-miny);
+    }
+    
+    get_correct_coord(valid_lines_undirected);
+    for(int i=0;i< valid_lines_undirected.size();++i){
+        valid_lines_undirected[i]->x1 = valid_lines_undirected[i]->x1-minx;
+        valid_lines_undirected[i]->x2 = valid_lines_undirected[i]->x2-minx;
+        valid_lines_undirected[i]->y1 = valid_lines_undirected[i]->y1-miny;
+        valid_lines_undirected[i]->y2 = valid_lines_undirected[i]->y2-miny;
+    }
+    
+    printf("MINX IS %d and MINY IS %d\n", minx, miny);
     return temp;
 }
 
+
+
 void plot_line(std::vector<mypoint*> all_points, int color){
     glBegin(GL_LINE_LOOP);
+    glLineWidth(5);
     for(std::vector<mypoint*>::iterator iterator = all_points.begin(); iterator != all_points.end(); iterator++) {
         mypoint *m = *iterator;
         GLfloat px = (m->x)*IMG_SCALE/sa_width;
@@ -1162,19 +1193,30 @@ void get_corner_points(Mat &imga){
     Mat dst, dst_norm;
     dst = Mat::zeros( imga.size(), CV_32FC1 );
     
-    cornerHarris( imga, dst, 5, 5, 0.05, BORDER_DEFAULT );
+    cornerHarris( imga, dst, 9, 9, 0.05, BORDER_DEFAULT );
     normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
     convertScaleAbs( dst_norm, dst_norm_scaled );
     
     
+    int minv = 1000000;
+    int maxv = -1;
     // store it in corner points
     for( int j = 0; j < dst_norm.rows ; j++ ){
         for( int i = 0; i < dst_norm.cols; i++ ){
             if( (int) dst_norm.at<float>(j,i) > HARRIS_THRESH ){
+                if(minv > dst_norm.at<float>(j,i)){
+                    minv = dst_norm.at<float>(j,i);
+                }
+                if(maxv < dst_norm.at<float>(j,i)){
+                    maxv =dst_norm.at<float>(j,i);
+                }
                 corner_points.push_back(i2tuple(j, i));
             }
         }
     }
+    
+    printf("MINIMUM values is %d\n", minv);
+    printf("MAXIMUM values is %d\n", maxv);
     return;
 }
 
@@ -1214,13 +1256,23 @@ std::vector<myline*> get_all_valid_lines(){
         myline *ml = *iterator;
         std::vector<i2tuple> pp = ml->pointliecount(points_vector);
         float ratio = (pp.size()*1.0)/ml->get_line_length();
-        //printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
+        printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
         if( ratio < POINT_PAIR_LYING_THRESH){
+            if(ml->x1 == 91 && ml->x2 == 359 && ml->y1 == 321 && ml->y2 == 359){
+                printf("debug it %d %d %d %d\n", ml->x1, ml->y1, ml->x2, ml->y2);
+                printf("test\n");
+            }
+            
             iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
             //printf("size after removal is %d\n", all_line_pairs.size());
                                                 // is smaller than the threshold * distance between those two point
         }
         else{
+            if(ml->x1 == 91 && ml->x2 == 359 && ml->y1 == 321 && ml->y2 == 359){
+                printf("debug it %d %d %d %d\n", ml->x1, ml->y1, ml->x2, ml->y2);
+                printf("test\n");
+            }
+            
             printf("lying count %d length is %d ratio is %f\n", pp.size(), ml->get_line_length(), ratio);
             valid_count = valid_count +1;
             iterator++;
@@ -1252,7 +1304,7 @@ int mainabs(int argc, char **argv){
 
 
 void initGL() {
-    int back = 1;
+    int back = 2;
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 0.0f, 0.0f } };
     glClearColor(colors[back][0], colors[back][1], colors[back][2], 1.0f); // Set background color to black and opaque
     glClearDepth(1.0f);                   // Set background depth to farthest
@@ -1322,14 +1374,66 @@ int mainabh(int argc, char** argv){
 
 
 
+
+
+
+void write_to_file(std::vector<i2tuple> corner_points, std::vector<myline*> valid_lines_undirected){
+    // writing to file for future use
+    myfile << corner_points.size();
+    myfile << "\n";
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        i2tuple pt = *it;
+        int i = std::get<0>(pt);
+        int j = std::get<1>(pt);
+        myfile << i;  myfile << ",";  myfile << j; myfile << "\n";
+    }
+    myfile << valid_lines_undirected.size();
+    myfile << "\n";
+    for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
+        myline* pt = *it;
+        int x1 = pt->x1;
+        int x2 = pt->x2;
+        int y1 = pt->y1;
+        int y2 = pt->y2;
+        myfile << x1; myfile << ","; myfile << y1; myfile << ","; myfile << x2; myfile << ","; myfile << y2; myfile << "\n";
+    }
+    
+    return;
+}
+
+void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> valid_lines_undirected, vector<i2tuple> corner_points){
+    
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        i2tuple pt = *it;
+        int i = get<0>(pt);
+        int j = get<1>(pt);
+        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
+        printf("(%d, %d)\n", i, j);
+    }
+    
+    for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
+        myline* pt = *it;
+        int x1 = pt->x1;
+        int x2 = pt->x2;
+        int y1 = pt->y1;
+        int y2 = pt->y2;
+        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
+        printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
+    }
+    
+    return;
+}
+
+
+
 int main(int argc, char** argv){
-    ofstream myfile;
-    myfile.open ("/Users/pranjal/Downloads/Graphics/imgg.txt");
+    
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
     
     
     
-    imga = imread("/Users/pranjal/Desktop/imgg.png", CV_LOAD_IMAGE_GRAYSCALE);
-    GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
+    imga = imread("/Users/pranjal/Desktop/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    //GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
     
     
 //    std::vector<myline*> ap;
@@ -1413,15 +1517,6 @@ int main(int argc, char** argv){
     
     
     
-    
-    
-    
-    // i2tuple p1 = i2tuple(1, 1);
-    
-    //i2tuple p2 = i2tuple(1, 3);
-    //all_lines[p1] = new myline(1, 6, 5);
-    //all_lines[p2] = new myline(1, 9, 53);
-    
 //    
 //    
 //    printf("rows = %d cols = %d\n", img.rows, img.cols);
@@ -1438,63 +1533,37 @@ int main(int argc, char** argv){
     
     
     
-    Mat dst, dst_norm;
-    dst = Mat::zeros( imga.size(), CV_32FC1 );
-    
-    cornerHarris( imga, dst, 5, 5, 0.05, BORDER_DEFAULT );
-    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
-    convertScaleAbs( dst_norm, dst_norm_scaled );
-    
-    myfile << corner_points.size();
-    myfile << "\n";
+//    Mat dst, dst_norm;
+//    dst = Mat::zeros( imga.size(), CV_32FC1 );
+//    
+//    cornerHarris( imga, dst, 5, 5, 0.03, BORDER_DEFAULT );
+//    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
+//    convertScaleAbs( dst_norm, dst_norm_scaled );
     
     
-    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
-        i2tuple pt = *it;
-        int i = get<0>(pt);
-        int j = get<1>(pt);
-        myfile << i;  myfile << ",";  myfile << j; myfile << "\n";
-        
-        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
-        printf("(%d, %d)\n", i, j);
-    }
 
-    
-    myline *ml = new myline(corner_points[18], corner_points[19]);
-    printf("slope is %f x1 = %d, y1 = %d x2 = %d y2 = %d\n", ml->m, ml->x1, ml->y1, ml->x2, ml->y2);
-    plotpoint(corner_points[18]);
-    plotpoint(corner_points[19]);
-    
     fill_points_vector(img);
     
+    
+    // get all the valid lines by checking the ratio of points lying on the line and its length
     valid_lines_undirected = get_all_valid_lines();
     
-    myfile << valid_lines_undirected.size();
-    myfile << "\n";
     
-    for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
-        myline* pt = *it;
-        int x1 = pt->x1;
-        int x2 = pt->x2;
-        int y1 = pt->y1;
-        int y2 = pt->y2;
-        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
-        myfile << x1; myfile << ","; myfile << y1; myfile << ","; myfile << x2; myfile << ","; myfile << y2; myfile << "\n";
-        //circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(0, 255, 0), 2, 8, 0 );
-        printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
-    }
+    // showing the result of line detection
+    plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
+    namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
+    imshow( "corners_window", dst_norm_scaled );
+    waitKey(0);
+
     
+    corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
+    
+    
+    // write corner points and line segments to file for later use
+    write_to_file(corner_points, valid_lines_undirected);
     myfile.close();
     
     
-    // Showing the result
-    //namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
-    //imshow( "corners_window", dst_norm_scaled );
-    //waitKey(0);
-
-    
-    get_correct_coord(valid_lines_undirected);  // remove it later should not be needed in future
-    corner_points = get_correct_coord(corner_points);
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     
@@ -1503,13 +1572,18 @@ int main(int argc, char** argv){
     valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
-    // get all the polygons by taking each line as starting point
+    
+//    for(int i=0;i< corner_points.size();++i){
+//        printf(">>>>> %d %d\n", get<0>(corner_points[i]), get<1>(corner_points[i]));
+//    }
+//    // get all the polygons by taking each line as starting point
     all_polygons = get_all_polygons(valid_lines_directed);
     
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
-
+    
+    
     // we start with x = 0 then rotate this plane till we get the best plane to project
     plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
     //plane_to_project = new plane(-5, 5, 5, new mypoint(-5, 5, 5));
@@ -1533,7 +1607,6 @@ int main(int argc, char** argv){
         points_in_camera[i] = ViewI*points_in_camera[i];
     }
     
-    //qqqqqqqqqqqqqqqqqqplane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
 
     
     

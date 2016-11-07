@@ -11,6 +11,8 @@
 #include "polygon.h"
 #include "mypoint.h"
 
+
+// returns the cost for the points
 float axis_alignment(std::vector<mypoint*> points){
     
     return 0;

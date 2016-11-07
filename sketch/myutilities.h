@@ -31,7 +31,7 @@
 
 
 #define PI 3.14159265
-#define IMG_SCALE 1.0
+#define IMG_SCALE 5.0
 
 typedef std::tuple<int,int> i2tuple;
 
@@ -40,7 +40,6 @@ float mymin(float a, float b);
 int mymax(int a, int b);
 float mymax(float a, float b);
 float get_point_distance(int x1, int y1, int x2, int y2);
-
 #endif
 
 
