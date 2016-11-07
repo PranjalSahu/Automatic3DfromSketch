@@ -35,8 +35,8 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     for(int i=0;i<points_2d.size()-1;++i){
         
         // get line vector in 3d and 2d
-        line_2d[i] = points_2d[i+1]-points_2d[i];
-        line_3d[i] = points_3d[i+1]-points_3d[i];
+        line_2d.push_back(points_2d[i+1]-points_2d[i]);
+        line_3d.push_back(points_3d[i+1]-points_3d[i]);
         
         float mod2 = sqrt(line_2d[i][0]*line_2d[i][0]+line_2d[i][1]*line_2d[i][1]);
         float mod3 = sqrt(line_3d[i][0]*line_3d[i][0]+line_3d[i][1]*line_3d[i][1]+line_3d[i][2]*line_3d[i][2]);
@@ -64,8 +64,8 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
             }
         }
         
-        weights[i] = maxv;
-        axis_mapping[i] = index;
+        weights.push_back(maxv);
+        axis_mapping.push_back(index);
     }
 
     

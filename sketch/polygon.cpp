@@ -85,3 +85,13 @@ std::vector<mypoint*> polygon::get_points(){
     }
     return all_points;
 }
+
+// returns the points of a polygon by traversing over the lines
+std::vector<glm::vec2> polygon::get_points_vec(){
+    std::vector<glm::vec2> all_points;
+    for(std::vector<myline*>::iterator it = lines.begin(); it != lines.end(); ++it){
+        myline *l = *it;
+        all_points.push_back(glm::vec2(l->x1, l->y1));
+    }
+    return all_points;
+}

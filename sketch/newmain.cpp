@@ -77,8 +77,8 @@ static int winmenu;
 static int menuid;
 static int val = 0;
 
-int sa_width  = 800;
-int sa_height = 800;
+int sa_width  = 500;
+int sa_height = 500;
 
 //flags to be used by keyboard for three different operations
 int count     = 0;
@@ -134,7 +134,7 @@ int polysize;						// for storing the size of the polygon
 std::queue<int> p1;					// for intersection points x coordinate
 
 // different display types for labelled lines, polygons, and projected polygon
-int display_type = 2;
+int display_type = 1;
 
 // plane to project for demo
 plane* plane_to_project;
@@ -192,6 +192,7 @@ std::vector<glm::vec4> points_in_camera;
 
 // sequence of polygon which are going to be placed
 int poly_seq[2];
+int current_polygon = 5;
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -603,6 +604,38 @@ void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
 }
 
 
+void prepare_points_to_project(){
+    
+    // always clear points before pushing new one
+    points_in_camera.clear();
+    
+    // points in the world camera
+    //    points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
+    //    points_in_camera.push_back(glm::vec4(5, 0, 0, 1));
+    //    points_in_camera.push_back(glm::vec4(5, 2, 0, 1));
+    //    points_in_camera.push_back(glm::vec4(0, 2, 0, 1));
+    
+    // points in the camera reference
+    std::vector<mypoint*>polygon_points  = all_polygons[current_polygon]->get_points();
+    for(int i=0;i<polygon_points.size();++i){
+        points_in_camera.push_back(glm::vec4(polygon_points[i]->x, polygon_points[i]->y, 0, 1));
+    }
+    
+    // get the points in the camera plane and make its depth equal to 0 since we have lost that information
+    // in that image
+//    for(int i=0;i<points_in_camera.size();++i){
+//        points_in_camera[i] = View*points_in_camera[i];
+//        //points_in_camera[i] = View*points_in_camera[i];
+//        points_in_camera[i][2] = 0;
+//    }
+    
+    // get world coordinates for these points
+    for(int i=0;i<points_in_camera.size();++i){
+        points_in_camera[i] = ViewI*points_in_camera[i];
+    }
+}
+
+
 
 void displayone() {
     
@@ -613,7 +646,6 @@ void displayone() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
-    // Render a color-cube consisting of 6 quads with different colors
     glLoadIdentity();                 // Reset the model-view matrix
     glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
 
@@ -665,39 +697,35 @@ void displayone() {
         int i = 2;
         std::vector<mypoint *> axis_line;
         std::vector<mypoint*> points_to_render;
+        std::vector<glm::vec3> points_to_render_vec;
 
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
-        printf("hinging angle is %f (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c);
-        points_to_render = temp->project_polygon(points_in_camera, -5, 5, 5);
+        
+        prepare_points_to_project();
+        
+        points_to_render_vec = temp->project_polygon(points_in_camera, -5, 5, 5);
+        
+        printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(all_polygons[3]->get_points_vec(), points_to_render_vec));
+        
         
         glColor3f(0.9f, 0.9f, 0.9f);
         glNormal3f(temp->a, temp->b, temp->c);
         
+        int render_scale = 10;
         glBegin(GL_QUADS);
-        for(int i=0;i<4;++i){
-            printf("%d >> (%f, %f, %f)\n", i, points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
-            glVertex3f( points_to_render[i]->x, points_to_render[i]->y, points_to_render[i]->z);
-            //glVertex3f( pp[i]->x/200.0, pp[i]->y/200.0, pp[i]->z/200.0);
+        for(int i=0;i<points_to_render_vec.size();++i){
+            printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
+            glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
         }
         glEnd();
-
-        
         
         glPushMatrix();
         glTranslatef(tr_x, tr_y, tr_z);
         drawmycuboid(1, 2, 5);
         glPopMatrix();
-//
-//        int i = 0;
-//        plane *temp = plane_to_project->rotate_it(-1*angle_p, po[i+1]->x-po[i]->x, po[i+1]->y-po[0]->y, 0);
-//        std::vector<mypoint *> pp = temp->project_polygon(po);
-//        printf("%f %f %f\n", pp[0]->x, pp[0]->y, pp[0]->z);
-//        plot_line(pp, 0);
     }
     
-    //plot_points(corner_points);
     glutSwapBuffers();
-    //glFlush();  // Render now
 }
 
 //Called when the window is resized
@@ -1328,6 +1356,10 @@ void init_values(){
     poly_seq[1] = 5;
 }
 
+
+
+
+
 int main(int argc, char** argv){
     
     init_values();
@@ -1383,29 +1415,9 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
     
-    // we start lwith yz = 0 then rotate this plane till we get the best plane to project
-    plane_to_project = new plane(1, 0, 0, new mypoint(0, 0, 0));
+    // we start with xy = 0  then rotate this plane till we get the best plane to project
+    plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
     
-    // points in the world camera
-    points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
-    points_in_camera.push_back(glm::vec4(5, 0, 0, 1));
-    points_in_camera.push_back(glm::vec4(5, 2, 0, 1));
-    points_in_camera.push_back(glm::vec4(0, 2, 0, 1));
-    
-    
-    // get the points in the camera plane and make its depth equal to 0 since we have lost that information
-    // in that image
-    for(int i=0;i<4;++i){
-        points_in_camera[i] = View*points_in_camera[i];
-        points_in_camera[i][2] = 0;
-    }
-    
-    // get world coordinates for these points
-    for(int i=0;i<4;++i){
-        points_in_camera[i] = ViewI*points_in_camera[i];
-    }
-    
-
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
@@ -1419,7 +1431,7 @@ int main(int argc, char** argv){
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glEnable( GL_BLEND );
     
-    //glutInitWindowPosition(50, 50);         // Position the window's initial top-left corner
+    glutInitWindowPosition(300, 50);         // Position the window's initial top-left corner
     glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);
     glutMouseFunc(mousemotion);

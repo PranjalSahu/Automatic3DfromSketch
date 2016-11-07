@@ -12,6 +12,13 @@
 #include <math.h>
 #include "plane.h"
 #include "myutilities.h"
+#include <glm/vec2.hpp> // glm::vec3
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/ext.hpp>
+
 
 // point normal form equation of a plane
 plane::plane(float _a, float _b, float _c, mypoint* _p){
@@ -120,12 +127,13 @@ std::vector<mypoint*> plane::project_polygon(std::vector<mypoint*> all_points, f
 }
 
 // returns the projected points onto this plane along the vector n1, n2, n3
-std::vector<mypoint*> plane::project_polygon(std::vector<glm::vec4> all_points, float n1, float n2, float n3){
-    std::vector<mypoint*> projected_points;
+std::vector<glm::vec3> plane::project_polygon(std::vector<glm::vec4> all_points, float n1, float n2, float n3){
+    std::vector<glm::vec3> projected_points;
     
     for(std::vector<glm::vec4>::iterator it = all_points.begin(); it != all_points.end(); ++it){
         glm::vec4 p = *it;
-        projected_points.push_back(project_point(p, n1, n2, n3));
+        mypoint *pt = project_point(p, n1, n2, n3);
+        projected_points.push_back(glm::vec3(pt->x, pt->y, pt->z));
     }
     return projected_points;
 }
