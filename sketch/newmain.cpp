@@ -1259,21 +1259,11 @@ std::vector<myline*> get_all_valid_lines(){
         float ratio = (pp.size()*1.0)/ml->get_line_length();
         printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
         if( ratio < POINT_PAIR_LYING_THRESH){
-            if(ml->x1 == 91 && ml->x2 == 359 && ml->y1 == 321 && ml->y2 == 359){
-                printf("debug it %d %d %d %d\n", ml->x1, ml->y1, ml->x2, ml->y2);
-                printf("test\n");
-            }
-            
             iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
             //printf("size after removal is %d\n", all_line_pairs.size());
                                                 // is smaller than the threshold * distance between those two point
         }
         else{
-            if(ml->x1 == 91 && ml->x2 == 359 && ml->y1 == 321 && ml->y2 == 359){
-                printf("debug it %d %d %d %d\n", ml->x1, ml->y1, ml->x2, ml->y2);
-                printf("test\n");
-            }
-            
             printf("lying count %d length is %d ratio is %f\n", pp.size(), ml->get_line_length(), ratio);
             valid_count = valid_count +1;
             iterator++;
@@ -1429,11 +1419,11 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 
 int main(int argc, char** argv){
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman5.txt");
     
     
     
-    imga = imread("/Users/pranjal/Desktop/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imga = imread("/Users/pranjal/Desktop/huffman5.png", CV_LOAD_IMAGE_GRAYSCALE);
     //GaussianBlur( imga, imga, Size(3,3), 0, 0, BORDER_DEFAULT );
     
     

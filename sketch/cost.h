@@ -14,7 +14,12 @@
 
 class cost{
 public:
-    float axis_alignment(std::vector<mypoint*> points);
+    glm::vec2 axis_2d[3];       // x, y, z
+    glm::vec3 axis_3d[3];       // x, y, z
+    glm::vec3 ap[3];
+    
+    float axis_alignment(std::vector<glm::vec2> points, std::vector<glm::vec3> points_3d);
+    cost(glm::vec2 point_2d_axis[]);
 };
 
 
