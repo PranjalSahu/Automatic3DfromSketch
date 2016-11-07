@@ -22,6 +22,22 @@ float gaussian(float angle){
     return exp(-1*value);
 }
 
+
+void get_line(std::vector<glm::vec2> points_2d, std::vector<glm::vec3> points_3d, std::vector<glm::vec2> line_2d,
+              std::vector<glm::vec3> line_3d, int i, int j){
+    // get line vector in 3d and 2d
+    line_2d.push_back(points_2d[j]-points_2d[i]);
+    line_3d.push_back(points_3d[j]-points_3d[i]);
+    
+    float mod2 = sqrt(line_2d[i][0]*line_2d[i][0]+line_2d[i][1]*line_2d[i][1]);
+    float mod3 = sqrt(line_3d[i][0]*line_3d[i][0]+line_3d[i][1]*line_3d[i][1]+line_3d[i][2]*line_3d[i][2]);
+    
+    // normalize
+    //line_2d[i] = line_2d[i]/mod2;
+    line_3d[i] = line_3d[i]/mod3;
+}
+
+
 // returns the cost for the points
 // points in 2d and in 3d have to be in same order
 float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::vec3> points_3d){
@@ -33,18 +49,9 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     std::vector<int> axis_mapping; // best axis in 2d 0 -> x, 1 -> y, 2 -> z
     
     for(int i=0;i<points_2d.size()-1;++i){
-        
-        // get line vector in 3d and 2d
-        line_2d.push_back(points_2d[i+1]-points_2d[i]);
-        line_3d.push_back(points_3d[i+1]-points_3d[i]);
-        
-        float mod2 = sqrt(line_2d[i][0]*line_2d[i][0]+line_2d[i][1]*line_2d[i][1]);
-        float mod3 = sqrt(line_3d[i][0]*line_3d[i][0]+line_3d[i][1]*line_3d[i][1]+line_3d[i][2]*line_3d[i][2]);
-        
-        // normalize
-        line_2d[i] = line_2d[i]/mod2;
-        line_3d[i] = line_3d[i]/mod3;
+        get_line(points_2d, points_3d, line_2d, line_3d, i, i+1);
     }
+    get_line(points_2d, points_3d, line_2d, line_3d, points_2d.size()-1, 0);
     
    
     // getting weights for each 2d line
@@ -57,7 +64,7 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
         for(int j=0;j<3;++j){
             
             float a = glm::angle(line_2d[i], axis_2d[j]);
-            float v = gaussian(a);
+            float v = gaussian(a*180/PI);
             if(v > maxv){
                 maxv   = v;
                 index  = j;
@@ -73,7 +80,8 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     // refer axis alignment cost functions
     float total_cost = 0;
     for(int i=0;i<line_3d.size();++i){
-        total_cost = total_cost + weights[i]*angle(line_3d[i], axis_3d[axis_mapping[i]]);
+        float angle = glm::angle(line_3d[i], axis_3d[axis_mapping[i]]);
+        total_cost  = total_cost + weights[i]*sin(angle);
     }
     
     return total_cost;

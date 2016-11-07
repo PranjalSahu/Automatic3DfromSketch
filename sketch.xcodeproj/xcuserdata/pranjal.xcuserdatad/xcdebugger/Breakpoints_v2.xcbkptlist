@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1497"
-            endingLineNumber = "1497">
+            startingLineNumber = "1503"
+            endingLineNumber = "1503">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1089,11 +1089,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1376"
-            endingLineNumber = "1376"
+            startingLineNumber = "1382"
+            endingLineNumber = "1382"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1121,11 +1121,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1526"
-            endingLineNumber = "1526">
+            startingLineNumber = "1532"
+            endingLineNumber = "1532">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1183,11 +1183,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1539"
-            endingLineNumber = "1539">
+            startingLineNumber = "1545"
+            endingLineNumber = "1545">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1197,11 +1197,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1576"
-            endingLineNumber = "1576">
+            startingLineNumber = "1582"
+            endingLineNumber = "1582">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1243,11 +1243,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1574"
-            endingLineNumber = "1574">
+            startingLineNumber = "1580"
+            endingLineNumber = "1580">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1257,11 +1257,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1571"
-            endingLineNumber = "1571">
+            startingLineNumber = "1577"
+            endingLineNumber = "1577">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1271,11 +1271,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1573"
-            endingLineNumber = "1573">
+            startingLineNumber = "1579"
+            endingLineNumber = "1579">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1285,11 +1285,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1570"
-            endingLineNumber = "1570">
+            startingLineNumber = "1576"
+            endingLineNumber = "1576">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1299,7 +1299,21 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1581"
+            endingLineNumber = "1581">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1575"
@@ -1313,25 +1327,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1569"
-            endingLineNumber = "1569">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1446"
-            endingLineNumber = "1446">
+            startingLineNumber = "1452"
+            endingLineNumber = "1452">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1437,11 +1437,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1568"
-            endingLineNumber = "1568">
+            startingLineNumber = "1574"
+            endingLineNumber = "1574">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1547,11 +1547,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1397"
-            endingLineNumber = "1397"
+            startingLineNumber = "1403"
+            endingLineNumber = "1403"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1687,15 +1687,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1406"
-            endingLineNumber = "1406"
+            startingLineNumber = "1412"
+            endingLineNumber = "1412"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1755,11 +1755,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1388"
-            endingLineNumber = "1388"
+            startingLineNumber = "1394"
+            endingLineNumber = "1394"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1771,11 +1771,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1393"
-            endingLineNumber = "1393"
+            startingLineNumber = "1399"
+            endingLineNumber = "1399"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1787,11 +1787,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "500221863.761208"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1410"
-            endingLineNumber = "1410"
+            startingLineNumber = "1416"
+            endingLineNumber = "1416"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1803,11 +1803,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/cost.cpp"
-            timestampString = "500216649.711602"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
             landmarkName = "cost::axis_alignment(std::vector&lt;glm::vec2&gt; points_2d, std::vector&lt;glm::vec3&gt; points_3d)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1883,11 +1883,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/cost.cpp"
-            timestampString = "500221746.634888"
+            timestampString = "500223647.430063"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "cost::axis_alignment(std::vector&lt;glm::vec2&gt; points_2d, std::vector&lt;glm::vec3&gt; points_3d)"
             landmarkType = "5">
          </BreakpointContent>
