@@ -192,7 +192,7 @@ std::vector<glm::vec4> points_in_camera;
 
 // sequence of polygon which are going to be placed
 int poly_seq[2];
-int current_polygon = 5;
+int current_polygon = 2;
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -689,14 +689,6 @@ void displayone() {
         glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
         glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
 
-        
-        
-        
-        polygon* p = all_polygons[3];
-        std::vector<mypoint *> po = p->get_points();
-        int i = 2;
-        std::vector<mypoint *> axis_line;
-        std::vector<mypoint*> points_to_render;
         std::vector<glm::vec3> points_to_render_vec;
 
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
@@ -1354,18 +1346,10 @@ void init_values(){
     // sequence of polygons to be placed this will be done automatically later
     poly_seq[0] = 3;
     poly_seq[1] = 5;
-}
-
-
-
-
-
-int main(int argc, char** argv){
     
-    init_values();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
-    imga = imread("/Users/pranjal/Desktop/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman1.txt");
+    imga = imread("/Users/pranjal/Desktop/huffman1.png", CV_LOAD_IMAGE_GRAYSCALE);
     
     bw   = imga > 128;
     img  = bw > 120;
@@ -1381,11 +1365,18 @@ int main(int argc, char** argv){
     thinning(img);
     
     fill_points_vector(img);
+}
+
+
+
+
+
+int main(int argc, char** argv){
     
+    init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
     valid_lines_undirected = get_all_valid_lines();
-    
     
     // showing the result of line detection
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
