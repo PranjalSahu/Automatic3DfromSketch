@@ -815,43 +815,6 @@ void displayone() {
                 }
                 glEnd();
             }
-            else if(check_3_points_already(all_polygons[i])){
-                plane * newplane = get_plane(all_polygons[i]);
-                prepare_points_to_project(all_polygons[i]);
-                
-                points_to_render_vec = newplane->project_polygon(points_in_camera, -5, 5, 5);
-                
-                glBegin(GL_LINE_LOOP);
-                glLineWidth(105);
-                glColor3f(1.0f, 0.0f, 0.0f);
-                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
-                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
-                }
-                glEnd();
-                
-                
-                glBegin(GL_QUADS);
-                glColor3f(0.4f, 0.4f, 0.4f);
-                glNormal3f(1.0f, 1.0f, 1.0f);
-                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
-                    glVertex3f( all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
-                }
-                glEnd();
-                
-                
-                
-                for(int i=0;i<points_to_render_vec.size();++i){
-                    glm::vec3 tp = glm::vec3(points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
-                    all_polygons[i]->points_to_render_vec.push_back(tp);
-                }
-                
-                all_polygons[i]->placed = true;
-                
-                // insert the points in the already placed list
-                insert_corres(points_to_render_vec, all_polygons[i]->get_points_vec());
-                
-            }
-            
         }
         
        
@@ -1290,6 +1253,28 @@ void handleKeypressa(unsigned char key, int x, int y) {
             current_polygon = current_polygon+1;
             if(current_polygon >=2)
                 current_polygon = 1;
+            
+            
+            for(int pl = 0;pl < all_polygons.size(); ++pl){
+                if(check_3_points_already(all_polygons[pl])){
+                    plane * newplane = get_plane(all_polygons[pl]);
+                    prepare_points_to_project(all_polygons[pl]);
+                    
+                    std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
+                    
+                    
+                    for(int k=0;k<points_to_render_vec_temp.size();++k){
+                        glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
+                        all_polygons[pl]->points_to_render_vec.push_back(tp);
+                    }
+                    all_polygons[pl]->placed = true;
+                    // insert the points in the already placed list
+                    insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+                }
+            }
+            
+            
+            
             break;
         case 27: //Escape key
             exit(0);
