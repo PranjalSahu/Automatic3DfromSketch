@@ -196,6 +196,15 @@ std::vector<glm::vec3> points_to_render_vec_global;
 int poly_seq[2];
 int current_polygon = 0;
 
+
+
+// vector for storing already placed points
+// will be used to check if the current polygon already has one of its three vertices placed in 3d
+// if yes then get the normal direction from those 3 points and project onto that
+// and place that polygon as well
+std::vector<glm::vec2> corres_2d;
+std::vector<glm::vec3> corres_3d;
+
 void thinningIteration(cv::Mat& im, int iter)
 {
     cv::Mat marker = cv::Mat::zeros(im.size(), CV_8UC1);
@@ -609,36 +618,91 @@ void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
 }
 
 
-void prepare_points_to_project(){
+void prepare_points_to_project(polygon *pt){
     
     // always clear points before pushing new one
     points_in_camera.clear();
     
-    // points in the world camera
-    //    points_in_camera.push_back(glm::vec4(0, 0, 0, 1));
-    //    points_in_camera.push_back(glm::vec4(5, 0, 0, 1));
-    //    points_in_camera.push_back(glm::vec4(5, 2, 0, 1));
-    //    points_in_camera.push_back(glm::vec4(0, 2, 0, 1));
-    
     // points in the camera reference
-    std::vector<mypoint*>polygon_points  = all_polygons[poly_seq[current_polygon]]->get_points();
+    std::vector<mypoint*>polygon_points  = pt->get_points();
     for(int i=0;i<polygon_points.size();++i){
         points_in_camera.push_back(glm::vec4(polygon_points[i]->x, polygon_points[i]->y, 0, 1));
     }
-    
-    // get the points in the camera plane and make its depth equal to 0 since we have lost that information
-    // in that image
-//    for(int i=0;i<points_in_camera.size();++i){
-//        points_in_camera[i] = View*points_in_camera[i];
-//        //points_in_camera[i] = View*points_in_camera[i];
-//        points_in_camera[i][2] = 0;
-//    }
     
     // get world coordinates for these points
     for(int i=0;i<points_in_camera.size();++i){
         points_in_camera[i] = ViewI*points_in_camera[i];
     }
 }
+
+
+
+// checks if for a polygon three points are already placed or not
+bool check_3_points_already(polygon *pt){
+    if(pt->lines.size()>4)
+        return false;
+        
+    std::vector<glm::vec2> twod_temp = pt->get_points_vec();
+    int count = 0;
+    
+    for(int j=0;j<twod_temp.size(); ++j){
+        for(int i=0;i<corres_2d.size(); ++i){
+            if(twod_temp[j][0] == corres_2d[i][0] && twod_temp[j][1] == corres_2d[i][1]){
+                ++count;
+                if(count == 3)
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
+// if 3 points are already placed then it searches for them and then forms a plane and returns it
+plane* get_plane(polygon *pt){
+    std::vector<glm::vec2> twod_temp = pt->get_points_vec();
+    std::vector<glm::vec3> plane_points;
+    
+    int count = 0;
+    
+    for(int j=0;j<twod_temp.size(); ++j){
+        for(int i=0;i<corres_2d.size(); ++i){
+            if(twod_temp[j][0] == corres_2d[i][0] && twod_temp[j][1] == corres_2d[i][1]){
+                ++count;
+                plane_points.push_back(corres_3d[i]);
+                
+                if(count == 3){
+                    break;
+                }
+            }
+        }
+    }
+    
+    return new plane(plane_points);
+}
+
+
+
+
+void insert_corres(std::vector<glm::vec3> threed, std::vector<glm::vec2> twod){
+    for(int i=0;i<twod.size();++i){
+        bool flag =  true;
+        for(int j=0;j<corres_2d.size();++j){
+            if(corres_2d[j][0] == twod[i][0] && corres_2d[j][1] == twod[i][1]){
+                flag = false;
+            }
+        }
+        
+        
+        // if not present already then push it in vector
+        if(flag){
+            corres_2d.push_back(glm::vec2(twod[i]));
+            corres_3d.push_back(glm::vec3(threed[i]));
+        }
+    }
+    
+    return;
+}
+
 
 
 
@@ -699,7 +763,7 @@ void displayone() {
 
         plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
         
-        prepare_points_to_project();
+        prepare_points_to_project(all_polygons[poly_seq[current_polygon]]);
         
         points_to_render_vec = temp->project_polygon(points_in_camera, -5, 5, 5);
         points_to_render_vec_global =  points_to_render_vec;
@@ -751,6 +815,43 @@ void displayone() {
                 }
                 glEnd();
             }
+            else if(check_3_points_already(all_polygons[i])){
+                plane * newplane = get_plane(all_polygons[i]);
+                prepare_points_to_project(all_polygons[i]);
+                
+                points_to_render_vec = newplane->project_polygon(points_in_camera, -5, 5, 5);
+                
+                glBegin(GL_LINE_LOOP);
+                glLineWidth(105);
+                glColor3f(1.0f, 0.0f, 0.0f);
+                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+                }
+                glEnd();
+                
+                
+                glBegin(GL_QUADS);
+                glColor3f(0.4f, 0.4f, 0.4f);
+                glNormal3f(1.0f, 1.0f, 1.0f);
+                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+                    glVertex3f( all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+                }
+                glEnd();
+                
+                
+                
+                for(int i=0;i<points_to_render_vec.size();++i){
+                    glm::vec3 tp = glm::vec3(points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
+                    all_polygons[i]->points_to_render_vec.push_back(tp);
+                }
+                
+                all_polygons[i]->placed = true;
+                
+                // insert the points in the already placed list
+                insert_corres(points_to_render_vec, all_polygons[i]->get_points_vec());
+                
+            }
+            
         }
         
        
@@ -1109,6 +1210,8 @@ int merge_points(){
 }
 
 
+
+
 //Called when a key is pressed
 void handleKeypressa(unsigned char key, int x, int y) {
     switch (key) {
@@ -1180,6 +1283,10 @@ void handleKeypressa(unsigned char key, int x, int y) {
                 glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
                 all_polygons[poly_seq[current_polygon]]->points_to_render_vec.push_back(tp);
             }
+            
+            // insert the points in the already placed list
+            insert_corres(points_to_render_vec_global, all_polygons[poly_seq[current_polygon]]->get_points_vec());
+            
             current_polygon = current_polygon+1;
             if(current_polygon >=2)
                 current_polygon = 1;
@@ -1188,6 +1295,8 @@ void handleKeypressa(unsigned char key, int x, int y) {
             exit(0);
     }
 }
+
+
 
 // gets the corner points using the harris detector
 // and clubs the points which are nearby into one
@@ -1426,23 +1535,6 @@ void init_values(){
 
 
 int main(int argc, char** argv){
-//    printf("sin is %f\n", sin(2.34));
-//    return 0;
-//    glm::vec2 pl = glm::vec2(-199, -113);
-//    glm::vec2 pla = pl/glm::length(pl);
-//    
-//    
-//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(0.9, 0.4), -1*pla))/PI);
-//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(0.01, 0.99), pla))/PI);
-//        printf("angle is %f\n", 180*acos(glm::dot(glm::vec2(-0.88, 0.47), pla))/PI);
-//
-//    
-//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(0.9, 0.4))/PI);
-//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), -1*glm::vec2(0.9, 0.4))/PI);
-//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(0.01, 0.99))/PI);
-//    printf("angle is %f\n", 180*glm::angle(pl/glm::length(pl), glm::vec2(-0.88, 0.47))/PI);
-//    
-//
     init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length

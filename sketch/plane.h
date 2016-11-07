@@ -27,6 +27,7 @@ public:
     float get_z(float x, float y);
     polygon *project_polygon(polygon *p);
     plane(float a, float b, float c, mypoint* p);
+    plane(std::vector<glm::vec3> plane_points);
     
 };
 

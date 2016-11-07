@@ -29,6 +29,22 @@ plane::plane(float _a, float _b, float _c, mypoint* _p){
     p = _p;
 }
 
+plane::plane(std::vector<glm::vec3> plane_points){
+    glm::vec3 ta = plane_points[0]-plane_points[1];
+    glm::vec3 tb = plane_points[1]-plane_points[2];
+    glm::vec3 tc = glm::cross(ta, tb);
+    
+    // normalize
+    tc = tc/glm::length(tc);
+ 
+    a = tc[0];
+    b = tc[1];
+    c = tc[2];
+    p = new mypoint(plane_points[0][0], plane_points[0][1], plane_points[0][2]);
+}
+
+
+
 //rotates the current plane by angle around the axis given by ka_, kb_, kc_ using Rodrigues's rotation formula
 // give angle in degree
 plane* plane::rotate_it(float angle, float ka_, float kb_, float kc_){
