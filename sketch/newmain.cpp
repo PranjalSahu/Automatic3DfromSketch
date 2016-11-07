@@ -193,7 +193,7 @@ std::vector<glm::vec3> points_to_render_vec_global;
 
 
 // sequence of polygon which are going to be placed
-int poly_seq[2];
+int poly_seq[3];
 int current_polygon = 0;
 
 
@@ -732,7 +732,7 @@ void displayone() {
         }
     }
     else if(display_type == 2){
-        polygon* p = all_polygons[3];
+        polygon* p = all_polygons[4];
         plot_lines(p->lines, 0);
     }
     else if(display_type == 3){
@@ -818,7 +818,13 @@ void displayone() {
         }
         
        
+        int cpl = 0;
+        for(int kl = 0;kl<all_polygons.size();++kl){
+            if(all_polygons[kl]->placed)
+                cpl = cpl+1;
+        }
         
+        printf("COUNT OF ALREADY PLACED POLYGONS %d\n", cpl);
 //        glPushMatrix();
 //        glTranslatef(tr_x, tr_y, tr_z);
 //        drawmycuboid(1, 2, 5);
@@ -1251,9 +1257,6 @@ void handleKeypressa(unsigned char key, int x, int y) {
             insert_corres(points_to_render_vec_global, all_polygons[poly_seq[current_polygon]]->get_points_vec());
             
             current_polygon = current_polygon+1;
-            if(current_polygon >=2)
-                current_polygon = 1;
-            
             
             for(int pl = 0;pl < all_polygons.size(); ++pl){
                 if(check_3_points_already(all_polygons[pl])){
@@ -1271,10 +1274,33 @@ void handleKeypressa(unsigned char key, int x, int y) {
                     // insert the points in the already placed list
                     insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 }
+                
+                //if(all_polygons[pl]->placed)
+                    //count = count+1;
             }
             
+            for(int pl = 0;pl < all_polygons.size(); ++pl){
+                if(check_3_points_already(all_polygons[pl])){
+                    plane * newplane = get_plane(all_polygons[pl]);
+                    prepare_points_to_project(all_polygons[pl]);
+                    
+                    std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
+                    
+                    
+                    for(int k=0;k<points_to_render_vec_temp.size();++k){
+                        glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
+                        all_polygons[pl]->points_to_render_vec.push_back(tp);
+                    }
+                    all_polygons[pl]->placed = true;
+                    // insert the points in the already placed list
+                    insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+                }
+                
+                //if(all_polygons[pl]->placed)
+                //count = count+1;
+            }
             
-            
+            //printf("NUMBER OF POLYGONS ALREADY PLACED IS %d\n", count);
             break;
         case 27: //Escape key
             exit(0);
@@ -1494,7 +1520,7 @@ void init_values(){
     // sequence of polygons to be placed this will be done automatically later
     poly_seq[0] = 3;
     poly_seq[1] = 5;
-    
+    poly_seq[2] = 4;
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
     imga = imread("/Users/pranjal/Desktop/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
