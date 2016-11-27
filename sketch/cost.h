@@ -19,6 +19,10 @@ public:
     glm::vec3 ap[3];
     
     float axis_alignment(std::vector<glm::vec2> points, std::vector<glm::vec3> points_3d);
+    float parallelism(std::vector<glm::vec2> points_2d, std::vector<glm::vec3> points_3d,
+                      std::vector<std::pair<int, int>> edges_list,
+                      std::vector<glm::vec2> corres_2d,
+                      std::vector<glm::vec3> corres_3d);
     cost(std::vector<glm::vec2>);
 };
 

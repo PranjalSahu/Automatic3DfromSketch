@@ -27,6 +27,10 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/epsilon.hpp>
+#include <glm/gtc/constants.hpp>
+
 
 #else
 #include <GL/glut.h>
@@ -204,6 +208,17 @@ int current_polygon = 0;
 // and place that polygon as well
 std::vector<glm::vec2> corres_2d;
 std::vector<glm::vec3> corres_3d;
+
+
+
+// vector for storing the already inserted edges in 2d and 3d
+// this will store only the indices of the vertex in corres_2d and corred_3d
+// to get vertex value just index the vector corres_2d and corres_3d
+// This will be used for solving the parallelism and collinearity constraints
+std::vector<pair<int, int>> edges_list;
+
+
+
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -682,7 +697,8 @@ plane* get_plane(polygon *pt){
 
 
 
-
+// maintains the list of points which are alrady rendered
+// always check by 2d points since 3d are in float
 void insert_corres(std::vector<glm::vec3> threed, std::vector<glm::vec2> twod){
     for(int i=0;i<twod.size();++i){
         bool flag =  true;
@@ -702,6 +718,71 @@ void insert_corres(std::vector<glm::vec3> threed, std::vector<glm::vec2> twod){
     
     return;
 }
+
+
+bool check_2d_equal(glm::vec2 a, glm::vec2 b){
+    if(a[0] == b[0] && a[1] == b[1])
+        return true;
+    else
+        return false;
+}
+
+// get index in corres_2d for a vertex
+int get_vertex_index(glm::vec2 v){
+    for(int i=0;i<corres_2d.size(); ++i){
+        if(corres_2d[i][0] == v[0] && corres_2d[i][1] == v[1])
+            return i;
+    }
+    
+    // not found
+    // ERROR case
+    printf("SOME ERROR OCCURED IN get_vertex_index");
+    return -1;
+}
+
+
+// maintains the list of edges which are already rendered
+// always check by 2d points since 3d are in float
+// should be called only after insert_corres has been inserted
+void insert_edges(std::vector<glm::vec3> threed, std::vector<glm::vec2> twod){
+    for(int i=0;i<twod.size();++i){
+        
+        bool flag =  true;
+        
+        glm::vec2 bf, bs;
+        
+        // get first and second vertex of edge
+        // for last value 2nd vertex is the first one in list
+        if (i == twod.size()-1){
+            bf = twod[i];
+            bs = twod[0];
+        }else{
+            bf = twod[i];
+            bs = twod[i+1];
+        }
+        
+        
+        // check in two d points list if it is already placed
+        for(int j=0; j< edges_list.size(); ++j){
+            
+            glm::vec2 af = corres_2d[edges_list[j].first];
+            glm::vec2 as = corres_2d[edges_list[j].second];
+            
+            if((check_2d_equal(af, bf) && check_2d_equal(as, bs)) || (check_2d_equal(af, bs) && check_2d_equal(bf, as))){
+                flag = false;
+            }
+        }
+        
+        
+        // if not present already then push it in vector
+        if(flag){
+            edges_list.push_back(make_pair(get_vertex_index(bf), get_vertex_index(bs)));
+        }
+    }
+    
+    return;
+}
+
 
 
 
@@ -1255,6 +1336,8 @@ void handleKeypressa(unsigned char key, int x, int y) {
             
             // insert the points in the already placed list
             insert_corres(points_to_render_vec_global, all_polygons[poly_seq[current_polygon]]->get_points_vec());
+            // insert in the already inserted edges
+            insert_edges(points_to_render_vec_global,  all_polygons[poly_seq[current_polygon]]->get_points_vec());
             
             current_polygon = current_polygon+1;
             
@@ -1273,12 +1356,16 @@ void handleKeypressa(unsigned char key, int x, int y) {
                     all_polygons[pl]->placed = true;
                     // insert the points in the already placed list
                     insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+                    insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 }
                 
                 //if(all_polygons[pl]->placed)
                     //count = count+1;
             }
             
+            
+            // make it iterative
+            // it should reiterate if a single polygon was inserted in a loop
             for(int pl = 0;pl < all_polygons.size(); ++pl){
                 if(check_3_points_already(all_polygons[pl])){
                     plane * newplane = get_plane(all_polygons[pl]);
@@ -1294,6 +1381,7 @@ void handleKeypressa(unsigned char key, int x, int y) {
                     all_polygons[pl]->placed = true;
                     // insert the points in the already placed list
                     insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+                    insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 }
                 
                 //if(all_polygons[pl]->placed)
@@ -1523,7 +1611,7 @@ void init_values(){
     poly_seq[2] = 4;
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
     
     bw   = imga > 128;
     img  = bw > 120;
@@ -1546,6 +1634,7 @@ void init_values(){
 
 
 int main(int argc, char** argv){
+    
     init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length

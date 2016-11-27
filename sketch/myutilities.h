@@ -30,10 +30,12 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
+#include <glm/glm.hpp>
 
 
 #define PI 3.14159265
 #define IMG_SCALE 3.0
+#define MY_GLM_EPS 0.001
 
 typedef std::tuple<int,int> i2tuple;
 
