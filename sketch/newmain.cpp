@@ -1262,6 +1262,32 @@ int merge_points(){
         
     }
     
+    // remove duplicate corner points
+    for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
+        bool present = false;
+        i2tuple pta = *it;
+        
+        for(std::vector<i2tuple>::iterator ita = corner_points_temp.begin(); ita != corner_points_temp.end(); ++ita){
+            i2tuple ptb = *ita;
+            if((get<0>(pta) == get<0>(ptb)) && (get<1>(pta) == get<1>(ptb))){
+                present = true;
+                break;
+            }
+        }
+        
+        if(!present){
+            corner_points_temp.push_back(pta);
+        }
+
+    }
+    
+    corner_points.clear();
+    
+    for(std::vector<i2tuple>::iterator it = corner_points_temp.begin(); it != corner_points_temp.end(); ++it){
+        i2tuple ptb = *it;
+        corner_points.push_back(ptb);
+    }
+    
     printf("size of corner_points END %d\n", corner_points.size());
     return count;
 }
@@ -1442,8 +1468,11 @@ void get_corner_points(Mat &imga){
 std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
     std::vector<myline*> reverse_lines;
     for(std::vector<myline*>::iterator iterator = vl.begin(); iterator != vl.end(); ++iterator) {
-        myline *t = *iterator;
-        reverse_lines.push_back(new myline(t->x2, t->x1, t->y2, t->y1));
+        myline *t  = *iterator;
+        myline *nt = new myline(t->x2, t->x1, t->y2, t->y1);
+        nt->reverse_line = t;
+        t->reverse_line   = nt;
+        reverse_lines.push_back(nt);
     }
     return reverse_lines;
 }
@@ -1653,6 +1682,10 @@ void init_values(){
 
 
 
+
+int get_adjacent_polygon(){
+    return 0;
+}
 
 
 int main(int argc, char** argv){

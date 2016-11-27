@@ -576,6 +576,7 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
         // if it L junction and one is green then other has to be blue
         if(other_junction_lines[0]->label.compare("green") == 0){
             this->label = "blue";
+            this->reverse_line->label = "blue";
             return true;
         }
     }
@@ -583,10 +584,12 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
     else if(j->junction_type == 1){
         if(count_color(other_junction_lines, "green") == 2 || count_color(other_junction_lines, "blue") == 2){
             this->label = "green";
+            this->reverse_line->label = "green";
             return true;
         }
         else if(count_color(other_junction_lines, "green") == 1 && count_color(other_junction_lines, "blue") == 1){
             this->label = "blue";
+            this->reverse_line->label = "blue";
             return true;
         }
     }
@@ -594,10 +597,12 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
     else if(j->junction_type == 2){
         if(count_color(other_junction_lines, "green") == 2 || count_color(other_junction_lines, "blue") == 2){
             this->label = "green";
+            this->reverse_line->label = "green";
             return true;
         }
         else if(count_color(other_junction_lines, "green") == 1 && count_color(other_junction_lines, "blue") == 1){
             this->label = "blue";
+            this->reverse_line->label = "blue";
             return true;
         }
     }
@@ -608,17 +613,28 @@ bool myline::label_line(std::vector<myline*> other_junction_lines, junction *j){
 // returns the colors for the given lines
 std::vector<int> get_line_labels(std::vector<myline*> all_lines){
     std::vector<int> all_colors;
+    int b = 0;
+    int g = 0;
+    int r = 0;
+    
     for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
         myline *t = *iter;
-        int color = 0;
+        int color = 1;
         if(t->label.compare("blue")){
             color = 2;
+            b = b+1;
         }
         else if(t->label.compare("green")){
             color = 0;
+            g = g+1;
+        }
+        else{
+            r = r+1;
         }
         all_colors.push_back(color);
     }
+    printf("R %d G %d B %d\n", r, g, b);
+    
     return all_colors;
 }
 
@@ -654,6 +670,8 @@ std::vector<int> get_huffman_label(std::vector<myline*> valid_lines_directed, st
         
         // set label to blue for occluding edges
         t->label = "blue";
+        t->reverse_line->label = "blue";
+        
         
         int x1 = t->x1;
         int y1 = t->y1;

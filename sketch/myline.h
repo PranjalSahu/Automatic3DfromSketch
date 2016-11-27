@@ -57,6 +57,7 @@ public:
     bool check_if_occluding_edge(std::vector<i2tuple> corner_points);
     float get_angle(myline *a, int bx, int by);
     bool label_line(std::vector<myline*> junction_lines, junction *j);
+    myline * reverse_line;  // for storing the reverse line
     
     myline(i2tuple a, i2tuple b);
     myline(int a, int b, float m);
