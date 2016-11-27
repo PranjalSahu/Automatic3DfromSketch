@@ -181,9 +181,22 @@ int myline::checkpointlies(int x, int y){
 
 
 // returns the count of point lying on this line segment
-std::vector<i2tuple>  myline::pointliecount(std::vector<i2tuple> points_vector){
+int  myline::pointliecount(std::vector<i2tuple> points_vector){
+    // dimension across which length will be taken
+    bool xismax = false;
+    if(this->get_line_max_dimension_length() ==  abs(this->x2-this->x1))
+        xismax = true;
+    
+    std::set<int> points_in_dim;
+    
+    
     int lying_count = 0;
     std::vector<i2tuple> lying_vector;
+    
+    int pp_count = 0;
+    int within_line = 0;
+    bool pp;
+    bool wl;
     
     for(std::vector<i2tuple>::iterator it = points_vector.begin(); it != points_vector.end(); ++it){
         i2tuple pt = *it;
@@ -193,13 +206,30 @@ std::vector<i2tuple>  myline::pointliecount(std::vector<i2tuple> points_vector){
         // use 6 for cube
         //if ( this->get_perpendicular_distance(pt) <= 6 && this->check_within_line_segment(pt) == 1){
         //if ( this->get_perpendicular_distance(pt) <= 10){
-        if ( this->get_perpendicular_distance(pt) <= 10 && this->check_within_line_segment(pt) == true){
-            lying_count = lying_count+1;
-            lying_vector.push_back(i2tuple(x, y));
+        pp = false;
+        wl = false;
+        
+        if ( this->get_perpendicular_distance(pt) <= 15){
+            pp_count = pp_count +1;
+            pp = true;
+        }
+        if (this->check_within_line_segment(pt) == true){
+            within_line =within_line+1;
+            wl = true;
+        }
+        
+        if(pp && wl){
+            if(xismax){
+                points_in_dim.insert(x);
+            }
+            else{
+                points_in_dim.insert(y);
+            }
         }
     }
     
-    return lying_vector;
+    //printf("COUNTSPP (%d,%d) -> (%d,%d) %d %d %d\n", this->x1, this->y1, this->x2, this->y2, within_line, pp_count, lying_count);
+    return points_in_dim.size();
 }
 
 
@@ -238,6 +268,14 @@ void myline::mergelines(myline *t){
         // update the slope taking the 2nd point
         m = (t->y1-this->y1)/(t->x1-this->x1);
     }
+}
+
+// returns the max of |x2-x1| and |y2-y1|
+// this will be used for calculating valid lines
+int myline::get_line_max_dimension_length(){
+    int a = abs(this->x2-this->x1);
+    int b = abs(this->y2-this->y1);
+    return a > b ? a : b;
 }
 
 float myline::get_line_length() const{

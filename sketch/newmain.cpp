@@ -851,8 +851,15 @@ void displayone() {
 
         std::vector<glm::vec2> p2d = all_polygons[poly_seq[current_polygon]]->get_points_vec();
         
-        printf("hinging angle is %f (%f, %f, %f) cost is %f\n", angle_p, temp->a, temp->b, temp->c, cost_obj->axis_alignment(p2d, points_to_render_vec));
+        float axis_alignment_cost = cost_obj->axis_alignment(p2d, points_to_render_vec);
+        float parallelism_cost    = cost_obj->parallelism(p2d, points_to_render_vec, edges_list, corres_2d, corres_3d);
+        float total_cost          = axis_alignment_cost + parallelism_cost;
         
+        
+        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
+        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
+        printf("hinging angle is %f total        cost is %f\n",        angle_p, total_cost);
+
         
         
         int render_scale = 30;
@@ -1245,7 +1252,7 @@ int merge_points(){
             }
         }
         
-        if(mind < 12.0){
+        if(mind < 20.0){
             // replace the merged point with the new formed point
             corner_points[minp-corner_points.begin()] = i2tuple((px1+px2)/2, (py1+py2)/2);
             // erase the current point
@@ -1465,16 +1472,24 @@ std::vector<myline*> get_all_valid_lines(){
     int valid_count = 0;
     for(std::vector<myline*>::iterator iterator = all_line_pairs.begin(); iterator != all_line_pairs.end();) {
         myline *ml = *iterator;
-        std::vector<i2tuple> pp = ml->pointliecount(points_vector);
-        float ratio = (pp.size()*1.0)/ml->get_line_length();
-        printf("%d %d %d %d %f\n", ml->x1, ml->y1, ml->x2, ml->y2, ratio);
+        int pointsize = ml->pointliecount(points_vector);
+        float linelength = ml->get_line_max_dimension_length();
+        
+        // dimension across which ratio will be taken
+        bool xismax = false;
+        if(ml->get_line_max_dimension_length() ==  abs(ml->x2-ml->x1))
+            xismax = true;
+        
+        float ratio = pointsize/linelength;
+        printf("A(%d,%d) B(%d,%d)    %d %f %f\n", ml->x1,ml->y1, ml->x2, ml->y2, pointsize, linelength, ratio);
+        
         if( ratio < POINT_PAIR_LYING_THRESH){
             iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
             //printf("size after removal is %d\n", all_line_pairs.size());
                                                 // is smaller than the threshold * distance between those two point
         }
         else{
-            printf("lying count %d length is %d ratio is %f\n", pp.size(), ml->get_line_length(), ratio);
+            printf("lying count %d length is %f ratio is %f\n", pointsize, linelength, ratio);
             valid_count = valid_count +1;
             iterator++;
         }
@@ -1566,22 +1581,29 @@ void write_to_file(std::vector<i2tuple> corner_points, std::vector<myline*> vali
 
 void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> valid_lines_undirected, vector<i2tuple> corner_points){
     
+    int count = 0;
     for(std::vector<i2tuple>::iterator it = corner_points.begin(); it != corner_points.end(); ++it){
         i2tuple pt = *it;
         int i = get<0>(pt);
         int j = get<1>(pt);
-        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
-        printf("(%d, %d)\n", i, j);
+        //circle( dst_norm_scaled, Point( i, j ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
+        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(255, 255, 255), 2, 8, 0 );
+        printf("CORNER (%d, %d)\n", i, j);
+        ++count;
+        //if(count >1)
+        //    break;
+        
     }
-    
+    count =0;
     for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
         myline* pt = *it;
         int x1 = pt->x1;
         int x2 = pt->x2;
         int y1 = pt->y1;
         int y2 = pt->y2;
-        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(0, 255, 0), 1, 8, 0);
-        printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
+        //line(dst_norm_scaled, Point(x1, y1), Point(x2, y2), Scalar(0, 255, 0), 1, 8, 0);
+        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 1, 8, 0);
+        printf("LINE (%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
     return;
@@ -1610,11 +1632,11 @@ void init_values(){
     poly_seq[1] = 5;
     poly_seq[2] = 4;
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman7.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman7.png", CV_LOAD_IMAGE_GRAYSCALE);
     
-    bw   = imga > 128;
-    img  = bw > 120;
+    bw   = imga > 80;
+    img  = bw > 80;
     
     // get corner points using harris detector
     get_corner_points(imga);
@@ -1644,6 +1666,7 @@ int main(int argc, char** argv){
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
     imshow( "corners_window", dst_norm_scaled );
+    //imshow( "corners_window", img );
     waitKey(0);
 
     
