@@ -904,7 +904,7 @@ void displayone() {
         axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
         plot_line_3d(axis_line, 0);
         
-        printf("Debugging Plane (%f, %f, %f) Rotation (%f, %f, %f)\n", temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
+        //printf("Debugging Plane (%f, %f, %f) Rotation (%f, %f, %f)\n", temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
         
         
         
@@ -931,7 +931,8 @@ void displayone() {
         
 //        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
 //        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
-//        printf("hinging angle is %f total        cost is %f\n",        angle_p, total_cost);
+        printf("hinging angle is %f axis_alignment_cost, parallelism_cost, total_cost is %f, %f, %f\n",
+               angle_p, axis_alignment_cost, parallelism_cost, total_cost);
 
         
         
@@ -940,16 +941,17 @@ void displayone() {
         glBegin(GL_LINE_LOOP);
         glLineWidth(105);
         glColor3f(1.0f, 0.0f, 0.0f);
+        glNormal3f(temp->a, temp->b, temp->c);
         for(int i=0;i<points_to_render_vec.size();++i){
             glVertex3f(points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
         }
         glEnd();
         
-        glColor3f(0.9f, 0.9f, 0.9f);
-        glNormal3f(temp->a, temp->b, temp->c);
         
         
         glBegin(GL_QUADS);
+        glColor3f(0.9f, 0.9f, 0.9f);
+        glNormal3f(temp->a, temp->b, temp->c);
         for(int i=0;i<points_to_render_vec.size();++i){
             //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
             glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
@@ -970,7 +972,7 @@ void displayone() {
                 
                 glBegin(GL_QUADS);
                 glColor3f(0.4f, 0.4f, 0.4f);
-                glNormal3f(1.0f, 1.0f, 1.0f);
+                glNormal3f(all_polygons[i]->plane_to_project->a, all_polygons[i]->plane_to_project->b, all_polygons[i]->plane_to_project->c);
                 for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
                     glVertex3f( all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
                 }
@@ -1787,22 +1789,33 @@ int get_adjacent_polygon(){
     return 0;
 }
 
+// removes the outer polygon from the list of all_polygons
+void remove_outer_polygon(std::vector<polygon*> all_polygons){
+    polygon *to_erase;
+    
+    for(std::vector<polygon*>::iterator it = all_polygons.begin(); it != all_polygons.end(); ++it){
+        polygon *pp = *it;
+        std::vector<myline*> lines = pp->lines;
+        
+        bool flag = true;
+        for(int i=0;i<lines.size();++i){
+            if(lines[i]->label.compare("blue") != 0){
+                flag = false;
+                break;
+            }
+        }
+        
+        if(flag){
+            to_erase = pp;
+            break;
+        }
+    }
+    
+    all_polygons.erase(std::remove(all_polygons.begin(), all_polygons.end(), to_erase), all_polygons.end());
+    return;
+}
 
 int main(int argc, char** argv){
-//    std::vector<glm::vec3> vg;
-//    vg.push_back(glm::vec3(0,0,0));
-//    vg.push_back(glm::vec3(1,0,0));
-//    vg.push_back(glm::vec3(0,0,1));
-//    
-//    plane *p = new plane(vg);
-//    
-//    for(int angle=0;angle<180;++angle){
-//        plane *tp = p->rotate_it(angle, 1, 0, 0);
-//        printf("normal >> (%f, %f, %f)\n", tp->a, tp->b, tp->c);
-//    }
-//    
-//    return 0;
-    
     init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
@@ -1835,6 +1848,9 @@ int main(int argc, char** argv){
     all_polygons = get_all_polygons(valid_lines_directed);
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
+    
+    // remove the outer polygon which only contains occluding edges
+    remove_outer_polygon(all_polygons);
     
     // insert the first polygon to place in the list
     polygons_to_place.push_back(all_polygons[poly_seq[current_polygon]]);
