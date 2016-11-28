@@ -1293,7 +1293,76 @@ int merge_points(){
 }
 
 
-
+void place_polygon(){
+    prepare_points_to_project(all_polygons[poly_seq[current_polygon]]);
+    plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+    points_to_render_vec_global = temp->project_polygon(points_in_camera, -5, 5, 5);
+    
+    all_polygons[poly_seq[current_polygon]]->placed = true;
+    for(int i=0;i<points_to_render_vec_global.size();++i){
+        glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
+        all_polygons[poly_seq[current_polygon]]->points_to_render_vec.push_back(tp);
+    }
+    
+    // insert the points in the already placed list
+    insert_corres(points_to_render_vec_global, all_polygons[poly_seq[current_polygon]]->get_points_vec());
+    // insert in the already inserted edges
+    insert_edges(points_to_render_vec_global,  all_polygons[poly_seq[current_polygon]]->get_points_vec());
+    
+    current_polygon = current_polygon+1;
+    
+    for(int pl = 0;pl < all_polygons.size(); ++pl){
+        if(check_3_points_already(all_polygons[pl])){
+            plane * newplane = get_plane(all_polygons[pl]);
+            prepare_points_to_project(all_polygons[pl]);
+            
+            std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
+            
+            
+            for(int k=0;k<points_to_render_vec_temp.size();++k){
+                glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
+                all_polygons[pl]->points_to_render_vec.push_back(tp);
+            }
+            all_polygons[pl]->placed = true;
+            // insert the points in the already placed list
+            insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+            insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+        }
+        
+        //if(all_polygons[pl]->placed)
+        //count = count+1;
+    }
+    
+    
+    std::vector<polygon*> adjacent_polygons = all_polygons[poly_seq[current_polygon]]->get_adjacent_polygons_using_huffman(all_polygons);
+    
+    
+    // make it iterative
+    // it should reiterate if a single polygon was inserted in a loop
+    for(int pl = 0;pl < all_polygons.size(); ++pl){
+        if(check_3_points_already(all_polygons[pl])){
+            plane * newplane = get_plane(all_polygons[pl]);
+            prepare_points_to_project(all_polygons[pl]);
+            
+            std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
+            
+            
+            for(int k=0;k<points_to_render_vec_temp.size();++k){
+                glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
+                all_polygons[pl]->points_to_render_vec.push_back(tp);
+            }
+            all_polygons[pl]->placed = true;
+            // insert the points in the already placed list
+            insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+            insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
+        }
+        
+        //if(all_polygons[pl]->placed)
+        //count = count+1;
+    }
+    
+    return;
+}
 
 //Called when a key is pressed
 void handleKeypressa(unsigned char key, int x, int y) {
@@ -1361,67 +1430,7 @@ void handleKeypressa(unsigned char key, int x, int y) {
             zview = zview-0.5;
             break;
         case 'g':
-            all_polygons[poly_seq[current_polygon]]->placed = true;
-            for(int i=0;i<points_to_render_vec_global.size();++i){
-                glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
-                all_polygons[poly_seq[current_polygon]]->points_to_render_vec.push_back(tp);
-            }
-            
-            // insert the points in the already placed list
-            insert_corres(points_to_render_vec_global, all_polygons[poly_seq[current_polygon]]->get_points_vec());
-            // insert in the already inserted edges
-            insert_edges(points_to_render_vec_global,  all_polygons[poly_seq[current_polygon]]->get_points_vec());
-            
-            current_polygon = current_polygon+1;
-            
-            for(int pl = 0;pl < all_polygons.size(); ++pl){
-                if(check_3_points_already(all_polygons[pl])){
-                    plane * newplane = get_plane(all_polygons[pl]);
-                    prepare_points_to_project(all_polygons[pl]);
-                    
-                    std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
-                    
-                    
-                    for(int k=0;k<points_to_render_vec_temp.size();++k){
-                        glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
-                        all_polygons[pl]->points_to_render_vec.push_back(tp);
-                    }
-                    all_polygons[pl]->placed = true;
-                    // insert the points in the already placed list
-                    insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
-                    insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
-                }
-                
-                //if(all_polygons[pl]->placed)
-                    //count = count+1;
-            }
-            
-            
-            // make it iterative
-            // it should reiterate if a single polygon was inserted in a loop
-            for(int pl = 0;pl < all_polygons.size(); ++pl){
-                if(check_3_points_already(all_polygons[pl])){
-                    plane * newplane = get_plane(all_polygons[pl]);
-                    prepare_points_to_project(all_polygons[pl]);
-                    
-                    std::vector<glm::vec3> points_to_render_vec_temp = newplane->project_polygon(points_in_camera, -5, 5, 5);
-                    
-                    
-                    for(int k=0;k<points_to_render_vec_temp.size();++k){
-                        glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
-                        all_polygons[pl]->points_to_render_vec.push_back(tp);
-                    }
-                    all_polygons[pl]->placed = true;
-                    // insert the points in the already placed list
-                    insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
-                    insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
-                }
-                
-                //if(all_polygons[pl]->placed)
-                //count = count+1;
-            }
-            
-            //printf("NUMBER OF POLYGONS ALREADY PLACED IS %d\n", count);
+            place_polygon();
             break;
         case 27: //Escape key
             exit(0);

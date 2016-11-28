@@ -96,3 +96,52 @@ std::vector<glm::vec2> polygon::get_points_vec(){
     }
     return all_points;
 }
+
+std::vector<myline*> polygon::get_green_lines(){
+    std::vector<myline*> green_lines;
+    for(std::vector<myline*>::iterator it = lines.begin(); it != lines.end(); ++it){
+        myline *t = *it;
+        if(t->label.compare("green") == 0){
+            green_lines.push_back(t);
+        }
+    }
+    return green_lines;
+}
+
+
+// returns the adjacent polygon of this polygon using the huffman labels
+// i.e. return polygons attached by a green line
+std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons){
+    std::vector<polygon*> adjacent_polygons;
+    
+    // get the convex lines
+    std::vector<myline*> green_lines = this->get_green_lines();
+    
+    // get all polygons which share edge using green lines
+    for(std::vector<polygon*>::iterator it = all_polygons.begin(); it != all_polygons.end(); ++it){
+        polygon * pp = *it;
+        std::vector<myline*> plines  = pp->lines;
+        
+        for(std::vector<myline*>::iterator itb = plines.begin(); itb != plines.end(); ++itb){
+            myline * lp = *itb;
+            
+            bool flag = false;
+            //if it shares any green line with the current polygon lines then push it
+            for(std::vector<myline*>::iterator ita = green_lines.begin(); ita != green_lines.end(); ++ita){
+                myline *lpp = *ita;
+                if((lp == lpp || lp->reverse_line == lpp) && !this->is_equal_to(pp)){
+                    adjacent_polygons.push_back(pp);
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if(flag){
+                break;
+            }
+        }
+    }
+    
+    
+    return adjacent_polygons;
+}
