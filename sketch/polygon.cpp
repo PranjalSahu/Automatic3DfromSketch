@@ -110,9 +110,27 @@ std::vector<myline*> polygon::get_green_lines(){
 }
 
 // returns the three points of the starting plane
-std::vector<glm::vec3> polygon::get_plane_points(myline * line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d){
+std::vector<glm::vec3> polygon::get_plane_points(polygon *p, myline * line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d){
     std::vector<glm::vec3> po;
+    std::vector<myline*> lines = this->lines;
+    myline *line2;  // get the next line
     
+    int i=0;
+    for(i=0;i<lines.size();++i){
+        if(lines[i]->is_equal_to(line) || lines[i]->is_reverse_of(line)){
+            break;
+        }
+    }
+    
+    
+    if(i ==lines.size()-1){
+        line2 = lines[0];
+    }
+    else{
+        line2 = lines[i+1];
+    }
+    
+    // first two points will be rotation axis
     for(int i=0;i<corres_2d.size();++i){
         if(line->x1 == corres_2d[i][0] && line->y1 == corres_2d[i][1]){
             po.push_back(corres_3d[i]);
@@ -121,11 +139,12 @@ std::vector<glm::vec3> polygon::get_plane_points(myline * line, std::vector<glm:
             po.push_back(corres_3d[i]);
         }
     }
+    for(int i=0;i<corres_2d.size();++i){
+        if(line2->x2 == corres_2d[i][0] && line2->y2 == corres_2d[i][1]){
+            po.push_back(corres_3d[i]);
+        }
+    }
     
-    po.push_back(glm::vec3(0, 0, 0));
-    //po.clear();
-    
-    //po.push_back(glm::vec3()
     return po;
 }
 
@@ -156,7 +175,7 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
                     
                     if(!pp->axis_assigned){
                         // calculate the rotation axis for this adjacent polygon
-                        std::vector<glm::vec3> plane_points = get_plane_points(lpp, corres_2d, corres_3d);
+                        std::vector<glm::vec3> plane_points = get_plane_points(pp, lpp, corres_2d, corres_3d);
                         
                         // get normalized rotation axis
                         glm::vec3 rotation_axis = plane_points[0]-plane_points[1];

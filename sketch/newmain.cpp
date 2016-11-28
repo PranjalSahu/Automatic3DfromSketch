@@ -518,6 +518,7 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
 void plot_line_3d(std::vector<mypoint*> all_points, int color){
     glBegin(GL_LINE_LOOP);
     glLineWidth(15);
+    glColor3f(0.0f, 1.0f, 0.0f);
     for(std::vector<mypoint*>::iterator iterator = all_points.begin(); iterator != all_points.end(); iterator++) {
         mypoint *m = *iterator;
         glVertex3f(m->x, m->y, m->z);
@@ -887,9 +888,11 @@ void displayone() {
         polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
         
         plane *temp;
+        glm::vec3 axis;
         if(current_polygon_p->axis_assigned){
-            glm::vec3 axis = current_polygon_p->rotation_axis;
-            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
+            axis = current_polygon_p->rotation_axis;
+            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, 1, 0, 0);
+            //temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
         }
         else{
             temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
@@ -901,6 +904,7 @@ void displayone() {
         axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
         plot_line_3d(axis_line, 0);
         
+        printf("Debugging Plane (%f, %f, %f) Rotation (%f, %f, %f)\n", temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
         
         
         
@@ -925,9 +929,9 @@ void displayone() {
         float parallelism_cost    = cost_obj->parallelism(p2d, points_to_render_vec, edges_list, corres_2d, corres_3d);
         float total_cost          = axis_alignment_cost + parallelism_cost;
         
-        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
-        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
-        printf("hinging angle is %f total        cost is %f\n",        angle_p, total_cost);
+//        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
+//        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
+//        printf("hinging angle is %f total        cost is %f\n",        angle_p, total_cost);
 
         
         
@@ -981,7 +985,7 @@ void displayone() {
                 cpl = cpl+1;
         }
         
-        printf("COUNT OF ALREADY PLACED POLYGONS %d\n", cpl);
+        //printf("COUNT OF ALREADY PLACED POLYGONS %d\n", cpl);
 //        glPushMatrix();
 //        glTranslatef(tr_x, tr_y, tr_z);
 //        drawmycuboid(1, 2, 5);
@@ -1785,6 +1789,19 @@ int get_adjacent_polygon(){
 
 
 int main(int argc, char** argv){
+//    std::vector<glm::vec3> vg;
+//    vg.push_back(glm::vec3(0,0,0));
+//    vg.push_back(glm::vec3(1,0,0));
+//    vg.push_back(glm::vec3(0,0,1));
+//    
+//    plane *p = new plane(vg);
+//    
+//    for(int angle=0;angle<180;++angle){
+//        plane *tp = p->rotate_it(angle, 1, 0, 0);
+//        printf("normal >> (%f, %f, %f)\n", tp->a, tp->b, tp->c);
+//    }
+//    
+//    return 0;
     
     init_values();
     

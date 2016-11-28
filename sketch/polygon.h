@@ -33,7 +33,7 @@ public:
     
     //plane* plane_placed;
     std::vector<glm::vec3> points_to_render_vec;
-    std::vector<glm::vec3> get_plane_points(myline *line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d);
+    std::vector<glm::vec3> get_plane_points(polygon * p, myline *line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d);
     std::vector<myline*>   get_green_lines();
     std::vector<polygon*>  get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
                                                               std::vector<glm::vec2> corres_2d,

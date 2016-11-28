@@ -57,31 +57,38 @@ plane* plane::rotate_it(float angle, float ka_, float kb_, float kc_){
     kb_ = kb_/mod;
     kc_ = kc_/mod;
     
-    float v_a = a*cos(angle);
-    float v_b = b*cos(angle);
-    float v_c = c*cos(angle);
     
-    float kdotv = ka_*a + kb_*b + kc_*c;
-    kdotv = kdotv*(1-cos(angle));
+    glm::vec3 n = glm::vec3(ka_, kb_, kc_);
+    glm::vec3 x = glm::vec3(this->a, this->b, this->c);
+    glm::vec3 temp = glm::cross(n, x);
+    glm::vec3 vrot = x + sin(angle)*(glm::cross(n, x))+(1-cos(angle))*(glm::cross(n, temp));
+    vrot = vrot/glm::length(vrot);
     
-    float kcrossv_a, kcrossv_b, kcrossv_c;
-    kcrossv_a = (kb_*c-kc_*b)*sin(angle);
-    kcrossv_b = (kc_*a-ka_*b)*sin(angle);
-    kcrossv_c = (ka_*b-kb_*a)*sin(angle);
-    
-    float vrota, vrotb, vrotc;
-    vrota = v_a + kcrossv_a + kdotv*ka_;
-    vrotb = v_b + kcrossv_b + kdotv*kb_;
-    vrotc = v_c + kcrossv_c + kdotv*kc_;
-    
-    mod = sqrt(vrota*vrota+vrotb*vrotb+vrotc*vrotc);
+//    float v_a = a*cos(angle);
+//    float v_b = b*cos(angle);
+//    float v_c = c*cos(angle);
+//    
+//    float kdotv = ka_*a + kb_*b + kc_*c;
+//    kdotv = kdotv*(1-cos(angle));
+//    
+//    float kcrossv_a, kcrossv_b, kcrossv_c;
+//    kcrossv_a = (kb_*c-kc_*b)*sin(angle);
+//    kcrossv_b = (kc_*a-ka_*b)*sin(angle);
+//    kcrossv_c = (ka_*b-kb_*a)*sin(angle);
+//    
+//    float vrota, vrotb, vrotc;
+//    vrota = v_a + kcrossv_a + kdotv*ka_;
+//    vrotb = v_b + kcrossv_b + kdotv*kb_;
+//    vrotc = v_c + kcrossv_c + kdotv*kc_;
+//    
+//    mod = sqrt(vrota*vrota+vrotb*vrotb+vrotc*vrotc);
     
     // change the normal vector for the plane
     //a = vrota/mod;
     //b = vrotb/mod;
     //c = vrotc/mod;
-    
-    return new plane(vrota/mod, vrotb/mod, vrotc/mod, p);
+    return new plane(vrot[0], vrot[1], vrot[2], p);
+    //return new plane(vrota/mod, vrotb/mod, vrotc/mod, p);
 }
 
 // returns the points obtained after projecting x, y, z onto this plane along vector n1, n2, n3

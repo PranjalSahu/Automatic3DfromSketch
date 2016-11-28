@@ -193,9 +193,9 @@ float cost::parallelism(std::vector<glm::vec2> points_2d, std::vector<glm::vec3>
         total_cost  = total_cost + edge_weight;
     }
     
-    printf("Dot values  are : %f %f %f %f \n", dot_values[0], dot_values[1], dot_values[2], dot_values[3]);
-    printf("angles  are : %f %f %f %f \n", angle_v[0], angle_v[1], angle_v[2], angle_v[3]);
-    printf("Edge costs are : %f %f %f %f \n", cost_v[0], cost_v[1], cost_v[2], cost_v[3]);
+//    printf("Dot values  are : %f %f %f %f \n", dot_values[0], dot_values[1], dot_values[2], dot_values[3]);
+//    printf("angles  are : %f %f %f %f \n", angle_v[0], angle_v[1], angle_v[2], angle_v[3]);
+//    printf("Edge costs are : %f %f %f %f \n", cost_v[0], cost_v[1], cost_v[2], cost_v[3]);
     
     return total_cost;
 }
