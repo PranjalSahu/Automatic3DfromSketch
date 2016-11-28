@@ -515,6 +515,18 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
 
 
 
+void plot_line_3d(std::vector<mypoint*> all_points, int color){
+    glBegin(GL_LINE_LOOP);
+    glLineWidth(15);
+    for(std::vector<mypoint*>::iterator iterator = all_points.begin(); iterator != all_points.end(); iterator++) {
+        mypoint *m = *iterator;
+        glVertex3f(m->x, m->y, m->z);
+    }
+    glEnd();
+    
+    return;
+}
+
 void plot_line(std::vector<mypoint*> all_points, int color){
     glBegin(GL_LINE_LOOP);
     glLineWidth(5);
@@ -872,8 +884,28 @@ void displayone() {
 
         std::vector<glm::vec3> points_to_render_vec;
 
-        plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
         polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
+        
+        plane *temp;
+        if(current_polygon_p->axis_assigned){
+            glm::vec3 axis = current_polygon_p->rotation_axis;
+            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
+        }
+        else{
+            temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+        }
+    
+        
+        std::vector<mypoint *> axis_line;
+        axis_line.push_back(new mypoint(temp->p->x, temp->p->y, temp->p->z));
+        axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
+        plot_line_3d(axis_line, 0);
+        
+        
+        
+        
+        
+        
         
         prepare_points_to_project(current_polygon_p);
         
@@ -899,7 +931,7 @@ void displayone() {
 
         
         
-        int render_scale = 30;
+        int render_scale = 60;
 
         glBegin(GL_LINE_LOOP);
         glLineWidth(105);
@@ -1338,15 +1370,19 @@ void place_polygon(){
     polygon *next_polygon_to_place =  get_next_polygon_to_render(polygons_to_place);
     prepare_points_to_project(next_polygon_to_place);
     
-    plane *temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+    plane *temp;
+    if(next_polygon_to_place->axis_assigned){
+        glm::vec3 axis = next_polygon_to_place->rotation_axis;
+        temp = next_polygon_to_place->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
+    }
+    else{
+       temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+    }
+    
     points_to_render_vec_global = temp->project_polygon(points_in_camera, -5, 5, 5);
     
     next_polygon_to_place->placed = true;
-    std::vector<polygon*> adjacent_polygons = next_polygon_to_place->get_adjacent_polygons_using_huffman(all_polygons);
     
-    // insert the adjacent polygons into the list of polygons
-    insert_into_polygons_to_render_list(adjacent_polygons);
-
     
     for(int i=0;i<points_to_render_vec_global.size();++i){
         glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
@@ -1357,6 +1393,14 @@ void place_polygon(){
     insert_corres(points_to_render_vec_global, next_polygon_to_place->get_points_vec());
     // insert in the already inserted edges
     insert_edges(points_to_render_vec_global,  next_polygon_to_place->get_points_vec());
+    
+    
+    std::vector<polygon*> adjacent_polygons = next_polygon_to_place->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
+    
+    // insert the adjacent polygons into the list of polygons
+    insert_into_polygons_to_render_list(adjacent_polygons);
+
+    
     
     current_polygon = current_polygon+1;
     
@@ -1383,7 +1427,7 @@ void place_polygon(){
                 all_polygons[pl]->placed = true;
                 new_polygon_added = true;
             
-                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons);
+                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
                 // insert the adjacent polygons into the list of polygons
                 insert_into_polygons_to_render_list(adjacent_polygons);
                 

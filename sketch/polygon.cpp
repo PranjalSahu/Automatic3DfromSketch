@@ -109,10 +109,32 @@ std::vector<myline*> polygon::get_green_lines(){
     return green_lines;
 }
 
+// returns the three points of the starting plane
+std::vector<glm::vec3> polygon::get_plane_points(myline * line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d){
+    std::vector<glm::vec3> po;
+    
+    for(int i=0;i<corres_2d.size();++i){
+        if(line->x1 == corres_2d[i][0] && line->y1 == corres_2d[i][1]){
+            po.push_back(corres_3d[i]);
+        }
+        if(line->x2 == corres_2d[i][0] && line->y2 == corres_2d[i][1]){
+            po.push_back(corres_3d[i]);
+        }
+    }
+    
+    po.push_back(glm::vec3(0, 0, 0));
+    //po.clear();
+    
+    //po.push_back(glm::vec3()
+    return po;
+}
+
 
 // returns the adjacent polygon of this polygon using the huffman labels
 // i.e. return polygons attached by a green line
-std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons){
+std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
+                                                                   std::vector<glm::vec2> corres_2d,
+                                                                   std::vector<glm::vec3> corres_3d){
     std::vector<polygon*> adjacent_polygons;
     
     // get the convex lines
@@ -131,6 +153,23 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
             for(std::vector<myline*>::iterator ita = green_lines.begin(); ita != green_lines.end(); ++ita){
                 myline *lpp = *ita;
                 if((lp == lpp || lp->reverse_line == lpp) && !this->is_equal_to(pp)){
+                    
+                    if(!pp->axis_assigned){
+                        // calculate the rotation axis for this adjacent polygon
+                        std::vector<glm::vec3> plane_points = get_plane_points(lpp, corres_2d, corres_3d);
+                        
+                        // get normalized rotation axis
+                        glm::vec3 rotation_axis = plane_points[0]-plane_points[1];
+                        rotation_axis = rotation_axis/glm::length(rotation_axis);
+                        
+                        
+                        plane * np = new plane(plane_points);
+                        
+                        pp->rotation_axis    = rotation_axis;
+                        pp->plane_to_project = np;
+                        pp->axis_assigned    = true;
+                    }
+                    
                     adjacent_polygons.push_back(pp);
                     flag = true;
                     break;

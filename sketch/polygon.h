@@ -28,12 +28,16 @@ public:
     bool placed;
     bool axis_assigned; // flag to denote if its rotating axis has been assigned or not
     
-    plane *plane_to_project;
+    plane *plane_to_project;    // starting plane which will be rotated
+    glm::vec3 rotation_axis;    // axis along whichi plane will be rotated
     
     //plane* plane_placed;
     std::vector<glm::vec3> points_to_render_vec;
-    std::vector<myline*> get_green_lines();
-    std::vector<polygon*> get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons);
+    std::vector<glm::vec3> get_plane_points(myline *line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d);
+    std::vector<myline*>   get_green_lines();
+    std::vector<polygon*>  get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
+                                                              std::vector<glm::vec2> corres_2d,
+                                                              std::vector<glm::vec3> corres_3d);
 
         
     std::vector<mypoint*> get_points();
