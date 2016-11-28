@@ -891,20 +891,20 @@ void displayone() {
         glm::vec3 axis;
         if(current_polygon_p->axis_assigned){
             axis = current_polygon_p->rotation_axis;
-            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, 1, 0, 0);
-            //temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
+            //temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, 1, 0, 0);
+            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
         }
         else{
             temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
         }
     
         
-        std::vector<mypoint *> axis_line;
-        axis_line.push_back(new mypoint(temp->p->x, temp->p->y, temp->p->z));
-        axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
-        plot_line_3d(axis_line, 0);
+//        std::vector<mypoint *> axis_line;
+//        axis_line.push_back(new mypoint(temp->p->x, temp->p->y, temp->p->z));
+//        axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
+//        plot_line_3d(axis_line, 0);
         
-        //printf("Debugging Plane (%f, %f, %f) Rotation (%f, %f, %f)\n", temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
+        //printf("Debugging %2.2f (%f, %f, %f) Rotation (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
         
         
         
@@ -931,7 +931,7 @@ void displayone() {
         
 //        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
 //        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
-        printf("hinging angle is %f axis_alignment_cost, parallelism_cost, total_cost is %f, %f, %f\n",
+        printf("angle is %f alignment, parallelism, total is %f, %f, %f\n",
                angle_p, axis_alignment_cost, parallelism_cost, total_cost);
 
         
@@ -1759,7 +1759,7 @@ void mousemotion(int button, int state, int x, int y){
 
 void init_values(){
     // sequence of polygons to be placed this will be done automatically later
-    poly_seq[0] = 5;
+    poly_seq[0] = 4;
     poly_seq[1] = 3;
     poly_seq[2] = 4;
     
@@ -1790,7 +1790,7 @@ int get_adjacent_polygon(){
 }
 
 // removes the outer polygon from the list of all_polygons
-void remove_outer_polygon(std::vector<polygon*> all_polygons){
+void remove_outer_polygon(){
     polygon *to_erase;
     
     for(std::vector<polygon*>::iterator it = all_polygons.begin(); it != all_polygons.end(); ++it){
@@ -1816,6 +1816,21 @@ void remove_outer_polygon(std::vector<polygon*> all_polygons){
 }
 
 int main(int argc, char** argv){
+//        std::vector<glm::vec3> vg;
+//        vg.push_back(glm::vec3(0,0,0));
+//        vg.push_back(glm::vec3(0,1,0));
+//        vg.push_back(glm::vec3(0,0,1));
+//    
+//        plane *p = new plane(vg);
+//    
+//        for(int angle=0;angle<180;++angle){
+//            plane *tp = p->rotate_it(angle, 0, 0, 1);
+//            printf("normal >> %d -> (%f, %f, %f)\n", angle, tp->a, tp->b, tp->c);
+//        }
+//        
+//        return 0;
+    
+    
     init_values();
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
@@ -1850,7 +1865,7 @@ int main(int argc, char** argv){
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
     // remove the outer polygon which only contains occluding edges
-    remove_outer_polygon(all_polygons);
+    remove_outer_polygon();
     
     // insert the first polygon to place in the list
     polygons_to_place.push_back(all_polygons[poly_seq[current_polygon]]);

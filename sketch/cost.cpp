@@ -184,6 +184,13 @@ float cost::parallelism(std::vector<glm::vec2> points_2d, std::vector<glm::vec3>
                                                
         float dot_value = glm::dot(most_weight_edge, line_3d[i]);
         
+        if(dot_value > 1){
+            dot_value = 1.0;
+        }
+        else if(dot_value < -1){
+            dot_value = -1.0;
+        }
+        
         //dot_values[i] = dot_value;
         float angle = acos(dot_value);
         //angle_v[i] = angle;
