@@ -74,9 +74,9 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     
     // refer axis alignment cost functions
     float total_cost = 0;
-    float cost_v[4];
-    float angle_v[4];
-    float dot_values[4];
+    float cost_v[10];
+    float angle_v[10];
+    float dot_values[10];
     for(int i=0;i<line_3d.size();++i){
         float dot_value = 0;
         for(int q = 0;q<3;++q){
@@ -173,9 +173,9 @@ float cost::parallelism(std::vector<glm::vec2> points_2d, std::vector<glm::vec3>
     
     // refer axis alignment cost functions in the paper
     float total_cost = 0;
-    float cost_v[4];
-    float angle_v[4];
-    float dot_values[4];
+    float cost_v[10];
+    float angle_v[10];
+    float dot_values[10];
     
     for(int i=0;i< line_3d.size();++i){
         

@@ -11,13 +11,14 @@
 
 #include "myline.h"
 #include "mypoint.h"
-//#include "plane.h"
+#include "plane.h"
 #include <glm/vec2.hpp> // glm::vec2
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
 
+class plane;
 
 class polygon{
 public:
@@ -25,6 +26,9 @@ public:
     bool is_equal_to(polygon *);
     bool is_part_of(std::vector<polygon*> pvector);
     bool placed;
+    bool axis_assigned; // flag to denote if its rotating axis has been assigned or not
+    
+    plane *plane_to_project;
     
     //plane* plane_placed;
     std::vector<glm::vec3> points_to_render_vec;

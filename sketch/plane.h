@@ -12,6 +12,8 @@
 #include "mypoint.h"
 #include "polygon.h"
 
+class polygon;
+
 class plane{
 public:
     float a, b, c;
