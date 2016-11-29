@@ -1327,7 +1327,7 @@ int merge_points(){
             }
         }
         
-        if(mind < 20.0){
+        if(mind < 10.0){
             // replace the merged point with the new formed point
             corner_points[minp-corner_points.begin()] = i2tuple((px1+px2)/2, (py1+py2)/2);
             // erase the current point
@@ -1763,11 +1763,13 @@ void init_values(){
     poly_seq[1] = 3;
     poly_seq[2] = 4;
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman7.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman7.png", CV_LOAD_IMAGE_GRAYSCALE);
+
     
-    bw   = imga > 80;
-    img  = bw > 80;
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffmani.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffmani.png", CV_LOAD_IMAGE_GRAYSCALE);
+    
+    bw   = imga > 180;
+    img  = bw > 120;
     
     // get corner points using harris detector
     get_corner_points(imga);
@@ -1779,6 +1781,34 @@ void init_values(){
     bitwise_not(bw, img);
     thinning(img);
     
+    
+//    int hun = 0;
+//    int ze = 0;
+//    for (int i = 1; i < img.rows-1; i++)
+//    {
+//        for (int j = 1; j < img.cols-1; j++)
+//        {
+//            if(img)
+//        }
+//    }
+    
+//    ofstream myfilea;
+//    myfilea.open ("/Users/pranjal/Downloads/Graphics/huffmani_xy.txt");
+//
+//    
+//    for (int i = 0; i < img.rows-1; i++)
+//    {
+//        for (int j = 0; j < img.cols-1; j++)
+//        {
+//            uchar p2 = img.at<uchar>(i-1, j);
+//            if(p2>100){
+//                myfilea << i; myfilea << ",";myfilea << j;myfilea << "\n";
+//            }
+//            
+//        }
+//    }
+    
+    //myfilea.close();
     fill_points_vector(img);
 }
 
@@ -1838,9 +1868,11 @@ int main(int argc, char** argv){
     
     // showing the result of line detection
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
-    namedWindow( "corners_window", CV_WINDOW_AUTOSIZE );
-    imshow( "corners_window", dst_norm_scaled );
-    //imshow( "corners_window", img );
+    namedWindow( "corners_window", WINDOW_NORMAL );
+    resizeWindow("corners_window", 600,600);
+    //imshow( "corners_window", dst_norm_scaled );
+    imshow( "corners_window", img );
+    //imshow( "corners_window", bw );
     waitKey(0);
 
     

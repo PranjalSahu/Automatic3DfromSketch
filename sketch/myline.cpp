@@ -209,7 +209,7 @@ int  myline::pointliecount(std::vector<i2tuple> points_vector){
         pp = false;
         wl = false;
         
-        if ( this->get_perpendicular_distance(pt) <= 15){
+        if ( this->get_perpendicular_distance(pt) <= 10){
             pp_count = pp_count +1;
             pp = true;
         }

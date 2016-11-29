@@ -61,6 +61,7 @@ plane* plane::rotate_it(float angle, float ka_, float kb_, float kc_){
     glm::vec3 n = glm::vec3(ka_, kb_, kc_);
     glm::vec3 x = glm::vec3(this->a, this->b, this->c);
     glm::vec3 temp = glm::cross(n, x);
+
     glm::vec3 vrot = x + sin(angle)*(glm::cross(n, x))+(1-cos(angle))*(glm::cross(n, temp));
     vrot = vrot/glm::length(vrot);
     
