@@ -1822,9 +1822,20 @@ glm::vec2 get_min(Mat& im){
 }
 
 
+bool get_non_zero(Mat &im){
+    for (int i = 0; i < im.rows-1; i++){
+        for (int j = 0; j < im.cols-1; j++){
+            if(im.at<uchar>(i, j) > 0){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 // once the line  has been fitted using split and merge
 // zero out the line (all the white pixels in im2) so that rest of the pixels can be vectorized
-void zero_the_line(Mat& im, Mat& im2){
+void zero_the_line(Mat& im, Mat& im2, std::vector<glm::vec2> lines){
     for (int i = 0; i < im.rows-1; i++){
         for (int j = 0; j < im.cols-1; j++){
             if(im2.at<uchar>(i, j) > 0){
@@ -1833,6 +1844,11 @@ void zero_the_line(Mat& im, Mat& im2){
         }
     }
     
+    //im.at<uchar>(lines[0][0], lines[0][1]) = 255;
+    //im.at<uchar>(lines[lines.size()-1][0], lines[lines.size()-1][1]) = 255;
+//    for(int i=0;i<lines.size();++i){
+//        im.at<uchar>(lines[i][0], lines[i][1]) = 255;
+//    }
     return;
 }
 
@@ -1945,9 +1961,9 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffmani.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffmani.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffmani.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman18.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman18.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman18.jpeg");
 
     
     bw   = imga > 180;
@@ -2019,22 +2035,26 @@ int main(int argc, char** argv){
     
     init_values();
     
-    for(int j=0; j<40;++j){
+    int iteration = 0;
+    
+    while(get_non_zero(img)){
+        iteration = iteration+1;
+        printf("ITERATION IS %d\n", iteration);
     std::vector<glm::vec2> po    = get_polylines(img);
     std::vector<glm::vec2> lines = split_and_merge(po);
     
-    zero_the_line(img, m2);
+    zero_the_line(img, m2, lines);
     int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0} };
 
     
     for(int i=0;i< lines.size()-1;++i){
         glm::vec2 a = lines[i];
         glm::vec2 b = lines[i+1];
-        line(imgc, Point(a[1], a[0]), Point(b[1], b[0]), Scalar(colors[j%5][0],colors[j%5][1],colors[j%5][2]), 2, 8, 0);
+        int c = rand()%5;
+        line(imgc, Point(a[1], a[0]), Point(b[1], b[0]), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
     }
     }
 
-    
     //zero_the_line(img, m2);
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
@@ -2045,7 +2065,8 @@ int main(int argc, char** argv){
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
     //imshow( "corners_window", dst_norm_scaled );
-    imshow( "corners_window", imgc );
+    //cv::resize(img, img, Size(), 0.5, 0.5);
+    imshow( "corners_window", imgc);
     //imshow( "corners_window", bw );
     waitKey(0);
 
