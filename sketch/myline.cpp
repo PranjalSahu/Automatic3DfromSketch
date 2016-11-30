@@ -297,6 +297,16 @@ float myline::get_perpendicular_distance(i2tuple a){
 }
 
 // only call when line's both points are known
+float myline::get_perpendicular_distance(glm::vec2 a){
+    int x_0 = a[0];
+    int y_0 = a[1];
+    
+    float dist = abs((y2-y1)*x_0-(x2-x1)*y_0+x2*y1-y2*x1)/sqrt((y2-y1)*(y2-y1)+(x2-x1)*(x2-x1));
+    return dist;
+}
+
+
+// only call when line's both points are known
 // checks if the point's x and y are within this line segment
 bool myline::check_within_line_segment(i2tuple a){
     int x_0 = std::get<0>(a);

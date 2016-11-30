@@ -95,7 +95,7 @@ int polytype  = 0;		// 1 means y polygon and 2 means star polygon
 
 char etext[100];
 
-Mat imga, bw, img;
+Mat imga, bw, img, imgc;
 Mat dst_norm_scaled;
 Mat m, m2, m3;
 
@@ -1827,7 +1827,7 @@ glm::vec2 get_min(Mat& im){
 void zero_the_line(Mat& im, Mat& im2){
     for (int i = 0; i < im.rows-1; i++){
         for (int j = 0; j < im.cols-1; j++){
-            if(m2.at<uchar>(i, j) > 0){
+            if(im2.at<uchar>(i, j) > 0){
                 im.at<uchar>(i, j) = 0;
             }
         }
@@ -1836,14 +1836,58 @@ void zero_the_line(Mat& im, Mat& im2){
     return;
 }
 
-std::vector<glm::vec2> split_and_merge(Mat& im){
+//Refer:: https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
+
+std::vector<glm::vec2> split_and_merge(std::vector<glm::vec2> points){
+    // Find the point with the maximum distance
+    int dmax  = 0;
+    int index = 0;
+    int size  = points.size();
+    float d   = 0;
+    int epsilon = 1;
+    
+    std::vector<glm::vec2> result;
+    
+    for(int i = 1; i < points.size()-1; ++i) {
+        myline * l = new myline(points[0][0], points[size-1][0], points[0][1], points[size-1][1]);
+        d = l->get_perpendicular_distance(points[i]);
+        if ( d > dmax ) {
+            index = i;
+            dmax  = d;
+        }
+    }
+    
+    // If max distance is greater than epsilon, recursively simplify
+    if ( dmax > epsilon ) {
+        // Recursive call
+        //std::vector<glm::vec2> points1(points.begin(), points.begin()+index+1);
+        std::vector<glm::vec2> points1(points.begin(), points.begin()+index);
+        std::vector<glm::vec2> points2(points.begin() + index, points.end());
+
+        std::vector<glm::vec2> recResults1 = split_and_merge(points1);
+        std::vector<glm::vec2> recResults2 = split_and_merge(points2);
+        
+        // add the reverse edges for all edges
+        result.insert(result.end(), recResults1.begin(), recResults1.end()-1);
+        result.insert(result.end(), recResults2.begin(), recResults2.end());
+    } else {
+        result.push_back(points[0]);
+        result.push_back(points[size-1]);
+    }
+    
+    return result;
+}
+
+std::vector<glm::vec2> get_polylines(Mat& im){
     std::vector<glm::vec2> points;
     
     im.copyTo(m2);
+    im.copyTo(m3);
     
     for (int i = 0; i < im.rows-1; i++){
         for (int j = 0; j < im.cols-1; j++){
             m2.at<uchar>(i, j) = 0;
+            m3.at<uchar>(i, j) = 0;
         }
     }
     
@@ -1858,32 +1902,32 @@ std::vector<glm::vec2> split_and_merge(Mat& im){
             m2.at<uchar>(x, y+1) = 255;
             y = y+1;
             points.push_back(glm::vec2(x, y));
-            printf("> %d %d\n", x, y);
+            //printf("> %d %d\n", x, y);
         }
         else if (im.at<uchar>(x+1, y) > 0 && m2.at<uchar>(x+1, y) == 0){
             m2.at<uchar>(x+1, y) = 255;
             x = x+1;
             points.push_back(glm::vec2(x, y));
-            printf(">> %d %d\n", x, y);
+            //printf(">> %d %d\n", x, y);
         }
         else if (im.at<uchar>(x+1, y+1)  > 0 && m2.at<uchar>(x+1, y+1) == 0){
             m2.at<uchar>(x+1, y+1) = 255;
             y = y+1;
             x = x+1;
             points.push_back(glm::vec2(x, y));
-            printf(">>> %d %d\n", x, y);
+            //printf(">>> %d %d\n", x, y);
         }
         else if (im.at<uchar>(x-1, y) > 0 && m2.at<uchar>(x-1, y) == 0){
             m2.at<uchar>(x-1, y) = 255;
             x = x-1;
-            printf(">> %d %d\n", x, y);
+            //printf(">> %d %d\n", x, y);
             points.push_back(glm::vec2(x, y));
         }
         else if (im.at<uchar>(x-1, y+1) > 0 && m2.at<uchar>(x-1, y+1) == 0){
             m2.at<uchar>(x-1, y+1) = 255;
             x = x-1;
             y = y+1;
-            printf(">> %d %d\n", x, y);
+            //printf(">> %d %d\n", x, y);
             points.push_back(glm::vec2(x, y));
         }
         else{
@@ -1900,10 +1944,11 @@ void init_values(){
     poly_seq[1] = 3;
     poly_seq[2] = 4;
     
-
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffmani.txt");
     imga = imread("/Users/pranjal/Desktop/image/huffmani.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffmani.png");
+
     
     bw   = imga > 180;
     img  = bw > 120;
@@ -1919,35 +1964,6 @@ void init_values(){
     thinning(img);
     
     remove_noise(img);
-    
-    
-//    int hun = 0;
-//    int ze = 0;
-//    for (int i = 1; i < img.rows-1; i++)
-//    {
-//        for (int j = 1; j < img.cols-1; j++)
-//        {
-//            if(img)
-//        }
-//    }
-    
-//    ofstream myfilea;
-//    myfilea.open ("/Users/pranjal/Downloads/Graphics/huffmani_xy.txt");
-//
-//    
-//    for (int i = 0; i < img.rows-1; i++)
-//    {
-//        for (int j = 0; j < img.cols-1; j++)
-//        {
-//            uchar p2 = img.at<uchar>(i-1, j);
-//            if(p2>100){
-//                myfilea << i; myfilea << ",";myfilea << j;myfilea << "\n";
-//            }
-//            
-//        }
-//    }
-    
-    //myfilea.close();
     fill_points_vector(img);
 }
 
@@ -1956,15 +1972,6 @@ void init_values(){
 // gets the line segments using the split and merge algorithm
 // get all the non zero pixels
 
-
-
-
-
-
-
-int get_adjacent_polygon(){
-    return 0;
-}
 
 // removes the outer polygon from the list of all_polygons
 void remove_outer_polygon(){
@@ -1993,10 +2000,43 @@ void remove_outer_polygon(){
 }
 
 int main(int argc, char** argv){
+//    std::vector<int> a;
+//    a.push_back(1);
+//    a.push_back(10);
+//    a.push_back(51);
+//    a.push_back(120);
+//    a.push_back(123);
+//
+//    std::vector<int> b;
+//    b.insert(b.end(), a.begin(), a.begin()+2);
+//    std::vector<int> c;
+//    c.insert(c.end(), a.begin()+1, a.end());
+//    printf("prnajal sahu");
+//    
+//    
+//    return 0;
+    
     
     init_values();
-    split_and_merge(img);
+    
+    for(int j=0; j<40;++j){
+    std::vector<glm::vec2> po    = get_polylines(img);
+    std::vector<glm::vec2> lines = split_and_merge(po);
+    
     zero_the_line(img, m2);
+    int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0} };
+
+    
+    for(int i=0;i< lines.size()-1;++i){
+        glm::vec2 a = lines[i];
+        glm::vec2 b = lines[i+1];
+        line(imgc, Point(a[1], a[0]), Point(b[1], b[0]), Scalar(colors[j%5][0],colors[j%5][1],colors[j%5][2]), 2, 8, 0);
+    }
+    }
+
+    
+    //zero_the_line(img, m2);
+    
     // get all the valid lines by checking the ratio of points lying on the line and its length
     //valid_lines_undirected = get_all_valid_lines();
     
@@ -2005,7 +2045,7 @@ int main(int argc, char** argv){
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
     //imshow( "corners_window", dst_norm_scaled );
-    imshow( "corners_window", img );
+    imshow( "corners_window", imgc );
     //imshow( "corners_window", bw );
     waitKey(0);
 

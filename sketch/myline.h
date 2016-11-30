@@ -48,6 +48,7 @@ public:
     int mergeable(myline *t);
     int get_intersection_count(cv::Mat &im);
     float get_perpendicular_distance(i2tuple a);
+    float get_perpendicular_distance(glm::vec2 a);
     bool check_within_line_segment(i2tuple a);
     float get_distance(const myline *ml) const;
     int get_line_max_dimension_length();
