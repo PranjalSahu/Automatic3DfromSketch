@@ -98,14 +98,14 @@ myline::myline(i2tuple a, i2tuple b){
         m = infslope;
     }
     else{
-        printf("debug message  is %d %d %d %d\n", x1, y1,  x2, y2);
+        //printf("debug message  is %d %d %d %d\n", x1, y1,  x2, y2);
         m = (y2-y1)*1.0/(x2-x1);
     }
     
     // not labelled initially
     label = "nl";
     
-    printf("slope is a %f\n", m);
+    //printf("slope is a %f\n", m);
 }
 
 myline::myline(int a,int b, float ma){
@@ -633,7 +633,7 @@ std::vector<int> get_line_labels(std::vector<myline*> all_lines){
         }
         all_colors.push_back(color);
     }
-    printf("R %d G %d B %d\n", r, g, b);
+    //printf("R %d G %d B %d\n", r, g, b);
     
     return all_colors;
 }

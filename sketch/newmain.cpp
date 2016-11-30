@@ -97,6 +97,7 @@ char etext[100];
 
 Mat imga, bw, img;
 Mat dst_norm_scaled;
+Mat m, m2, m3;
 
 
 // 2d hash for storing lines at each pixel
@@ -343,7 +344,7 @@ int get_max_slope(int x, int y, std::vector<i2tuple> points_vector, Mat& im){
             max_slope = theta;
         }
     }
-    printf("%d, %d\n", x, y);
+    //printf("%d, %d\n", x, y);
     return max_slope;
 }
 
@@ -509,7 +510,7 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
         valid_lines_undirected[i]->y2 = valid_lines_undirected[i]->y2-miny;
     }
     
-    printf("MINX IS %d and MINY IS %d\n", minx, miny);
+    //printf("MINX IS %d and MINY IS %d\n", minx, miny);
     return temp;
 }
 
@@ -1293,7 +1294,7 @@ int mergelines(int force){
 // merges the points until no change is observed in the point set
 int merge_points(){
     int count  = 0;
-    printf("size of corner_points START %d\n", corner_points.size());
+    //printf("size of corner_points START %d\n", corner_points.size());
     
     vector<i2tuple> corner_points_temp;
     vector<tuple<i2tuple, i2tuple>> corner_points_to_merge;
@@ -1363,7 +1364,7 @@ int merge_points(){
         corner_points.push_back(ptb);
     }
     
-    printf("size of corner_points END %d\n", corner_points.size());
+    //printf("size of corner_points END %d\n", corner_points.size());
     return count;
 }
 
@@ -1561,8 +1562,8 @@ void get_corner_points(Mat &imga){
         }
     }
     
-    printf("MINIMUM values is %d\n", minv);
-    printf("MAXIMUM values is %d\n", maxv);
+    //printf("MINIMUM values is %d\n", minv);
+    //printf("MAXIMUM values is %d\n", maxv);
     return;
 }
 
@@ -1599,7 +1600,7 @@ std::vector<myline*> get_all_valid_lines(){
         }
     }
     
-    printf("SIZE OF ALL LINES BEFORE %d\n", all_line_pairs.size());
+    //printf("SIZE OF ALL LINES BEFORE %d\n", all_line_pairs.size());
     int valid_count = 0;
     for(std::vector<myline*>::iterator iterator = all_line_pairs.begin(); iterator != all_line_pairs.end();) {
         myline *ml = *iterator;
@@ -1612,7 +1613,7 @@ std::vector<myline*> get_all_valid_lines(){
             xismax = true;
         
         float ratio = pointsize/linelength;
-        printf("A(%d,%d) B(%d,%d)    %d %f %f\n", ml->x1,ml->y1, ml->x2, ml->y2, pointsize, linelength, ratio);
+        //printf("A(%d,%d) B(%d,%d)    %d %f %f\n", ml->x1,ml->y1, ml->x2, ml->y2, pointsize, linelength, ratio);
         
         if( ratio < POINT_PAIR_LYING_THRESH){
             iterator = all_line_pairs.erase(iterator);     // erase a line if the number of points lying on that line
@@ -1620,13 +1621,13 @@ std::vector<myline*> get_all_valid_lines(){
                                                 // is smaller than the threshold * distance between those two point
         }
         else{
-            printf("lying count %d length is %f ratio is %f\n", pointsize, linelength, ratio);
+            //printf("lying count %d length is %f ratio is %f\n", pointsize, linelength, ratio);
             valid_count = valid_count +1;
             iterator++;
         }
     }
     
-    printf("SIZE OF ALL LINES AFTER %d valid_count is %d\n", all_line_pairs.size(), valid_count);
+    //printf("SIZE OF ALL LINES AFTER %d valid_count is %d\n", all_line_pairs.size(), valid_count);
     return all_line_pairs;
 }
 
@@ -1719,7 +1720,7 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
         int j = get<1>(pt);
         //circle( dst_norm_scaled, Point( i, j ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
         circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(255, 255, 255), 2, 8, 0 );
-        printf("CORNER (%d, %d)\n", i, j);
+        //printf("CORNER (%d, %d)\n", i, j);
         ++count;
         //if(count >1)
         //    break;
@@ -1734,7 +1735,7 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
         int y2 = pt->y2;
         //line(dst_norm_scaled, Point(x1, y1), Point(x2, y2), Scalar(0, 255, 0), 1, 8, 0);
         line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 1, 8, 0);
-        printf("LINE (%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
+        //printf("LINE (%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
     return;
@@ -1756,6 +1757,142 @@ void mousemotion(int button, int state, int x, int y){
     }
 }
 
+//http://stackoverflow.com/questions/16990721/removing-blobs-from-a-binary-image
+
+void remove_noise(Mat& im){
+    // threashold specifying minimum area of a blob
+    double threshold = 10;
+    
+    vector<vector<Point>> contours;
+    vector<Vec4i> hierarchy;
+    vector<int> small_blobs;
+    double contour_area;
+    Mat temp_image;
+    
+    // find all contours in the binary image
+    im.copyTo(temp_image);
+    findContours(temp_image, contours, hierarchy, CV_RETR_CCOMP,
+                 CV_CHAIN_APPROX_SIMPLE);
+    
+    // Find indices of contours whose area is less than `threshold`
+    if ( !contours.empty()) {
+        for (size_t i=0; i<contours.size(); ++i) {
+            contour_area = contourArea(contours[i]) ;
+            if ( contour_area < threshold)
+                small_blobs.push_back(i);
+        }
+    }
+    
+    // fill-in all small contours with zeros
+    for (size_t i=0; i < small_blobs.size(); ++i) {
+        drawContours(im, contours, small_blobs[i], cv::Scalar(0),
+                     CV_FILLED, 8);
+    }
+    
+    printf("SIZE OF SMALL BLOBS IS %d\n", small_blobs.size());
+    return;
+}
+
+// returns the minimum vertex
+// has the minimum y and maximumx
+glm::vec2 get_min(Mat& im){
+    std::vector<glm::vec2> miny_points;
+    int miny = 1000000;
+    int maxx = -1;
+    
+    for (int i = 0; i < im.rows-1; i++){
+        for (int j = 0; j < im.cols-1; j++){
+            uchar p2 = im.at<uchar>(i, j);
+            if(p2 > 0 && miny > j){
+                miny = j;
+                break;
+            }
+        }
+    }
+    
+    for(int i=im.rows-1;i >= 0; --i){
+        uchar p2 = im.at<uchar>(i, miny);
+        if(p2 > 0){
+            maxx = i;
+            break;
+        }
+    }
+    
+    return glm::vec2(maxx, miny);
+}
+
+
+// once the line  has been fitted using split and merge
+// zero out the line (all the white pixels in im2) so that rest of the pixels can be vectorized
+void zero_the_line(Mat& im, Mat& im2){
+    for (int i = 0; i < im.rows-1; i++){
+        for (int j = 0; j < im.cols-1; j++){
+            if(m2.at<uchar>(i, j) > 0){
+                im.at<uchar>(i, j) = 0;
+            }
+        }
+    }
+    
+    return;
+}
+
+std::vector<glm::vec2> split_and_merge(Mat& im){
+    std::vector<glm::vec2> points;
+    
+    im.copyTo(m2);
+    
+    for (int i = 0; i < im.rows-1; i++){
+        for (int j = 0; j < im.cols-1; j++){
+            m2.at<uchar>(i, j) = 0;
+        }
+    }
+    
+    glm::vec2 minp = get_min(im);
+    int x = minp[0];
+    int y = minp[1];
+
+    m2.at<uchar>(x, y) = 1;
+
+    while(x < m2.rows && y < m2.cols && y >= 1 && x >= 1){
+        if (im.at<uchar>(x, y+1) > 0 && m2.at<uchar>(x, y+1) == 0){
+            m2.at<uchar>(x, y+1) = 255;
+            y = y+1;
+            points.push_back(glm::vec2(x, y));
+            printf("> %d %d\n", x, y);
+        }
+        else if (im.at<uchar>(x+1, y) > 0 && m2.at<uchar>(x+1, y) == 0){
+            m2.at<uchar>(x+1, y) = 255;
+            x = x+1;
+            points.push_back(glm::vec2(x, y));
+            printf(">> %d %d\n", x, y);
+        }
+        else if (im.at<uchar>(x+1, y+1)  > 0 && m2.at<uchar>(x+1, y+1) == 0){
+            m2.at<uchar>(x+1, y+1) = 255;
+            y = y+1;
+            x = x+1;
+            points.push_back(glm::vec2(x, y));
+            printf(">>> %d %d\n", x, y);
+        }
+        else if (im.at<uchar>(x-1, y) > 0 && m2.at<uchar>(x-1, y) == 0){
+            m2.at<uchar>(x-1, y) = 255;
+            x = x-1;
+            printf(">> %d %d\n", x, y);
+            points.push_back(glm::vec2(x, y));
+        }
+        else if (im.at<uchar>(x-1, y+1) > 0 && m2.at<uchar>(x-1, y+1) == 0){
+            m2.at<uchar>(x-1, y+1) = 255;
+            x = x-1;
+            y = y+1;
+            printf(">> %d %d\n", x, y);
+            points.push_back(glm::vec2(x, y));
+        }
+        else{
+            break;
+        }
+    }
+    
+    return points;
+}
 
 void init_values(){
     // sequence of polygons to be placed this will be done automatically later
@@ -1780,6 +1917,8 @@ void init_values(){
     
     bitwise_not(bw, img);
     thinning(img);
+    
+    remove_noise(img);
     
     
 //    int hun = 0;
@@ -1811,6 +1950,14 @@ void init_values(){
     //myfilea.close();
     fill_points_vector(img);
 }
+
+
+
+// gets the line segments using the split and merge algorithm
+// get all the non zero pixels
+
+
+
 
 
 
@@ -1846,28 +1993,15 @@ void remove_outer_polygon(){
 }
 
 int main(int argc, char** argv){
-//        std::vector<glm::vec3> vg;
-//        vg.push_back(glm::vec3(0,0,0));
-//        vg.push_back(glm::vec3(0,1,0));
-//        vg.push_back(glm::vec3(0,0,1));
-//    
-//        plane *p = new plane(vg);
-//    
-//        for(int angle=0;angle<180;++angle){
-//            plane *tp = p->rotate_it(angle, 0, 0, 1);
-//            printf("normal >> %d -> (%f, %f, %f)\n", angle, tp->a, tp->b, tp->c);
-//        }
-//        
-//        return 0;
-    
     
     init_values();
-    
+    split_and_merge(img);
+    zero_the_line(img, m2);
     // get all the valid lines by checking the ratio of points lying on the line and its length
-    valid_lines_undirected = get_all_valid_lines();
+    //valid_lines_undirected = get_all_valid_lines();
     
     // showing the result of line detection
-    plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
+    //plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
     //imshow( "corners_window", dst_norm_scaled );
