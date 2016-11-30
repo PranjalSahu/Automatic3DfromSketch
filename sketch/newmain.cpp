@@ -99,6 +99,8 @@ Mat imga, bw, img, imgc;
 Mat dst_norm_scaled;
 Mat m, m2, m3;
 
+std::vector<glm::vec2> all_lines_vec;
+std::vector<myline*> all_mylines;
 
 // 2d hash for storing lines at each pixel
 std::map<i2tuple, myline*> all_lines;
@@ -1912,7 +1914,9 @@ std::vector<glm::vec2> get_polylines(Mat& im){
     int y = minp[1];
 
     m2.at<uchar>(x, y) = 1;
-
+    
+    points.push_back(glm::vec2(x, y));
+    
     while(x < m2.rows && y < m2.cols && y >= 1 && x >= 1){
         if (im.at<uchar>(x, y+1) > 0 && m2.at<uchar>(x, y+1) == 0){
             m2.at<uchar>(x, y+1) = 255;
@@ -1961,26 +1965,26 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman18.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman18.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman18.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman99.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
 
     
-    bw   = imga > 180;
+    bw   = imga > 80;
     img  = bw > 120;
     
     // get corner points using harris detector
-    get_corner_points(imga);
+    //get_corner_points(imga);
     
-    while(merge_points() != 0){
-        merge_points();
-    }
-    
+//    while(merge_points() != 0){
+//        merge_points();
+//    }
+//    
     bitwise_not(bw, img);
     thinning(img);
     
     remove_noise(img);
-    fill_points_vector(img);
+    //fill_points_vector(img);
 }
 
 
@@ -2015,6 +2019,113 @@ void remove_outer_polygon(){
     return;
 }
 
+// takes two adjacent points in array and makes a line of it
+void get_lines_from_corners(){
+    
+}
+
+void merge_line_corners(){
+    
+    
+    bool flag = false;
+    while(1){
+        
+        flag = false;
+        for(int i=0;i<all_mylines.size()-1;++i){
+            
+            int count1 = 0;
+            int count2 = 0;
+            
+            for(int j=0;j<all_mylines.size();++j){
+                
+                // same line
+                if(j == i)
+                    continue;
+                
+                if(all_mylines[i]->x1 == all_mylines[j]->x1 && all_mylines[i]->y1 == all_mylines[j]->y1){
+                    count1 = count1 +1;
+                }else if(all_mylines[i]->x2 == all_mylines[j]->x1 && all_mylines[i]->y2 == all_mylines[j]->y1){
+                    count2 = count2+1;
+                }else if(all_mylines[i]->x1 == all_mylines[j]->x2 && all_mylines[i]->y1 == all_mylines[j]->y2){
+                    count1 = count1 +1;
+                }else if(all_mylines[i]->x2 == all_mylines[j]->x2 && all_mylines[i]->y2 == all_mylines[j]->y2){
+                    count2 = count2+1;
+                }
+                
+            }
+            
+            // already merged line
+            if(count1 > 0 && count2 > 0)
+                continue;
+            
+            for(int j=i+1;j<all_mylines.size();++j){
+                float a, b, c, d, ap, bp, cp, dp;
+                
+                ap = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
+                bp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
+                cp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
+                dp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
+                
+                a = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
+                b = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
+                c = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
+                d = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
+                
+                float mina = min(a, b);
+                mina = min(mina, c);
+                mina = min(mina, d);
+                
+                int thresh_m = 2;
+                if(mina < thresh_m && mina != 0){
+                    flag = true;
+                    
+                    if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
+                        if(cp < dp){
+                            if(a < b){
+                                all_mylines[j]->x1 = all_mylines[i]->x1;
+                                all_mylines[j]->y1 = all_mylines[i]->y1;
+                            }else{
+                                all_mylines[j]->x1 = all_mylines[i]->x2;
+                                all_mylines[j]->y1 = all_mylines[i]->y2;
+                            }
+                        }else{
+                            if(c < d){
+                                all_mylines[j]->x2 = all_mylines[i]->x1;
+                                all_mylines[j]->y2 = all_mylines[i]->y1;
+                            }else{
+                                all_mylines[j]->x2 = all_mylines[i]->x2;
+                                all_mylines[j]->y2 = all_mylines[i]->y2;
+                            }
+                        }
+                    }else{
+                        if(ap < bp){
+                            if(a < c){
+                                all_mylines[i]->x1 = all_mylines[j]->x1;
+                                all_mylines[i]->y1 = all_mylines[j]->y1;
+                            }else{
+                                all_mylines[i]->x1 = all_mylines[j]->x2;
+                                all_mylines[i]->y1 = all_mylines[j]->y2;
+                            }
+                        }else{
+                            if(b < d){
+                                all_mylines[i]->x2 = all_mylines[j]->x1;
+                                all_mylines[i]->y2 = all_mylines[j]->y1;
+                            }else{
+                                all_mylines[i]->x2 = all_mylines[j]->x2;
+                                all_mylines[i]->y2 = all_mylines[j]->y2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(!flag)
+            break;
+    }
+    
+    return ;
+}
+
 int main(int argc, char** argv){
 //    std::vector<int> a;
 //    a.push_back(1);
@@ -2037,24 +2148,35 @@ int main(int argc, char** argv){
     
     int iteration = 0;
     
+    
     while(get_non_zero(img)){
         iteration = iteration+1;
+        if(iteration == 7){
+            printf("pranjal sahu");
+            //break;
+        }
+        
         printf("ITERATION IS %d\n", iteration);
-    std::vector<glm::vec2> po    = get_polylines(img);
-    std::vector<glm::vec2> lines = split_and_merge(po);
+        std::vector<glm::vec2> po    = get_polylines(img);
+        //if(iterati)
+        std::vector<glm::vec2> lines = split_and_merge(po);
+        
+        for(int i=0;i<lines.size()-1;++i){
+            all_mylines.push_back(new myline(lines[i][0], lines[i+1][0],lines[i][1], lines[i+1][1]));
+        }
+        
+        zero_the_line(img, m2, lines);
+    }
+
+    merge_line_corners();
     
-    zero_the_line(img, m2, lines);
     int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0} };
 
-    
-    for(int i=0;i< lines.size()-1;++i){
-        glm::vec2 a = lines[i];
-        glm::vec2 b = lines[i+1];
+    for(int i=0;i< all_mylines.size();++i){
         int c = rand()%5;
-        line(imgc, Point(a[1], a[0]), Point(b[1], b[0]), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
+        line(imgc, Point(all_mylines[i]->y1, all_mylines[i]->x1), Point(all_mylines[i]->y2, all_mylines[i]->x2), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
     }
-    }
-
+    
     //zero_the_line(img, m2);
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
