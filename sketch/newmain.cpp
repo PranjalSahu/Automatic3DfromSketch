@@ -1964,7 +1964,7 @@ std::vector<glm::vec2> get_polylines(Mat& im){
 
 void init_values(){
     // sequence of polygons to be placed this will be done automatically later
-    poly_seq[0] = 4;
+    poly_seq[0] = 0;
     poly_seq[1] = 3;
     poly_seq[2] = 4;
     
