@@ -506,10 +506,14 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
     
     get_correct_coord(valid_lines_undirected);
     for(int i=0;i< valid_lines_undirected.size();++i){
+        
         valid_lines_undirected[i]->x1 = valid_lines_undirected[i]->x1-minx;
         valid_lines_undirected[i]->x2 = valid_lines_undirected[i]->x2-minx;
         valid_lines_undirected[i]->y1 = valid_lines_undirected[i]->y1-miny;
         valid_lines_undirected[i]->y2 = valid_lines_undirected[i]->y2-miny;
+        if(valid_lines_undirected[i]->x1 == -60){
+            printf("teting as");
+        }
     }
     
     //printf("MINX IS %d and MINY IS %d\n", minx, miny);
@@ -1721,7 +1725,7 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
         int i = get<0>(pt);
         int j = get<1>(pt);
         //circle( dst_norm_scaled, Point( i, j ), 15,  Scalar(0, 255, 0), 2, 8, 0 );
-        circle( dst_norm_scaled, Point( j, i ), 15,  Scalar(255, 255, 255), 2, 8, 0 );
+        circle( dst_norm_scaled, Point( j, i ), 5,  Scalar(255, 255, 255), 2, 8, 0 );
         //printf("CORNER (%d, %d)\n", i, j);
         ++count;
         //if(count >1)
@@ -2026,22 +2030,31 @@ void get_lines_from_corners(){
 
 void merge_line_corners(){
     
-    
     bool flag = false;
+    bool mergeline =  false;
+    int iteration = 0;
+    
     while(1){
-        
+        mergeline = false;
         flag = false;
+        ++iteration;
         
-        float minvalue = 100000;
-        int minindexa   = -1;
-        int minindexb   = -1;
+        float minvalue_g  = 100000;
+        int minindexa_g   = -1;
+        int minindexb_g   = -1;
         float a, b, c, d, ap, bp, cp, dp;
+        
         
         for(int i=0;i<all_mylines.size();++i){
             
             int count1 = 0;
             int count2 = 0;
             
+            float minvalue  = 100000;
+            int minindexa   = i;
+            int minindexb   = -1;
+            
+            float a_t = 0, b_t = 0, c_t = 0, d_t = 0, ap_t = 0.0, bp_t = 0, cp_t = 0, dp_t = 0;
             
             for(int j=0; j< all_mylines.size();++j){
                 
@@ -2059,57 +2072,91 @@ void merge_line_corners(){
                     count2 = count2+1;
                 }else{
                     
-                    float a_t, b_t, c_t, d_t, ap_t, bp_t, cp_t, dp_t;
+                    float a_tp, b_tp, c_tp, d_tp, ap_tp, bp_tp, cp_tp, dp_tp;
                     
-                    ap_t = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
-                    bp_t = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
-                    cp_t = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
-                    dp_t = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
+                    ap_tp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
+                    bp_tp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
+                    cp_tp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
+                    dp_tp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
                     
-                    a_t = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
-                    b_t = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
-                    c_t = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
-                    d_t = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
+                    a_tp = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
+                    b_tp = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
+                    c_tp = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
+                    d_tp = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
                     
-                    float mina = min(a_t, b_t);
-                    mina = min(mina, c_t);
-                    mina = min(mina, d_t);
+                    if(all_mylines[j]->x2 == 91 && all_mylines[i]->x2 == 91 ){
+                        printf("debugging test");
+                    }
+                    
+                    float mina = min(a_tp, b_tp);
+                    mina = min(mina, c_tp);
+                    mina = min(mina, d_tp);
                     
                     if(mina < minvalue){
                         minvalue = mina;
-                        
                         minindexa = i;
                         minindexb = j;
                         
-                        ap = ap_t;
-                        bp = bp_t;
-                        cp = cp_t;
-                        dp = dp_t;
+                        ap_t = ap_tp;
+                        bp_t = bp_tp;
+                        cp_t = cp_tp;
+                        dp_t = dp_tp;
                         
-                        a = a_t;
-                        b = b_t;
-                        c = c_t;
-                        d = d_t;
+                        a_t = a_tp;
+                        b_t = b_tp;
+                        c_t = c_tp;
+                        d_t = d_tp;
                     }
                 }
                 
                 
             }
             
-            // already merged line
-            if(count1 > 0 && count2 > 0){
-                continue;
-            }else{
-                printf("NOT merged line\n");
+            if(all_mylines[i]->y1 == 32){
+                //printf("testing pranjal");
             }
+            // already merged line
+            if(!(count1 > 0 && count2 > 0)){
+                if(minvalue < minvalue_g){
+                    minindexa_g = minindexa;
+                    minindexb_g = minindexb;
+                    minvalue_g  = minvalue;
+                    
+                    ap = ap_t;
+                    bp = bp_t;
+                    cp = cp_t;
+                    dp = dp_t;
+                    
+                    a = a_t;
+                    b = b_t;
+                    c = c_t;
+                    d = d_t;
+                }
+            }
+        }
+        
+//        if(minindexa_g == -1){
+//            printf("All lines merged\n");
+//            return;
+//        }
+        
+        
+        if(minindexa_g == 17){
+            printf("testing pranjal sahu\n");
         }
         
         int thresh_m = 10;
         
-        int i = minindexa;
-        int j = minindexb;
+        int i = minindexa_g;
+        int j = minindexb_g;
         
-        if(minvalue < thresh_m && minvalue != 0){
+        printf("i = %d, j = %d, minvalue = %f length_a = %f length_b %f \n", minindexa_g, minindexb_g, minvalue_g, all_mylines[i]->get_line_length(), all_mylines[j]->get_line_length());
+        
+        if(i == 0 || i == 8 || i == 9 || j == 0 || j == 8 || j == 9){
+            printf("debugginf testing");
+        }
+        if(minvalue_g < thresh_m && minvalue_g != 0){
+        //if(minvalue != 0){
             printf("Below threshold\n");
             
             flag       = true;
@@ -2198,34 +2245,45 @@ void merge_line_corners(){
         }
         
         
-        printf("After merging the lines");
+        printf("After merging the lines\n");
+        
+        
+        corner_points.clear();
+        
+        
+        // getting corner points
+        for(int i=0;i<all_mylines.size();++i){
+            bool flag1 = true;
+            bool flag2 = true;
+            
+            for(int j=0;j<corner_points.size();++j){
+                
+                if(all_mylines[i]->x1 == std::get<0>(corner_points[j]) && all_mylines[i]->y1 == std::get<1>(corner_points[j])){
+                    flag1 = false;
+                }
+                if(all_mylines[i]->x2 == std::get<0>(corner_points[j]) && all_mylines[i]->y2 == std::get<1>(corner_points[j])){
+                    flag2 = false;
+                }
+            }
+            if(flag1){
+                corner_points.push_back(i2tuple(all_mylines[i]->x1, all_mylines[i]->y1));
+            }
+            if(flag2){
+                corner_points.push_back(i2tuple(all_mylines[i]->x2, all_mylines[i]->y2));
+            }
+        }
         
         if(!flag)
-            break;
-    }
-    
-    
-    for(int i=0;i<all_mylines.size();++i){
-        bool flag1 = true;
-        bool flag2 = true;
+            return;
         
-        for(int j=0;j<corner_points.size();++j){
-            
-            if(all_mylines[i]->x1 == std::get<0>(corner_points[j]) && all_mylines[i]->y1 == std::get<1>(corner_points[j])){
-                flag1 = false;
-            }
-            if(all_mylines[i]->x2 == std::get<0>(corner_points[j]) && all_mylines[i]->y2 == std::get<1>(corner_points[j])){
-                flag2 = false;
-            }
-        }
-        if(flag1){
-            corner_points.push_back(i2tuple(all_mylines[i]->x1, all_mylines[i]->y1));
-        }
-        if(flag2){
-            corner_points.push_back(i2tuple(all_mylines[i]->x2, all_mylines[i]->y2));
-        }
+        char buffer [1000];
+        sprintf (buffer, "/Users/pranjal/Downloads/Graphics/checkit/corners_window_%d.jpg", iteration);
+        
+        img.copyTo(dst_norm_scaled);
+        plot_corner_points_and_lines(dst_norm_scaled, all_mylines, corner_points);
+        imwrite( buffer, dst_norm_scaled );
+        
     }
-    
     
     return ;
 }
@@ -2286,9 +2344,11 @@ int main(int argc, char** argv){
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
     //valid_lines_undirected = get_all_valid_lines();
+    valid_lines_undirected = all_mylines;
     
     // showing the result of line detection
-    //plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
+    img.copyTo(dst_norm_scaled);
+    plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
     //imshow( "corners_window", dst_norm_scaled );
@@ -2299,8 +2359,20 @@ int main(int argc, char** argv){
 
     valid_lines_undirected = all_mylines;
     
+    printf("=====================================\n");
+
+    
+    for(int i=0;i<corner_points.size();++i){
+        printf("%d, %d\n", std::get<0>(corner_points[i]), std::get<1>(corner_points[i]));
+    }
     
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
+    
+    printf("=====================================\n");
+    
+    for(int i=0;i<corner_points.size();++i){
+        printf("%d, %d\n", std::get<0>(corner_points[i]), std::get<1>(corner_points[i]));
+    }
     
     
     // write corner points and line segments to file for later use

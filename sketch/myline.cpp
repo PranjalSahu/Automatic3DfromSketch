@@ -484,7 +484,7 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
     polygon_lines.push_back(start);
     
     while(1){
-        if(sa->x1 == 1){
+        if(sa->x1 == -60){
             printf("debug");
         }
         //printf(">>>>  %d %d %d %d\n", sa->x1, sa->x2, sa->y1, sa->y2);
