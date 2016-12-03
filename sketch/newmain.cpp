@@ -2042,7 +2042,7 @@ void merge_line_corners(){
         float minvalue_g  = 100000;
         int minindexa_g   = -1;
         int minindexb_g   = -1;
-        float a, b, c, d, ap, bp, cp, dp;
+        float a, b, c, d;
         
         
         for(int i=0;i<all_mylines.size();++i){
@@ -2054,7 +2054,7 @@ void merge_line_corners(){
             int minindexa   = i;
             int minindexb   = -1;
             
-            float a_t = 0, b_t = 0, c_t = 0, d_t = 0, ap_t = 0.0, bp_t = 0, cp_t = 0, dp_t = 0;
+            float a_t = 0, b_t = 0, c_t = 0, d_t = 0;
             
             for(int j=0; j< all_mylines.size();++j){
                 
@@ -2074,11 +2074,6 @@ void merge_line_corners(){
                     
                     float a_tp, b_tp, c_tp, d_tp, ap_tp, bp_tp, cp_tp, dp_tp;
                     
-                    ap_tp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
-                    bp_tp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
-                    cp_tp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
-                    dp_tp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
-                    
                     a_tp = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
                     b_tp = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
                     c_tp = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
@@ -2096,11 +2091,6 @@ void merge_line_corners(){
                         minvalue = mina;
                         minindexa = i;
                         minindexb = j;
-                        
-                        ap_t = ap_tp;
-                        bp_t = bp_tp;
-                        cp_t = cp_tp;
-                        dp_t = dp_tp;
                         
                         a_t = a_tp;
                         b_t = b_tp;
@@ -2122,11 +2112,6 @@ void merge_line_corners(){
                     minindexb_g = minindexb;
                     minvalue_g  = minvalue;
                     
-                    ap = ap_t;
-                    bp = bp_t;
-                    cp = cp_t;
-                    dp = dp_t;
-                    
                     a = a_t;
                     b = b_t;
                     c = c_t;
@@ -2135,10 +2120,10 @@ void merge_line_corners(){
             }
         }
         
-//        if(minindexa_g == -1){
-//            printf("All lines merged\n");
-//            return;
-//        }
+        if(minindexa_g == -1){
+            printf("All lines merged\n");
+            return;
+        }
         
         
         if(minindexa_g == 17){
@@ -2165,8 +2150,10 @@ void merge_line_corners(){
             int new_x  = -1;
             int new_y  = -1;
             
+            // Decide which line's coordinates will be replaced
+            // the line which has smaller length will be changed
             if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
-                if(cp < dp){
+                if(  min (a, b) < min(c, d)){
                     prev_x = all_mylines[j]->x1;
                     prev_y = all_mylines[j]->y1;
                     
@@ -2199,7 +2186,7 @@ void merge_line_corners(){
                     
                 }
             }else{
-                if(ap < bp){
+                if(min(a, c) < min(b, d)){
                     prev_x = all_mylines[i]->x1;
                     prev_y = all_mylines[i]->y1;
                     
