@@ -857,6 +857,7 @@ void displayone() {
     else if(display_type == 1){
         int index  = 0;
         for(std::vector<polygon*>::iterator iter = all_polygons.begin(); iter != all_polygons.end(); iter++){
+            //polygon *pl = all_polygons[6];
             polygon* pl = *iter;
             plot_lines(pl->lines, index%4);
             ++index;
@@ -1969,12 +1970,12 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
 
     
-    bw   = imga > 80;
+    bw   = imga > 120;
     img  = bw > 120;
     
     // get corner points using harris detector
@@ -2262,14 +2263,6 @@ void merge_line_corners(){
         
         if(!flag)
             return;
-        
-        char buffer [1000];
-        sprintf (buffer, "/Users/pranjal/Downloads/Graphics/checkit/corners_window_%d.jpg", iteration);
-        
-        img.copyTo(dst_norm_scaled);
-        plot_corner_points_and_lines(dst_norm_scaled, all_mylines, corner_points);
-        imwrite( buffer, dst_norm_scaled );
-        
     }
     
     return ;
@@ -2300,14 +2293,8 @@ int main(int argc, char** argv){
     
     while(get_non_zero(img)){
         iteration = iteration+1;
-        if(iteration == 7){
-            printf("pranjal sahu");
-            //break;
-        }
         
-        printf("ITERATION IS %d\n", iteration);
         std::vector<glm::vec2> po    = get_polylines(img);
-        //if(iterati)
         std::vector<glm::vec2> lines = split_and_merge(po);
         
         for(int i=0;i<lines.size()-1;++i){
@@ -2327,7 +2314,6 @@ int main(int argc, char** argv){
         line(imgc, Point(all_mylines[i]->y1, all_mylines[i]->x1), Point(all_mylines[i]->y2, all_mylines[i]->x2), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
     }
     
-    //zero_the_line(img, m2);
     
     // get all the valid lines by checking the ratio of points lying on the line and its length
     //valid_lines_undirected = get_all_valid_lines();
@@ -2338,7 +2324,7 @@ int main(int argc, char** argv){
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
-    //imshow( "corners_window", dst_norm_scaled );
+    imshow( "corners_window", dst_norm_scaled );
     //cv::resize(img, img, Size(), 0.5, 0.5);
     imshow( "corners_window", imgc);
     //imshow( "corners_window", bw );

@@ -64,9 +64,6 @@ std::vector<polygon*> get_all_polygons(std::vector<myline*> all_lines){
     // loop for every line and take it as start and get the polygon by traversing over all valid lines
     for(std::vector<myline*>::iterator it = all_lines.begin(); it != all_lines.end(); ++it){
         myline *start = *it;
-        if(start->x1 == -60 && start->y1 == 71){
-            printf("testing");
-        }
         std::vector<myline*> polygon_lines = start->get_polygon(all_lines);
         polygon* temp = new polygon(polygon_lines);
         

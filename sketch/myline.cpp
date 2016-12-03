@@ -484,12 +484,10 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
     polygon_lines.push_back(start);
     
     while(1){
-        if(sa->x1 == -60){
-            printf("debug");
-        }
-        //printf(">>>>  %d %d %d %d\n", sa->x1, sa->x2, sa->y1, sa->y2);
         myline * nl = get_next_line(sa, valid_lines);
-        if(nl->is_equal_to(start)){
+        //if(nl->is_equal_to(start)){
+        if(nl->x2 == this->x1 && nl->y2 == this->y1){
+            polygon_lines.push_back(nl);
             break;
         }
         else{
@@ -497,7 +495,6 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
         }
         sa = nl;
     }
-    printf("pranjal testing");
     return polygon_lines;
 }
 

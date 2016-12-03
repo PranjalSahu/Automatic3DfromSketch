@@ -74,9 +74,9 @@ float cost::axis_alignment(std::vector<glm::vec2> points_2d, std::vector<glm::ve
     
     // refer axis alignment cost functions
     float total_cost = 0;
-    float cost_v[10];
-    float angle_v[10];
-    float dot_values[10];
+    float cost_v[100];
+    float angle_v[100];
+    float dot_values[100];
     for(int i=0;i<line_3d.size();++i){
         float dot_value = 0;
         for(int q = 0;q<3;++q){
