@@ -1965,9 +1965,9 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman99.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
     bw   = imga > 80;
@@ -2031,12 +2031,15 @@ void merge_line_corners(){
     while(1){
         
         flag = false;
-        for(int i=0;i<all_mylines.size()-1;++i){
+        for(int i=0;i<all_mylines.size();++i){
             
             int count1 = 0;
             int count2 = 0;
+            float minvalue = 100000;
+            int minindex   = -1;
+            float a, b, c, d, ap, bp, cp, dp;
             
-            for(int j=0;j<all_mylines.size();++j){
+            for(int j=0; j< all_mylines.size();++j){
                 
                 // same line
                 if(j == i)
@@ -2050,78 +2053,169 @@ void merge_line_corners(){
                     count1 = count1 +1;
                 }else if(all_mylines[i]->x2 == all_mylines[j]->x2 && all_mylines[i]->y2 == all_mylines[j]->y2){
                     count2 = count2+1;
+                }else{
+                    
+                    float a_t, b_t, c_t, d_t, ap_t, bp_t, cp_t, dp_t;
+                    
+                    ap_t = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
+                    bp_t = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
+                    cp_t = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
+                    dp_t = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
+                    
+                    a_t = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
+                    b_t = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
+                    c_t = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
+                    d_t = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
+                    
+                    float mina = min(a_t, b_t);
+                    mina = min(mina, c_t);
+                    mina = min(mina, d_t);
+                    
+                    if(mina < minvalue){
+                        minvalue = mina;
+                        minindex = j;
+                        ap = ap_t;
+                        bp = bp_t;
+                        cp = cp_t;
+                        dp = dp_t;
+                        
+                        a = a_t;
+                        b = b_t;
+                        c = c_t;
+                        d = d_t;
+                    }
                 }
+                
                 
             }
             
             // already merged line
-            if(count1 > 0 && count2 > 0)
+            if(count1 > 0 && count2 > 0){
                 continue;
+            }else{
+                printf("NOT merged line\n");
+            }
             
-            for(int j=i+1;j<all_mylines.size();++j){
-                float a, b, c, d, ap, bp, cp, dp;
+            int thresh_m = 10;
+            int j = minindex;
+            
+            if(minvalue < thresh_m && minvalue != 0){
+                printf("Below threshold\n");
                 
-                ap = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1));
-                bp = all_mylines[j]->get_perpendicular_distance(glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2));
-                cp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x1, all_mylines[j]->y1));
-                dp = all_mylines[i]->get_perpendicular_distance(glm::vec2(all_mylines[j]->x2, all_mylines[j]->y2));
+                flag       = true;
+                int prev_x = -1;
+                int prev_y = -1;
+                int new_x  = -1;
+                int new_y  = -1;
                 
-                a = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x1, all_mylines[j]->y1 - all_mylines[i]->y1));
-                b = glm::length(glm::vec2(all_mylines[j]->x1-all_mylines[i]->x2, all_mylines[j]->y1 - all_mylines[i]->y2));
-                c = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x1, all_mylines[j]->y2 - all_mylines[i]->y1));
-                d = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
-                
-                float mina = min(a, b);
-                mina = min(mina, c);
-                mina = min(mina, d);
-                
-                int thresh_m = 2;
-                if(mina < thresh_m && mina != 0){
-                    flag = true;
-                    
-                    if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
-                        if(cp < dp){
-                            if(a < b){
-                                all_mylines[j]->x1 = all_mylines[i]->x1;
-                                all_mylines[j]->y1 = all_mylines[i]->y1;
-                            }else{
-                                all_mylines[j]->x1 = all_mylines[i]->x2;
-                                all_mylines[j]->y1 = all_mylines[i]->y2;
-                            }
+                if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
+                    if(cp < dp){
+                        prev_x = all_mylines[j]->x1;
+                        prev_y = all_mylines[j]->y1;
+                        
+                        if(a < b){
+                            all_mylines[j]->x1 = all_mylines[i]->x1;
+                            all_mylines[j]->y1 = all_mylines[i]->y1;
+                            
                         }else{
-                            if(c < d){
-                                all_mylines[j]->x2 = all_mylines[i]->x1;
-                                all_mylines[j]->y2 = all_mylines[i]->y1;
-                            }else{
-                                all_mylines[j]->x2 = all_mylines[i]->x2;
-                                all_mylines[j]->y2 = all_mylines[i]->y2;
-                            }
+                            all_mylines[j]->x1 = all_mylines[i]->x2;
+                            all_mylines[j]->y1 = all_mylines[i]->y2;
                         }
+                        
+                        new_x = all_mylines[j]->x1;
+                        new_y = all_mylines[j]->y1;
+                        
                     }else{
-                        if(ap < bp){
-                            if(a < c){
-                                all_mylines[i]->x1 = all_mylines[j]->x1;
-                                all_mylines[i]->y1 = all_mylines[j]->y1;
-                            }else{
-                                all_mylines[i]->x1 = all_mylines[j]->x2;
-                                all_mylines[i]->y1 = all_mylines[j]->y2;
-                            }
+                        prev_x = all_mylines[j]->x2;
+                        prev_y = all_mylines[j]->y2;
+                        
+                        if(c < d){
+                            all_mylines[j]->x2 = all_mylines[i]->x1;
+                            all_mylines[j]->y2 = all_mylines[i]->y1;
                         }else{
-                            if(b < d){
-                                all_mylines[i]->x2 = all_mylines[j]->x1;
-                                all_mylines[i]->y2 = all_mylines[j]->y1;
-                            }else{
-                                all_mylines[i]->x2 = all_mylines[j]->x2;
-                                all_mylines[i]->y2 = all_mylines[j]->y2;
-                            }
+                            all_mylines[j]->x2 = all_mylines[i]->x2;
+                            all_mylines[j]->y2 = all_mylines[i]->y2;
                         }
+                        
+                        new_x = all_mylines[j]->x2;
+                        new_y = all_mylines[j]->y2;
+                        
+                    }
+                }else{
+                    if(ap < bp){
+                        prev_x = all_mylines[i]->x1;
+                        prev_y = all_mylines[i]->y1;
+                        
+                        if(a < c){
+                            all_mylines[i]->x1 = all_mylines[j]->x1;
+                            all_mylines[i]->y1 = all_mylines[j]->y1;
+                        }else{
+                            all_mylines[i]->x1 = all_mylines[j]->x2;
+                            all_mylines[i]->y1 = all_mylines[j]->y2;
+                        }
+                        
+                        new_x = all_mylines[i]->x1;
+                        new_y = all_mylines[i]->y1;
+                        
+                    }else{
+                        prev_x = all_mylines[i]->x2;
+                        prev_y = all_mylines[i]->y2;
+                        
+                        if(b < d){
+                            all_mylines[i]->x2 = all_mylines[j]->x1;
+                            all_mylines[i]->y2 = all_mylines[j]->y1;
+                        }else{
+                            all_mylines[i]->x2 = all_mylines[j]->x2;
+                            all_mylines[i]->y2 = all_mylines[j]->y2;
+                        }
+                        
+                        new_x = all_mylines[i]->x2;
+                        new_y = all_mylines[i]->y2;
+                        
+                    }
+                }
+                
+                // change all the lines which are affected due to shift
+                for (int pl = 0;pl < all_mylines.size();++pl){
+                    if(all_mylines[pl]->x1 == prev_x && all_mylines[pl]->y1 == prev_y){
+                        all_mylines[pl]->x1 = new_x;
+                        all_mylines[pl]->y1 = new_y;
+                    }else if(all_mylines[pl]->x2 == prev_x && all_mylines[pl]->y2 == prev_y){
+                        all_mylines[pl]->x2 = new_x;
+                        all_mylines[pl]->y2 = new_y;
                     }
                 }
             }
+            
+            
+            printf("After merging the lines");
         }
         if(!flag)
             break;
     }
+    
+    
+    for(int i=0;i<all_mylines.size();++i){
+        bool flag1 = true;
+        bool flag2 = true;
+        
+        for(int j=0;j<corner_points.size();++j){
+            
+            if(all_mylines[i]->x1 == std::get<0>(corner_points[j]) && all_mylines[i]->y1 == std::get<1>(corner_points[j])){
+                flag1 = false;
+            }
+            if(all_mylines[i]->x2 == std::get<0>(corner_points[j]) && all_mylines[i]->y2 == std::get<1>(corner_points[j])){
+                flag2 = false;
+            }
+        }
+        if(flag1){
+            corner_points.push_back(i2tuple(all_mylines[i]->x1, all_mylines[i]->y1));
+        }
+        if(flag2){
+            corner_points.push_back(i2tuple(all_mylines[i]->x2, all_mylines[i]->y2));
+        }
+    }
+    
     
     return ;
 }
@@ -2170,10 +2264,11 @@ int main(int argc, char** argv){
 
     merge_line_corners();
     
-    int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0} };
+    
+    int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0},  {155,155,0}, {0,155,155}};
 
     for(int i=0;i< all_mylines.size();++i){
-        int c = rand()%5;
+        int c = rand()%7;
         line(imgc, Point(all_mylines[i]->y1, all_mylines[i]->x1), Point(all_mylines[i]->y2, all_mylines[i]->x2), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
     }
     
@@ -2192,6 +2287,8 @@ int main(int argc, char** argv){
     //imshow( "corners_window", bw );
     waitKey(0);
 
+    valid_lines_undirected = all_mylines;
+    
     
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
     
@@ -2200,6 +2297,27 @@ int main(int argc, char** argv){
     write_to_file(corner_points, valid_lines_undirected);
     myfile.close();
     
+    int test1 = 0;
+    int test2 = 0;
+    
+    for(int i=0;i<valid_lines_undirected.size();++i){
+        if(valid_lines_undirected[i]->x1 == -60 && valid_lines_undirected[i]->y1 == 76){
+            printf("test1");
+            ++test1;
+        }
+        if(valid_lines_undirected[i]->x2 == -60 && valid_lines_undirected[i]->y2 == 76){
+            printf("test2");
+            ++test1;
+        }
+        if(valid_lines_undirected[i]->x1 == -56 && valid_lines_undirected[i]->y1 == 83){
+            printf("test3");
+            ++test2;
+        }
+        if(valid_lines_undirected[i]->x2 == 83 && valid_lines_undirected[i]->y2 == -56){
+            printf("tes4");
+            ++test2;
+        }
+    }
     
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);

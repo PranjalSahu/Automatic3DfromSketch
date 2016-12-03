@@ -454,9 +454,17 @@ bool ccw(int x1, int y1, int x2, int y2, int x3, int y3){
 // and all_lines_to_check is direted as well
 std::vector<myline*> get_all_adjacent_lines(myline *start, std::vector<myline*> all_lines_to_check){
     std::vector<myline*> adjacent_lines;
-    for(std::vector<myline*>::iterator iter = all_lines_to_check.begin(); iter != all_lines_to_check.end(); iter++){
-        myline* a = *iter;
+    if(start->x1 ==-56 && start->y1 == 83){
+        printf("pranjal testing 1");
+    }
+    for(int i=0;i<all_lines_to_check.size();++i){
+        myline* a = all_lines_to_check[i];
         // check if both lines are not same and check if either end of a is same as end of line a
+        if(a->x1 == -60 && a->y1 == 76 && start->x1 ==-56 && start->y1 == 83){
+            printf("%d\n", a->is_equal_to(start));
+            printf("%d\n", a->is_reverse_of(start));
+            //printf("%d\n", a->is_equal_to(start));
+        }
         if(!a->is_equal_to(start) && !a->is_reverse_of(start) && (a->x1 == start->x2 && a->y1 == start->y2)){
             adjacent_lines.push_back(a);
         }
@@ -476,6 +484,10 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
     polygon_lines.push_back(start);
     
     while(1){
+        if(sa->x1 == 1){
+            printf("debug");
+        }
+        //printf(">>>>  %d %d %d %d\n", sa->x1, sa->x2, sa->y1, sa->y2);
         myline * nl = get_next_line(sa, valid_lines);
         if(nl->is_equal_to(start)){
             break;
@@ -485,7 +497,7 @@ std::vector<myline*> myline::get_polygon(std::vector<myline*> valid_lines){
         }
         sa = nl;
     }
-    
+    printf("pranjal testing");
     return polygon_lines;
 }
 
