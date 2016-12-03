@@ -2031,13 +2031,17 @@ void merge_line_corners(){
     while(1){
         
         flag = false;
+        
+        float minvalue = 100000;
+        int minindexa   = -1;
+        int minindexb   = -1;
+        float a, b, c, d, ap, bp, cp, dp;
+        
         for(int i=0;i<all_mylines.size();++i){
             
             int count1 = 0;
             int count2 = 0;
-            float minvalue = 100000;
-            int minindex   = -1;
-            float a, b, c, d, ap, bp, cp, dp;
+            
             
             for(int j=0; j< all_mylines.size();++j){
                 
@@ -2073,7 +2077,10 @@ void merge_line_corners(){
                     
                     if(mina < minvalue){
                         minvalue = mina;
-                        minindex = j;
+                        
+                        minindexa = i;
+                        minindexb = j;
+                        
                         ap = ap_t;
                         bp = bp_t;
                         cp = cp_t;
@@ -2095,101 +2102,104 @@ void merge_line_corners(){
             }else{
                 printf("NOT merged line\n");
             }
+        }
+        
+        int thresh_m = 10;
+        
+        int i = minindexa;
+        int j = minindexb;
+        
+        if(minvalue < thresh_m && minvalue != 0){
+            printf("Below threshold\n");
             
-            int thresh_m = 10;
-            int j = minindex;
+            flag       = true;
+            int prev_x = -1;
+            int prev_y = -1;
+            int new_x  = -1;
+            int new_y  = -1;
             
-            if(minvalue < thresh_m && minvalue != 0){
-                printf("Below threshold\n");
-                
-                flag       = true;
-                int prev_x = -1;
-                int prev_y = -1;
-                int new_x  = -1;
-                int new_y  = -1;
-                
-                if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
-                    if(cp < dp){
-                        prev_x = all_mylines[j]->x1;
-                        prev_y = all_mylines[j]->y1;
-                        
-                        if(a < b){
-                            all_mylines[j]->x1 = all_mylines[i]->x1;
-                            all_mylines[j]->y1 = all_mylines[i]->y1;
-                            
-                        }else{
-                            all_mylines[j]->x1 = all_mylines[i]->x2;
-                            all_mylines[j]->y1 = all_mylines[i]->y2;
-                        }
-                        
-                        new_x = all_mylines[j]->x1;
-                        new_y = all_mylines[j]->y1;
+            if(all_mylines[j]->get_line_length() < all_mylines[i]->get_line_length()){
+                if(cp < dp){
+                    prev_x = all_mylines[j]->x1;
+                    prev_y = all_mylines[j]->y1;
+                    
+                    if(a < b){
+                        all_mylines[j]->x1 = all_mylines[i]->x1;
+                        all_mylines[j]->y1 = all_mylines[i]->y1;
                         
                     }else{
-                        prev_x = all_mylines[j]->x2;
-                        prev_y = all_mylines[j]->y2;
-                        
-                        if(c < d){
-                            all_mylines[j]->x2 = all_mylines[i]->x1;
-                            all_mylines[j]->y2 = all_mylines[i]->y1;
-                        }else{
-                            all_mylines[j]->x2 = all_mylines[i]->x2;
-                            all_mylines[j]->y2 = all_mylines[i]->y2;
-                        }
-                        
-                        new_x = all_mylines[j]->x2;
-                        new_y = all_mylines[j]->y2;
-                        
+                        all_mylines[j]->x1 = all_mylines[i]->x2;
+                        all_mylines[j]->y1 = all_mylines[i]->y2;
                     }
+                    
+                    new_x = all_mylines[j]->x1;
+                    new_y = all_mylines[j]->y1;
+                    
                 }else{
-                    if(ap < bp){
-                        prev_x = all_mylines[i]->x1;
-                        prev_y = all_mylines[i]->y1;
-                        
-                        if(a < c){
-                            all_mylines[i]->x1 = all_mylines[j]->x1;
-                            all_mylines[i]->y1 = all_mylines[j]->y1;
-                        }else{
-                            all_mylines[i]->x1 = all_mylines[j]->x2;
-                            all_mylines[i]->y1 = all_mylines[j]->y2;
-                        }
-                        
-                        new_x = all_mylines[i]->x1;
-                        new_y = all_mylines[i]->y1;
-                        
+                    prev_x = all_mylines[j]->x2;
+                    prev_y = all_mylines[j]->y2;
+                    
+                    if(c < d){
+                        all_mylines[j]->x2 = all_mylines[i]->x1;
+                        all_mylines[j]->y2 = all_mylines[i]->y1;
                     }else{
-                        prev_x = all_mylines[i]->x2;
-                        prev_y = all_mylines[i]->y2;
-                        
-                        if(b < d){
-                            all_mylines[i]->x2 = all_mylines[j]->x1;
-                            all_mylines[i]->y2 = all_mylines[j]->y1;
-                        }else{
-                            all_mylines[i]->x2 = all_mylines[j]->x2;
-                            all_mylines[i]->y2 = all_mylines[j]->y2;
-                        }
-                        
-                        new_x = all_mylines[i]->x2;
-                        new_y = all_mylines[i]->y2;
-                        
+                        all_mylines[j]->x2 = all_mylines[i]->x2;
+                        all_mylines[j]->y2 = all_mylines[i]->y2;
                     }
+                    
+                    new_x = all_mylines[j]->x2;
+                    new_y = all_mylines[j]->y2;
+                    
                 }
-                
-                // change all the lines which are affected due to shift
-                for (int pl = 0;pl < all_mylines.size();++pl){
-                    if(all_mylines[pl]->x1 == prev_x && all_mylines[pl]->y1 == prev_y){
-                        all_mylines[pl]->x1 = new_x;
-                        all_mylines[pl]->y1 = new_y;
-                    }else if(all_mylines[pl]->x2 == prev_x && all_mylines[pl]->y2 == prev_y){
-                        all_mylines[pl]->x2 = new_x;
-                        all_mylines[pl]->y2 = new_y;
+            }else{
+                if(ap < bp){
+                    prev_x = all_mylines[i]->x1;
+                    prev_y = all_mylines[i]->y1;
+                    
+                    if(a < c){
+                        all_mylines[i]->x1 = all_mylines[j]->x1;
+                        all_mylines[i]->y1 = all_mylines[j]->y1;
+                    }else{
+                        all_mylines[i]->x1 = all_mylines[j]->x2;
+                        all_mylines[i]->y1 = all_mylines[j]->y2;
                     }
+                    
+                    new_x = all_mylines[i]->x1;
+                    new_y = all_mylines[i]->y1;
+                    
+                }else{
+                    prev_x = all_mylines[i]->x2;
+                    prev_y = all_mylines[i]->y2;
+                    
+                    if(b < d){
+                        all_mylines[i]->x2 = all_mylines[j]->x1;
+                        all_mylines[i]->y2 = all_mylines[j]->y1;
+                    }else{
+                        all_mylines[i]->x2 = all_mylines[j]->x2;
+                        all_mylines[i]->y2 = all_mylines[j]->y2;
+                    }
+                    
+                    new_x = all_mylines[i]->x2;
+                    new_y = all_mylines[i]->y2;
+                    
                 }
             }
             
-            
-            printf("After merging the lines");
+            // change all the lines which are affected due to shift
+            for (int pl = 0;pl < all_mylines.size();++pl){
+                if(all_mylines[pl]->x1 == prev_x && all_mylines[pl]->y1 == prev_y){
+                    all_mylines[pl]->x1 = new_x;
+                    all_mylines[pl]->y1 = new_y;
+                }else if(all_mylines[pl]->x2 == prev_x && all_mylines[pl]->y2 == prev_y){
+                    all_mylines[pl]->x2 = new_x;
+                    all_mylines[pl]->y2 = new_y;
+                }
+            }
         }
+        
+        
+        printf("After merging the lines");
+        
         if(!flag)
             break;
     }
