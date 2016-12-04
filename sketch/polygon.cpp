@@ -20,12 +20,12 @@ polygon::polygon(std::vector<myline*> tlines){
 
 // checks if two polygons are equal or not
 bool polygon::is_equal_to(polygon *b){
-    printf("TESTING BUG 9 start\n");
+    //printf("TESTING BUG 9 start\n");
     std::vector<myline*> at = this->lines;
     std::vector<myline*> bt = b->lines;
     
     if(bt.size() != at.size()){
-        printf("TESTING BUG 9 end\n");
+        //printf("TESTING BUG 9 end\n");
         return false;
     }
     
@@ -40,11 +40,11 @@ bool polygon::is_equal_to(polygon *b){
             //if(ta->x1 == 156  && ta->y1 == 170 && t->x1 == 188 && t->y1 == 31){
                 //printf("TESTING BUG10 %d %d %d %d\n", ta->x1, ta->y1, t->x1, t->y1);
             //}
-            printf("TESTING BUG 10 start\n");
+            //printf("TESTING BUG 10 start\n");
             bool flaga = ta->is_equal_to(t);
             bool flagb = ta->is_reverse_of(t);
             
-            printf("TESTING BUG 10 end\n");
+            //printf("TESTING BUG 10 end\n");
             if(flaga || flagb){
                 flag = true;
                 break;
@@ -52,26 +52,26 @@ bool polygon::is_equal_to(polygon *b){
         }
         
         if(flag == false){
-            printf("TESTING BUG 9 end\n");
+            //printf("TESTING BUG 9 end\n");
             return false;
         }
     }
     
-    printf("TESTING BUG 9 end\n");
+    //printf("TESTING BUG 9 end\n");
     return true;
 }
 
 // checks if the polygon is contained in the polygon vector pvector
 bool polygon::is_part_of(std::vector<polygon*> pvector){
-    printf("TESTING BUG 8 start\n");
+    //printf("TESTING BUG 8 start\n");
     for(std::vector<polygon*>::iterator it = pvector.begin(); it != pvector.end(); ++it){
         polygon *a = *it;
         if(this->is_equal_to(a)){
-            printf("TESTING BUG 8 end\n");
+            //printf("TESTING BUG 8 end\n");
             return true;
         }
     }
-    printf("TESTING BUG 8 end\n");
+    //printf("TESTING BUG 8 end\n");
     return false;
 }
 
@@ -196,9 +196,9 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
                         std::vector<glm::vec3> plane_points = get_plane_points(pp, lpp, corres_2d, corres_3d);
                         
                         // get normalized rotation axis
-                        printf("TESTING BUG 50 start %f\n", plane_points[0][0]);
+                        //printf("TESTING BUG 50 start %f\n", plane_points[0][0]);
                         glm::vec3 rotation_axis = plane_points[0]-plane_points[1];
-                        printf("TESTING BUG 50 end\n");
+                        //printf("TESTING BUG 50 end\n");
                         rotation_axis = rotation_axis/glm::length(rotation_axis);
                         
                         

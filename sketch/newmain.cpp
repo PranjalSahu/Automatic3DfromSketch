@@ -678,9 +678,6 @@ void prepare_points_to_project(polygon *pt){
 
 // checks if for a polygon three points are already placed or not
 bool check_3_points_already(polygon *pt){
-    if(pt->lines.size()>6)
-        return false;
-        
     std::vector<glm::vec2> twod_temp = pt->get_points_vec();
     int count = 0;
     
@@ -700,6 +697,7 @@ bool check_3_points_already(polygon *pt){
 plane* get_plane(polygon *pt){
     std::vector<glm::vec2> twod_temp = pt->get_points_vec();
     std::vector<glm::vec3> plane_points;
+    std::vector<glm::vec2> plane_points_2d;
     
     int count = 0;
     
@@ -708,9 +706,11 @@ plane* get_plane(polygon *pt){
             if(twod_temp[j][0] == corres_2d[i][0] && twod_temp[j][1] == corres_2d[i][1]){
                 ++count;
                 plane_points.push_back(corres_3d[i]);
+                plane_points_2d.push_back(corres_2d[i]);
                 
                 if(count == 3){
-                    break;
+                    printf("testing plane points\n");
+                    return new plane(plane_points);
                 }
             }
         }
@@ -826,23 +826,25 @@ polygon * get_next_polygon_to_render(std::vector<polygon*> polygons_to_place){
             }
         }
     }
+    
+    printf("mincost polygon\n");
     return mincost_polygon;
 }
 
 // inserts the polygon list all_polygons_to_add into the polygons_to_place
 void insert_into_polygons_to_render_list(std::vector<polygon*> adjacent_polygons){
     
-    printf("TESTING BUG 7 start\n");
+    //printf("TESTING BUG 7 start\n");
     for(std::vector<polygon*>::iterator it = adjacent_polygons.begin(); it != adjacent_polygons.end(); ++it){
         polygon *pp = *it;
         // insert if it is already not present in the list
         if(!pp->is_part_of(polygons_to_place)){
-            printf("TESTIG BUG 11 start\n");
+            //printf("TESTIG BUG 11 start\n");
             polygons_to_place.push_back(pp);
-            printf("TESTIG BUG 11 end\n");
+            //printf("TESTIG BUG 11 end\n");
         }
     }
-    printf("TESTING BUG 7 end\n");
+    //printf("TESTING BUG 7 end\n");
     return;
 }
 
@@ -1412,10 +1414,10 @@ void place_polygon(){
                 insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 
-                printf("TESTING BUG 18 start\n");
+                //printf("TESTING BUG 18 start\n");
                 std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
                 // insert the adjacent polygons into the list of polygons
-                printf("TESTING BUG 18 end\n");
+                //printf("TESTING BUG 18 end\n");
                 insert_into_polygons_to_render_list(adjacent_polygons);
                 
             }
@@ -1701,14 +1703,18 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
         
     }
     count =0;
-    for(std::vector<myline*>::iterator it = valid_lines_undirected.begin(); it != valid_lines_undirected.end(); ++it){
-        myline* pt = *it;
+    for(int i=0;i<valid_lines_undirected.size();++i){
+        myline* pt = valid_lines_undirected[i];
         int x1 = pt->x1;
         int x2 = pt->x2;
         int y1 = pt->y1;
         int y2 = pt->y2;
         //line(dst_norm_scaled, Point(x1, y1), Point(x2, y2), Scalar(0, 255, 0), 1, 8, 0);
-        line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 1, 8, 0);
+        if(i == 17 || i == 31){
+            line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 10, 8, 0);
+        }else{
+            line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 1, 8, 0);
+        }
         //printf("LINE (%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
@@ -1954,9 +1960,9 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman81.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman81.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman81.png");
 
     
     bw   = imga > 160;
@@ -2019,16 +2025,24 @@ void merge_line_corners(){
     bool mergeline =  false;
     int iteration = 0;
     
+    int left_count = 0;
+    
     while(1){
-        mergeline = false;
-        flag = false;
+        
+        mergeline  = false;
+        flag       = false;
+        left_count = 0;
+        
         ++iteration;
+        
         
         float minvalue_g  = 100000;
         int minindexa_g   = -1;
         int minindexb_g   = -1;
         float a, b, c, d;
         
+        int count1_g = 0;
+        int count2_g = 0;
         
         for(int i=0;i<all_mylines.size();++i){
             
@@ -2065,7 +2079,7 @@ void merge_line_corners(){
                     d_tp = glm::length(glm::vec2(all_mylines[j]->x2-all_mylines[i]->x2, all_mylines[j]->y2 - all_mylines[i]->y2));
                     
                     if(all_mylines[j]->x2 == 91 && all_mylines[i]->x2 == 91 ){
-                        printf("debugging test");
+                        printf("debugging test\n");
                     }
                     
                     float mina = min(a_tp, b_tp);
@@ -2083,15 +2097,14 @@ void merge_line_corners(){
                         d_t = d_tp;
                     }
                 }
-                
-                
             }
             
-            if(all_mylines[i]->y1 == 32){
-                //printf("testing pranjal");
-            }
             // already merged line
             if(!(count1 > 0 && count2 > 0)){
+                count1_g = count1;
+                count2_g = count2;
+                
+                ++left_count;
                 if(minvalue < minvalue_g){
                     minindexa_g = minindexa;
                     minindexb_g = minindexb;
@@ -2111,20 +2124,13 @@ void merge_line_corners(){
         }
         
         
-        if(minindexa_g == 17){
-            printf("testing pranjal sahu\n");
-        }
-        
         int thresh_m = 10;
         
         int i = minindexa_g;
         int j = minindexb_g;
         
-        printf("i = %d, j = %d, minvalue = %f length_a = %f length_b %f \n", minindexa_g, minindexb_g, minvalue_g, all_mylines[i]->get_line_length(), all_mylines[j]->get_line_length());
+        printf("i = %d, j = %d, minvalue = %f length_a = %f length_b %f leftcount = %d\n", minindexa_g, minindexb_g, minvalue_g, all_mylines[i]->get_line_length(), all_mylines[j]->get_line_length(), left_count);
         
-        if(i == 0 || i == 8 || i == 9 || j == 0 || j == 8 || j == 9){
-            printf("debugginf testing");
-        }
         if(minvalue_g < thresh_m && minvalue_g != 0){
         //if(minvalue != 0){
             printf("Below threshold\n");
@@ -2214,12 +2220,51 @@ void merge_line_corners(){
                     all_mylines[pl]->y2 = new_y;
                 }
             }
+            
+            printf("After merge iteration\n");
         }
         
         
         printf("After merging the lines\n");
         
         
+        // this means threshold has crossed and line is remaining which does not have two corners merged
+        // this means we will first find all lines which are not merged
+        // select the one whose corner is nearest to any line (perpendicular distance)
+        // and then split obtained line into two across that corner
+        if(!flag){
+            
+            // line i's corner 1 is not merged
+            glm::vec2 pkl;
+            if(count1_g < 1){
+                pkl = glm::vec2(all_mylines[i]->x1, all_mylines[i]->y1);
+            }
+            else if(count2_g < 1){
+                pkl = glm::vec2(all_mylines[i]->x2, all_mylines[i]->y2);
+            }
+            
+            float mindist = 100000;
+            int minindex = -1;
+            
+            // get the line whose perpendicular distance is the minimum from this point
+            for(int pk=0;pk<all_mylines.size();++pk){
+                if(i == pk)
+                    continue;
+                
+                float dist = all_mylines[pk]->get_perpendicular_distance(glm::vec2(pkl[0], pkl[1]));
+                if(dist < mindist){
+                    mindist = dist;
+                    minindex = pk;
+                }
+            }
+            
+            // remove the perpendicular line and insert two new ones
+            myline *newline1 = new myline(all_mylines[minindex]->x1, (int)pkl[0], all_mylines[minindex]->y1, (int)pkl[1]);
+            myline *newline2 = new myline(all_mylines[minindex]->x2, (int)pkl[0], all_mylines[minindex]->y2, (int)pkl[1]);
+            all_mylines[minindex] = newline1;
+            all_mylines.push_back(newline2);
+        }
+    
         corner_points.clear();
         
         
@@ -2245,32 +2290,24 @@ void merge_line_corners(){
             }
         }
         
-        if(!flag){
-            printf("testing pranjal\n");
-            return;
-        }
+        
+//        char buffer [1000];
+//        sprintf (buffer, "/Users/pranjal/Downloads/Graphics/checkit/corners_window_%d.jpg", iteration);
+//        
+////        for(int i=0;i< all_mylines.size();++i){
+////            int c = rand()%7;
+////            line(imgc, Point(all_mylines[i]->y1, all_mylines[i]->x1), Point(all_mylines[i]->y2, all_mylines[i]->x2), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
+////        }
+//        
+//        img.copyTo(dst_norm_scaled);
+//        plot_corner_points_and_lines(dst_norm_scaled, all_mylines, corner_points);
+//        imwrite( buffer, dst_norm_scaled );
     }
     
     return ;
 }
 
 int main(int argc, char** argv){
-//    std::vector<int> a;
-//    a.push_back(1);
-//    a.push_back(10);
-//    a.push_back(51);
-//    a.push_back(120);
-//    a.push_back(123);
-//
-//    std::vector<int> b;
-//    b.insert(b.end(), a.begin(), a.begin()+2);
-//    std::vector<int> c;
-//    c.insert(c.end(), a.begin()+1, a.end());
-//    printf("prnajal sahu");
-//    
-//    
-//    return 0;
-    
     
     init_values();
     
@@ -2310,7 +2347,7 @@ int main(int argc, char** argv){
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 600,600);
-    imshow( "corners_window", dst_norm_scaled );
+    //imshow( "corners_window", img );
     //cv::resize(img, img, Size(), 0.5, 0.5);
     imshow( "corners_window", imgc);
     //imshow( "corners_window", bw );
