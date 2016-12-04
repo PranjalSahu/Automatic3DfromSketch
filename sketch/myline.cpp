@@ -363,12 +363,14 @@ int myline::get_intersection_count(cv::Mat &im){
 
 // checks if both lines are same
 bool myline::is_equal_to(myline *a){
+    //printf("testing bug 2\n");
     return (a->x1 == this->x1 && a->x2 == this->x2 && a->y1 == this->y1 && a->y2 == this->y2);
 }
 
 
 // checks if both lines are reverse of each other
 bool myline::is_reverse_of(myline *a){
+    //printf("testing bug 3\n");
     return (a->x1 == this->x2 && a->x2 == this->x1 && a->y1 == this->y2 && a->y2 == this->y1);
 }
 

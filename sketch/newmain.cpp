@@ -825,14 +825,17 @@ polygon * get_next_polygon_to_render(std::vector<polygon*> polygons_to_place){
 // inserts the polygon list all_polygons_to_add into the polygons_to_place
 void insert_into_polygons_to_render_list(std::vector<polygon*> adjacent_polygons){
     
+    printf("TESTING BUG 7 start\n");
     for(std::vector<polygon*>::iterator it = adjacent_polygons.begin(); it != adjacent_polygons.end(); ++it){
         polygon *pp = *it;
         // insert if it is already not present in the list
         if(!pp->is_part_of(polygons_to_place)){
+            printf("TESTIG BUG 11 start\n");
             polygons_to_place.push_back(pp);
+            printf("TESTIG BUG 11 end\n");
         }
     }
-    
+    printf("TESTING BUG 7 end\n");
     return;
 }
 
@@ -891,43 +894,43 @@ void displayone() {
         glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
         glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
 
-        std::vector<glm::vec3> points_to_render_vec;
-
-        polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
+//        std::vector<glm::vec3> points_to_render_vec;
+//
+//        polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
+//        
+//        
+//        // get the points projected onto the minimum cost plane
+//        std::pair<std::vector<glm::vec3>, float> return_pair   = current_polygon_p->get_min_cost_angle_points(corres_2d, corres_3d, edges_list, plane_to_project, cost_obj);
+//        points_to_render_vec = return_pair.first;
+//        float min_angle      = return_pair.second;
+//        plane *temp = current_polygon_p->get_plane_with_angle(min_angle, plane_to_project);
+//        
+//        
+//        points_to_render_vec_global = points_to_render_vec;
+//
+//        int render_scale = 60;
+//
+//        glBegin(GL_LINE_LOOP);
+//        glLineWidth(105);
+//        glColor3f(1.0f, 0.0f, 0.0f);
+//        glNormal3f(temp->a, temp->b, temp->c);
+//        for(int i=0;i<points_to_render_vec.size();++i){
+//            glVertex3f(points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
+//        }
+//        glEnd();
+//        
+//        
+//        
+//        glBegin(GL_QUADS);
+//        glColor3f(0.9f, 0.9f, 0.9f);
+//        glNormal3f(temp->a, temp->b, temp->c);
+//        for(int i=0;i<points_to_render_vec.size();++i){
+//            //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
+//            glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
+//        }
+//        glEnd();
         
-        
-        // get the points projected onto the minimum cost plane
-        std::pair<std::vector<glm::vec3>, float> return_pair   = current_polygon_p->get_min_cost_angle_points(corres_2d, corres_3d, edges_list, plane_to_project, cost_obj);
-        points_to_render_vec = return_pair.first;
-        float min_angle      = return_pair.second;
-        plane *temp = current_polygon_p->get_plane_with_angle(min_angle, plane_to_project);
-        
-        
-        points_to_render_vec_global = points_to_render_vec;
-
         int render_scale = 60;
-
-        glBegin(GL_LINE_LOOP);
-        glLineWidth(105);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glNormal3f(temp->a, temp->b, temp->c);
-        for(int i=0;i<points_to_render_vec.size();++i){
-            glVertex3f(points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
-        }
-        glEnd();
-        
-        
-        
-        glBegin(GL_QUADS);
-        glColor3f(0.9f, 0.9f, 0.9f);
-        glNormal3f(temp->a, temp->b, temp->c);
-        for(int i=0;i<points_to_render_vec.size();++i){
-            //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
-            glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
-        }
-        glEnd();
-        
-        
         for(int i =0;i<all_polygons.size();++i){
             if(all_polygons[i]->placed){
                 glBegin(GL_LINE_LOOP);
@@ -1397,16 +1400,17 @@ void place_polygon(){
                 all_polygons[pl]->placed = true;
                 new_polygon_added = true;
             
-                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
-                // insert the adjacent polygons into the list of polygons
-                insert_into_polygons_to_render_list(adjacent_polygons);
-                
-                
                 
                 // insert the points in the already placed list
                 insert_corres(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
-        
+                
+                printf("TESTING BUG 18 start\n");
+                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
+                // insert the adjacent polygons into the list of polygons
+                printf("TESTING BUG 18 end\n");
+                insert_into_polygons_to_render_list(adjacent_polygons);
+                
             }
         }
         
