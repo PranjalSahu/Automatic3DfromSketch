@@ -811,15 +811,22 @@ void insert_edges(std::vector<glm::vec3> threed, std::vector<glm::vec2> twod){
 
 // returns the next polygon to be placed in 3d
 polygon * get_next_polygon_to_render(std::vector<polygon*> polygons_to_place){
-    // currently it is sequential
-    // make it using lowest cost
-    //return polygons_to_place[2];
+    // getting the polygon having the lowest cost
+    
+    float mincost = 10000;
+    polygon *mincost_polygon = NULL;
+    
     for(std::vector<polygon*>::iterator it = polygons_to_place.begin(); it != polygons_to_place.end(); ++it){
         polygon *pp = *it;
-        if(!pp->placed)
-            return pp;
+        if(!pp->placed){
+            std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = pp->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
+            if(return_pair.second.first < mincost){
+                mincost         = return_pair.second.first;
+                mincost_polygon = pp;
+            }
+        }
     }
-    return all_polygons[0];
+    return mincost_polygon;
 }
 
 // inserts the polygon list all_polygons_to_add into the polygons_to_place
@@ -1347,9 +1354,9 @@ void place_polygon(){
     
     polygon *next_polygon_to_place =  get_next_polygon_to_render(polygons_to_place);
     
-    std::pair<std::vector<glm::vec3>, float> return_pair = next_polygon_to_place->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
+    std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = next_polygon_to_place->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
     
-    float minangle = return_pair.second;
+    float minangle = return_pair.second.first;
     plane *temp    = next_polygon_to_place->get_plane_with_angle(minangle, plane_to_project);
     
     points_to_render_vec_global = return_pair.first;
@@ -1722,20 +1729,20 @@ void mousemotion(int button, int state, int x, int y){
             cost_obj = new cost(axis_2d_points);
             
             // placing all polygons
-            while(1){
-                bool flag = false;
-                for(int i=0;i<polygons_to_place.size();++i){
-                    if(!polygons_to_place[i]->placed){
-                        flag = true;
-                        break;
-                    }
-                }
-                if(flag)
-                    place_polygon();
-                else{
-                    break;
-                }
-            }
+//            while(1){
+//                bool flag = false;
+//                for(int i=0;i<polygons_to_place.size();++i){
+//                    if(!polygons_to_place[i]->placed){
+//                        flag = true;
+//                        break;
+//                    }
+//                }
+//                if(flag)
+//                    place_polygon();
+//                else{
+//                    break;
+//                }
+//            }
 
         }
     }
@@ -1947,9 +1954,9 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
 
     
     bw   = imga > 160;

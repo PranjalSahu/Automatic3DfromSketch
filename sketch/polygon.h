@@ -42,7 +42,7 @@ public:
                                                               std::vector<glm::vec3> corres_3d);
     
     plane * get_plane_with_angle(float angle_p, plane *global_plane_to_project);
-    std::pair<std::vector<glm::vec3>, float> get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
+    std::pair<std::vector<glm::vec3>, std::pair<float, float>> get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
                                       std::vector<glm::vec3> corres_3d,
                                       std::vector<std::pair<int, int>> edges_list,
                                       plane *global_plane_to_project, cost* cost_obj);

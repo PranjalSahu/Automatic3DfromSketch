@@ -243,7 +243,7 @@ plane * polygon::get_plane_with_angle(float angle_p, plane *global_plane_to_proj
 
 // returns the points of polygon projected onto a plane
 // with minimum cost angle by iterating over all angles
-std::pair<std::vector<glm::vec3>, float> polygon::get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
+std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
                                   std::vector<glm::vec3> corres_3d,
                                   std::vector<std::pair<int, int>> edges_list,
                                   plane *global_plane_to_project, cost* cost_obj){
@@ -316,5 +316,5 @@ std::pair<std::vector<glm::vec3>, float> polygon::get_min_cost_angle_points(std:
     
     
     this->plane_to_project = final_plane;
-    return std::make_pair(points_to_render_vec_global, min_angle);
+    return std::make_pair(points_to_render_vec_global, std::make_pair(min_angle, min_cost));
 }
