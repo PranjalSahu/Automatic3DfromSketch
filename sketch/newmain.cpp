@@ -1720,6 +1720,23 @@ void mousemotion(int button, int state, int x, int y){
         // instantiate cost object when 4 points have been clicked
         if(axis_2d_points.size() == 4){
             cost_obj = new cost(axis_2d_points);
+            
+            // placing all polygons
+            while(1){
+                bool flag = false;
+                for(int i=0;i<polygons_to_place.size();++i){
+                    if(!polygons_to_place[i]->placed){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag)
+                    place_polygon();
+                else{
+                    break;
+                }
+            }
+
         }
     }
 }
@@ -2357,7 +2374,8 @@ int main(int argc, char** argv){
     // we start with xy = 0  then rotate this plane till we get the best plane to project
     plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
     
-    //place_polygon();
+    
+    
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
