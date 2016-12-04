@@ -17,6 +17,8 @@
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext.hpp>
+#include <utility>
+#include "cost.h"
 
 class plane;
 
@@ -38,6 +40,12 @@ public:
     std::vector<polygon*>  get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
                                                               std::vector<glm::vec2> corres_2d,
                                                               std::vector<glm::vec3> corres_3d);
+    
+    plane * get_plane_with_angle(float angle_p, plane *global_plane_to_project);
+    std::pair<std::vector<glm::vec3>, float> get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
+                                      std::vector<glm::vec3> corres_3d,
+                                      std::vector<std::pair<int, int>> edges_list,
+                                      plane *global_plane_to_project, cost* cost_obj);
 
         
     std::vector<mypoint*> get_points();

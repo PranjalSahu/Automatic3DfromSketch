@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "myline.h"
 #include "polygon.h"
-
+#include "cost.h"
 
 polygon::polygon(std::vector<myline*> tlines){
     this->lines = tlines;
@@ -76,6 +76,7 @@ std::vector<polygon*> get_all_polygons(std::vector<myline*> all_lines){
     
     return all_polygons;
 }
+
 
 
 // returns the points of a polygon by traversing over the lines
@@ -203,4 +204,98 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
     
     
     return adjacent_polygons;
+}
+
+// returns the plane rotated by angle_p across rotation axis
+plane * polygon::get_plane_with_angle(float angle_p, plane *global_plane_to_project){
+    plane *temp;
+    glm::vec3 axis;
+    
+    if(this->axis_assigned){
+        axis = this->rotation_axis;
+        temp = this->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
+    }
+    else{
+        temp = global_plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
+    }
+    
+    return temp;
+}
+
+// returns the points of polygon projected onto a plane
+// with minimum cost angle by iterating over all angles
+std::pair<std::vector<glm::vec3>, float> polygon::get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
+                                  std::vector<glm::vec3> corres_3d,
+                                  std::vector<std::pair<int, int>> edges_list,
+                                  plane *global_plane_to_project, cost* cost_obj){
+    
+    polygon *current_polygon_p = this;
+    
+    std::vector<glm::vec4> points_in_camera;
+    std::vector<glm::vec3> points_to_render_vec_global;
+    std::vector<glm::vec3> points_to_render_vec;
+    
+    plane *temp;
+    plane *final_plane;
+    
+    glm::vec3 axis;
+    float angle_p = 0;
+    
+    // Camera matrix
+    glm::mat4 View = glm::lookAt(
+                                 glm::vec3(-5,5,5), // Camera is at (4,3,3), in World Space
+                                 glm::vec3(0,0,0),  // and looks at the origin
+                                 glm::vec3(0,1,0)   // Head is up (set to 0,-1,0 to look upside-down)
+                                 );
+    
+    
+    glm::mat4 ViewI = glm::inverse(View);
+    
+    float min_cost  = 1000000;
+    float min_angle = 0;
+    
+    for(int i = 1;i<180; ++i){
+        angle_p = i;
+        
+        plane *temp = get_plane_with_angle(angle_p, global_plane_to_project);
+        
+        // always clear points before pushing new one
+        points_in_camera.clear();
+        
+        // points in the camera reference
+        std::vector<mypoint*>polygon_points  = current_polygon_p->get_points();
+        for(int i=0;i<polygon_points.size();++i){
+            points_in_camera.push_back(glm::vec4(polygon_points[i]->x, polygon_points[i]->y, 0, 1));
+        }
+        
+        // get world coordinates for these points
+        for(int i=0;i<points_in_camera.size();++i){
+            points_in_camera[i] = ViewI*points_in_camera[i];
+        }
+        
+        points_to_render_vec       = temp->project_polygon(points_in_camera, -5, 5, 5);
+        
+        std::vector<glm::vec2> p2d = current_polygon_p->get_points_vec();
+        
+        float axis_alignment_cost = cost_obj->axis_alignment(p2d, points_to_render_vec);
+        float parallelism_cost    = cost_obj->parallelism(p2d, points_to_render_vec, edges_list, corres_2d, corres_3d);
+        float total_cost          = axis_alignment_cost + parallelism_cost;
+        
+        if(min_cost > total_cost){
+            
+            min_cost  = total_cost;
+            min_angle = angle_p;
+            points_to_render_vec_global = points_to_render_vec;
+            final_plane = temp;
+        }
+        
+        printf("angle is %f alignment, parallelism, total is %f, %f, %f\n",
+               angle_p, axis_alignment_cost, parallelism_cost, total_cost);
+    }
+    
+    
+    
+    
+    
+    return std::make_pair(points_to_render_vec_global, min_angle);
 }

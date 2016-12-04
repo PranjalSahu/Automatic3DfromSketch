@@ -895,55 +895,16 @@ void displayone() {
 
         polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
         
-        plane *temp;
-        glm::vec3 axis;
-        if(current_polygon_p->axis_assigned){
-            axis = current_polygon_p->rotation_axis;
-            //temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, 1, 0, 0);
-            temp = current_polygon_p->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
-        }
-        else{
-            temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
-        }
-    
         
-//        std::vector<mypoint *> axis_line;
-//        axis_line.push_back(new mypoint(temp->p->x, temp->p->y, temp->p->z));
-//        axis_line.push_back(new mypoint(temp->p->x+10000*temp->a,temp->p->y+ 10000*temp->b, temp->p->z+10000*temp->c));
-//        plot_line_3d(axis_line, 0);
-        
-        //printf("Debugging %2.2f (%f, %f, %f) Rotation (%f, %f, %f)\n", angle_p, temp->a, temp->b, temp->c, axis[0], axis[1], axis[2]);
+        // get the points projected onto the minimum cost plane
+        std::pair<std::vector<glm::vec3>, float> return_pair   = current_polygon_p->get_min_cost_angle_points(corres_2d, corres_3d, edges_list, plane_to_project, cost_obj);
+        points_to_render_vec = return_pair.first;
+        float min_angle      = return_pair.second;
+        plane *temp = current_polygon_p->get_plane_with_angle(min_angle, plane_to_project);
         
         
-        
-        
-        
-        
-        prepare_points_to_project(current_polygon_p);
-        
-        points_to_render_vec        = temp->project_polygon(points_in_camera, -5, 5, 5);
-        points_to_render_vec_global =  points_to_render_vec;
+        points_to_render_vec_global = points_to_render_vec;
 
-        std::vector<glm::vec2> p2d = current_polygon_p->get_points_vec();
-        
-//        for(int y =0;y<current_polygon_p->lines.size();++y){
-//            if(current_polygon_p->lines[y]->x1 == 86 || current_polygon_p->lines[y]->x2 == 86){
-//                printf("testing prnjal 3");
-//                printf("hello");
-//            }
-//        }
-        
-        float axis_alignment_cost = cost_obj->axis_alignment(p2d, points_to_render_vec);
-        float parallelism_cost    = cost_obj->parallelism(p2d, points_to_render_vec, edges_list, corres_2d, corres_3d);
-        float total_cost          = axis_alignment_cost + parallelism_cost;
-        
-//        printf("hinging angle is %f axis_alignment_cost cost is %f\n", angle_p, axis_alignment_cost);
-//        printf("hinging angle is %f parallelism_cost cost is %f\n",    angle_p, parallelism_cost);
-        printf("angle is %f alignment, parallelism, total is %f, %f, %f\n",
-               angle_p, axis_alignment_cost, parallelism_cost, total_cost);
-
-        
-        
         int render_scale = 60;
 
         glBegin(GL_LINE_LOOP);
@@ -1382,18 +1343,13 @@ int merge_points(){
 void place_polygon(){
     
     polygon *next_polygon_to_place =  get_next_polygon_to_render(polygons_to_place);
-    prepare_points_to_project(next_polygon_to_place);
     
-    plane *temp;
-    if(next_polygon_to_place->axis_assigned){
-        glm::vec3 axis = next_polygon_to_place->rotation_axis;
-        temp = next_polygon_to_place->plane_to_project->rotate_it(-1*angle_p, axis[0], axis[1], axis[2]);
-    }
-    else{
-       temp = plane_to_project->rotate_it(-1*angle_p, 0, 1, 0);
-    }
+    std::pair<std::vector<glm::vec3>, float> return_pair = next_polygon_to_place->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
     
-    points_to_render_vec_global = temp->project_polygon(points_in_camera, -5, 5, 5);
+    float minangle = return_pair.second;
+    plane *temp    = next_polygon_to_place->get_plane_with_angle(minangle, plane_to_project);
+    
+    points_to_render_vec_global = return_pair.first;
     
     next_polygon_to_place->placed = true;
     
@@ -1970,12 +1926,12 @@ void init_values(){
     poly_seq[2] = 4;
     
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
-    bw   = imga > 120;
+    bw   = imga > 160;
     img  = bw > 120;
     
     // get corner points using harris detector
@@ -2261,8 +2217,10 @@ void merge_line_corners(){
             }
         }
         
-        if(!flag)
+        if(!flag){
+            printf("testing pranjal\n");
             return;
+        }
     }
     
     return ;
@@ -2395,6 +2353,7 @@ int main(int argc, char** argv){
     // we start with xy = 0  then rotate this plane till we get the best plane to project
     plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
     
+    //place_polygon();
     
     
     glutInit(&argc, argv);                 // Initialize GLUT
