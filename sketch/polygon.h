@@ -30,8 +30,10 @@ public:
     bool placed;
     bool axis_assigned; // flag to denote if its rotating axis has been assigned or not
     
+    polygon *adjacent_polygon;  // the polygon which was adjacent to it and the axis of rotation was assigned using this
     plane *plane_to_project;    // starting plane which will be rotated
     glm::vec3 rotation_axis;    // axis along whichi plane will be rotated
+    std::vector<glm::vec2> rotation_axis_2d_points; // axis of rotation in image
     
     //plane* plane_placed;
     std::vector<glm::vec3> points_to_render_vec;
@@ -39,7 +41,8 @@ public:
     std::vector<myline*>   get_green_lines();
     std::vector<polygon*>  get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
                                                               std::vector<glm::vec2> corres_2d,
-                                                              std::vector<glm::vec3> corres_3d);
+                                                              std::vector<glm::vec3> corres_3d,
+                                                              bool assign_axis);
     
     plane * get_plane_with_angle(float angle_p, plane *global_plane_to_project);
     std::pair<std::vector<glm::vec3>, std::pair<float, float>> get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,

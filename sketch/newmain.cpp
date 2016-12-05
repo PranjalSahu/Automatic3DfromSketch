@@ -676,24 +676,28 @@ void prepare_points_to_project(polygon *pt){
 
 
 
-// checks if for a polygon three points are already placed or not
-bool check_3_points_already(polygon *pt){
+// checks if for a polygon two of its adjaent polygon are placed or not
+bool check_2_polygons_already_placed(polygon *pt){
     std::vector<glm::vec2> twod_temp = pt->get_points_vec();
     int count = 0;
     
-    for(int j=0;j<twod_temp.size(); ++j){
-        for(int i=0;i<corres_2d.size(); ++i){
-            if(twod_temp[j][0] == corres_2d[i][0] && twod_temp[j][1] == corres_2d[i][1]){
-                ++count;
-                if(count == 3)
-                    return true;
+    std::vector<polygon*> adjacent_polygons = pt->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d, false);
+    for(int i=0;i<adjacent_polygons.size();++i){
+        if(adjacent_polygons[i]->placed){
+            count = count+1;
+            if(count >=2 ){
+                printf("testing bug");
+                return true;
             }
         }
     }
     return false;
 }
 
-// if 3 points are already placed then it searches for them and then forms a plane and returns it
+// if 2 polygons are already placed then it searches for the 3rd point
+// first two are the rotation axis and the third one is searched such that it does not
+// appears in the same polygon
+// a plane is formed using these points and returned
 plane* get_plane(polygon *pt){
     std::vector<glm::vec2> twod_temp = pt->get_points_vec();
     std::vector<glm::vec3> plane_points;
@@ -701,18 +705,44 @@ plane* get_plane(polygon *pt){
     
     int count = 0;
     
-    for(int j=0;j<twod_temp.size(); ++j){
+    std::vector<glm::vec2> twod_tempa = pt->rotation_axis_2d_points;
+
+    for(int j=0;j<twod_tempa.size(); ++j){
         for(int i=0;i<corres_2d.size(); ++i){
-            if(twod_temp[j][0] == corres_2d[i][0] && twod_temp[j][1] == corres_2d[i][1]){
+            if(twod_tempa[j][0] == corres_2d[i][0] && twod_tempa[j][1] == corres_2d[i][1]){
                 ++count;
                 plane_points.push_back(corres_3d[i]);
                 plane_points_2d.push_back(corres_2d[i]);
-                
-                if(count == 3){
-                    printf("testing plane points\n");
-                    return new plane(plane_points);
+            }
+        }
+    }
+    
+    
+    // check for the third point
+    // it should not come from the polygon from which axis of rotation was defined
+    // therefore iterate over all the polygons to find the 2nd placed polygon
+    std::vector<polygon*> adjacent_polygons = pt->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d, false);
+    
+    for(int i=0;i< adjacent_polygons.size();++i){
+        
+        if(all_polygons[i]->placed && all_polygons[i] != pt->adjacent_polygon){
+            twod_tempa = all_polygons[i]->get_points_vec();
+            
+            for(int j=0; j< twod_tempa.size(); ++j){
+                for(int ik=0;ik < corres_2d.size(); ++ik){
+                    if(twod_tempa[j][0] == corres_2d[ik][0] && twod_tempa[j][1] == corres_2d[ik][1]){
+                        // there should be thress distinct points for a plane to form
+                        if(twod_tempa[j] != plane_points_2d[0] && twod_tempa[j] != plane_points_2d[1]){
+                            plane_points.push_back(corres_3d[ik]);
+                            plane_points_2d.push_back(corres_2d[ik]);
+                            
+                            // form the plane using these 3 points and return
+                            return new plane(plane_points);
+                        }
+                    }
                 }
             }
+            
         }
     }
     
@@ -1377,7 +1407,7 @@ void place_polygon(){
     insert_edges(points_to_render_vec_global,  next_polygon_to_place->get_points_vec());
     
     
-    std::vector<polygon*> adjacent_polygons = next_polygon_to_place->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
+    std::vector<polygon*> adjacent_polygons = next_polygon_to_place->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d, true);
     
     // insert the adjacent polygons into the list of polygons
     insert_into_polygons_to_render_list(adjacent_polygons);
@@ -1394,7 +1424,7 @@ void place_polygon(){
             if(all_polygons[pl]->placed)
                 continue;
         
-            if(check_3_points_already(all_polygons[pl])){
+            if(check_2_polygons_already_placed(all_polygons[pl])){
                 plane * newplane = get_plane(all_polygons[pl]);
                 prepare_points_to_project(all_polygons[pl]);
             
@@ -1415,7 +1445,8 @@ void place_polygon(){
                 insert_edges(points_to_render_vec_temp, all_polygons[pl]->get_points_vec());
                 
                 //printf("TESTING BUG 18 start\n");
-                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d);
+                std::vector<polygon*> adjacent_polygons = all_polygons[pl]->get_adjacent_polygons_using_huffman(all_polygons, corres_2d,
+                                                                                                                corres_3d, true);
                 // insert the adjacent polygons into the list of polygons
                 //printf("TESTING BUG 18 end\n");
                 insert_into_polygons_to_render_list(adjacent_polygons);

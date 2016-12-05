@@ -130,7 +130,6 @@ std::vector<myline*> polygon::get_green_lines(){
 // returns the three points of the starting plane
 std::vector<glm::vec3> polygon::get_plane_points(polygon *p, myline * line, std::vector<glm::vec2> corres_2d, std::vector<glm::vec3> corres_3d){
     std::vector<glm::vec3> po;
-    std::vector<myline*> lines = this->lines;
     myline *line2;  // get the next line
     
     int i=0;
@@ -152,9 +151,11 @@ std::vector<glm::vec3> polygon::get_plane_points(polygon *p, myline * line, std:
     for(int i=0;i<corres_2d.size();++i){
         if(line->x1 == corres_2d[i][0] && line->y1 == corres_2d[i][1]){
             po.push_back(corres_3d[i]);
+            p->rotation_axis_2d_points.push_back(corres_2d[i]);
         }
         if(line->x2 == corres_2d[i][0] && line->y2 == corres_2d[i][1]){
             po.push_back(corres_3d[i]);
+            p->rotation_axis_2d_points.push_back(corres_2d[i]);
         }
     }
     for(int i=0;i<corres_2d.size();++i){
@@ -163,6 +164,7 @@ std::vector<glm::vec3> polygon::get_plane_points(polygon *p, myline * line, std:
         }
     }
     
+    printf("get plane points \n");
     return po;
 }
 
@@ -171,7 +173,8 @@ std::vector<glm::vec3> polygon::get_plane_points(polygon *p, myline * line, std:
 // i.e. return polygons attached by a green line
 std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<polygon*> all_polygons,
                                                                    std::vector<glm::vec2> corres_2d,
-                                                                   std::vector<glm::vec3> corres_3d){
+                                                                   std::vector<glm::vec3> corres_3d,
+                                                                   bool assign_axis){
     std::vector<polygon*> adjacent_polygons;
     
     // get the convex lines
@@ -191,22 +194,25 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
                 myline *lpp = *ita;
                 if((lp == lpp || lp->reverse_line == lpp) && !this->is_equal_to(pp)){
                     
-                    if(!pp->axis_assigned){
-                        // calculate the rotation axis for this adjacent polygon
-                        std::vector<glm::vec3> plane_points = get_plane_points(pp, lpp, corres_2d, corres_3d);
-                        
-                        // get normalized rotation axis
-                        //printf("TESTING BUG 50 start %f\n", plane_points[0][0]);
-                        glm::vec3 rotation_axis = plane_points[0]-plane_points[1];
-                        //printf("TESTING BUG 50 end\n");
-                        rotation_axis = rotation_axis/glm::length(rotation_axis);
-                        
-                        
-                        plane * np = new plane(plane_points);
-                        
-                        pp->rotation_axis    = rotation_axis;
-                        pp->plane_to_project = np;
-                        pp->axis_assigned    = true;
+                    if(assign_axis){
+                        if(!pp->axis_assigned){ // flag to assign axis
+                            // calculate the rotation axis for this adjacent polygon
+                            std::vector<glm::vec3> plane_points = get_plane_points(pp, lpp, corres_2d, corres_3d);
+                            
+                            // get normalized rotation axis
+                            //printf("TESTING BUG 50 start %f\n", plane_points[0][0]);
+                            glm::vec3 rotation_axis = plane_points[0]-plane_points[1];
+                            //printf("TESTING BUG 50 end\n");
+                            rotation_axis = rotation_axis/glm::length(rotation_axis);
+                            
+                            
+                            plane * np = new plane(plane_points);
+                            
+                            pp->adjacent_polygon = this;
+                            pp->rotation_axis    = rotation_axis;
+                            pp->plane_to_project = np;
+                            pp->axis_assigned    = true;
+                        }
                     }
                     
                     adjacent_polygons.push_back(pp);
