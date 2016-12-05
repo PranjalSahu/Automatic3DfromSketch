@@ -859,8 +859,10 @@ void TesselatedStar(double points3d[][3], int size, plane *p)
     
     gluTessBeginPolygon(tess, NULL);
     glColor3f(0.4f, 0.4f, 0.4f);
-    gluTessNormal(tess, p->a, p->b, p->c);
+    
+    //gluTessNormal(tess, p->a, p->b, p->c);
     gluTessBeginContour(tess);
+    gluTessNormal(tess, 0, 0, 0);
     printf("===============================\n");
     for(int k=0;k<size;++k){
         printf("%f %f %f\n", points3d[k][0], points3d[k][1], points3d[k][2]);
