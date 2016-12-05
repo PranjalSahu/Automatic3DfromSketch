@@ -195,8 +195,8 @@ glm::mat4 ViewI = glm::inverse(View);
 
 //Add positioned light
 GLfloat lightColors[][4] = {{1.f, 1.f, 1.f, 1.0f}, {0.5f, 0.2f, 0.2f, 1.0f}};
-GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   // Positioned at (4, 0, 8)
-
+//GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   // Positioned at (4, 0, 8)
+GLfloat lightPos[][4] = {{-5.0f, 5.0f, -5.0f, 1.0f}, {5.0f, 5.f, 0.f, 0.0f}};
 
 
 
@@ -856,6 +856,7 @@ void myglBegin(GLenum type, void *polygon_data){
     double b = *(ptr+1);
     double c = *(ptr+2);
     glNormal3f(a, b, c);
+    glColor3f(0.4f, 0.4f, 0.4f);
 }
 
 void TesselatedStar(double points3d[][3], int size, plane *p)
@@ -869,8 +870,6 @@ void TesselatedStar(double points3d[][3], int size, plane *p)
     gluTessCallback(tess,GLU_TESS_ERROR  ,(void (CALLBACK *)())TessError);
     
     gluTessBeginPolygon(tess, p->normal_array);
-    glColor3f(0.4f, 0.4f, 0.4f);
-    //gluTessNormal(tess, p->a, p->b, p->c);
     gluTessBeginContour(tess);
     
     //printf("===============================\n");
