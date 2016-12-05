@@ -8,6 +8,7 @@
  * 2. https://web.archive.org/web/20160322113207/http://opencv-code.com/quick-tips/implementation-of-thinning-algorithm-in-opencv/
  * 3. http://opencvexamples.blogspot.com/2013/10/harris-corner-detection.html
  * 4. Finding faces in a planar embedding of a graph
+ * 5. Polygon tesselation http://www.songho.ca/opengl/gl_tessellation.html
  * */
 
 #ifdef WIN32
@@ -42,7 +43,7 @@
 #ifndef NEWMAIN_H
 #define NEWMAIN_H
 
-
+#define GL_GLEXT_PROTOTYPES
 #include <queue>
 #include <list>
 #include <vector>
@@ -84,6 +85,10 @@ static int val = 0;
 int sa_width  = 500;
 int sa_height = 500;
 
+// Scale of the render
+// make it configurable in GUI
+int render_scale = 40;
+
 //flags to be used by keyboard for three different operations
 int count     = 0;
 int entertext = 0;
@@ -112,6 +117,7 @@ vector<i2tuple> corner_points;      // stores the corner points obtained from ha
 std::vector<myline*> valid_lines_undirected;  // all the valid lines finally obtained
 std::vector<myline*> valid_lines_directed;   // all the valid lines finally obtained
 
+GLUtesselator* tess;
 
 #define PI 3.14159265
 
@@ -606,57 +612,6 @@ void plot_lines(std::vector<myline*> lines_to_plot, int color){
 }
 
 
-void drawmycuboid(GLfloat l, GLfloat b, GLfloat h){
-    glBegin(GL_QUADS);
-    
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    
-    // THIS CUBOID IS OF DIMENSION 6 x 4 x 2
-    // FRONT
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, l, 0.0f);
-    glVertex3f(0.0f, l, -1*b);
-    glVertex3f(0.0f, 0.0f, -b);
-    
-    // SHIFT FRONT BY 2 IN -X TO GET BACK
-    glNormal3f(-1.0f, 0.0f, 0.0f);
-    glVertex3f(-1*h, 0.0f, 0.0f);
-    glVertex3f(-1*h, l, 0.0f);
-    glVertex3f(-1*h, l, -1*b);
-    glVertex3f(-1*h, 0.0f, -1*b);
-    
-    // TOP
-    glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, l, 0.0f);
-    glVertex3f(-1*h, l, 0.0f);
-    glVertex3f(-1*h, l, -1*b);
-    glVertex3f(0.0f, l, -1*b);
-    
-    // SHIFT TOP BY -6 IN Y TO GET BOTTOM
-    glNormal3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(-1*h, 0.0f, 0.0f);
-    glVertex3f(-1*h, 0.0f, -1*b);
-    glVertex3f(0.0f, 0.0f, -1*b);
-    
-    // OPPOSITE HIDDEN
-    glVertex3f(0.0f, 0.0f, 0.0f);
-    glVertex3f(0.0f, l, 0.0f);
-    glVertex3f(-1*h, l, 0.0f);
-    glVertex3f(-1*h, 0.0f, 0.0f);
-    
-    // HIDDEN
-    glVertex3f(0.0f, 0.0f, -1*b);
-    glVertex3f(0.0f, l, -1*b);
-    glVertex3f(-1*h, l, -1*b);
-    glVertex3f(-1*h, 0.0f, -1*b);
-    
-    glEnd();
-    return;
-}
-
-
 void prepare_points_to_project(polygon *pt){
     
     // always clear points before pushing new one
@@ -878,6 +833,47 @@ void insert_into_polygons_to_render_list(std::vector<polygon*> adjacent_polygons
     return;
 }
 
+void TessError(GLenum err)
+{
+    fprintf(stderr,"Tessellation Error: %s\n",gluErrorString(err));
+    exit(1);
+}
+
+void TessCombine(double coords[3],double* data[4],float weight[4],double** result)
+{
+    *result = (double*) malloc(3 * sizeof(double));
+    (*result)[0] = coords[0];
+    (*result)[1] = coords[1];
+    (*result)[2] = coords[2];
+}
+
+void TesselatedStar(double points3d[][3], int size, plane *p)
+{
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    gluTessProperty(tess,GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
+    gluTessCallback(tess, GLU_TESS_BEGIN, (void (CALLBACK *)())glBegin);
+    gluTessCallback(tess,GLU_TESS_END    ,glEnd);
+    gluTessCallback(tess,GLU_TESS_VERTEX , (void (CALLBACK *)())glVertex3dv);
+    gluTessCallback(tess,GLU_TESS_COMBINE,(void (CALLBACK *)())TessCombine);
+    gluTessCallback(tess,GLU_TESS_ERROR  ,(void (CALLBACK *)())TessError);
+    
+    gluTessBeginPolygon(tess, NULL);
+    glColor3f(0.4f, 0.4f, 0.4f);
+    gluTessNormal(tess, p->a, p->b, p->c);
+    gluTessBeginContour(tess);
+    printf("===============================\n");
+    for(int k=0;k<size;++k){
+        printf("%f %f %f\n", points3d[k][0], points3d[k][1], points3d[k][2]);
+        gluTessVertex(tess, points3d[k], points3d[k]);
+    }
+    printf("===============================\n");
+    gluTessEndContour(tess);
+    gluTessEndPolygon(tess);
+    //gluDeleteTess(tess);
+}
+
+
+
 
 void displayone() {
     
@@ -969,7 +965,7 @@ void displayone() {
 //        }
 //        glEnd();
         
-        int render_scale = 60;
+        
         for(int i =0;i<all_polygons.size();++i){
             if(all_polygons[i]->placed){
                 glBegin(GL_LINE_LOOP);
@@ -980,14 +976,7 @@ void displayone() {
                 }
                 glEnd();
                 
-                
-                glBegin(GL_QUADS);
-                glColor3f(0.4f, 0.4f, 0.4f);
-                glNormal3f(all_polygons[i]->plane_to_project->a, all_polygons[i]->plane_to_project->b, all_polygons[i]->plane_to_project->c);
-                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
-                    glVertex3f( all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
-                }
-                glEnd();
+                TesselatedStar(all_polygons[i]->vertices, all_polygons[i]->points_to_render_vec.size(), all_polygons[i]->plane_to_project);
             }
         }
         
@@ -1399,6 +1388,9 @@ void place_polygon(){
     for(int i=0;i<points_to_render_vec_global.size();++i){
         glm::vec3 tp = glm::vec3(points_to_render_vec_global[i][0], points_to_render_vec_global[i][1], points_to_render_vec_global[i][2]);
         next_polygon_to_place->points_to_render_vec.push_back(tp);
+        next_polygon_to_place->vertices[i][0] = tp[0]/render_scale;
+        next_polygon_to_place->vertices[i][1] = tp[1]/render_scale;
+        next_polygon_to_place->vertices[i][2] = tp[2]/render_scale;
     }
     
     // insert the points in the already placed list
@@ -1434,6 +1426,9 @@ void place_polygon(){
                 for(int k=0;k<points_to_render_vec_temp.size();++k){
                     glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
                     all_polygons[pl]->points_to_render_vec.push_back(tp);
+                    next_polygon_to_place->vertices[k][0] = tp[0]/render_scale;
+                    next_polygon_to_place->vertices[k][1] = tp[1]/render_scale;
+                    next_polygon_to_place->vertices[k][2] = tp[2]/render_scale;
                 }
             
                 all_polygons[pl]->placed = true;
@@ -1990,6 +1985,7 @@ void init_values(){
     poly_seq[1] = 3;
     poly_seq[2] = 4;
     
+    tess = gluNewTess();
     
     myfile.open ("/Users/pranjal/Downloads/Graphics/huffman81.txt");
     imga = imread("/Users/pranjal/Desktop/image/huffman81.png", CV_LOAD_IMAGE_GRAYSCALE);
@@ -2338,6 +2334,7 @@ void merge_line_corners(){
     return ;
 }
 
+
 int main(int argc, char** argv){
     
     init_values();
@@ -2464,6 +2461,9 @@ int main(int argc, char** argv){
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glEnable( GL_BLEND );
     
+    printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
+
+    
     glutInitWindowPosition(300, 50);         // Position the window's initial top-left corner
     glutDisplayFunc(displayone);            // Register display callback handler for window re-paint
     glutKeyboardFunc(handleKeypressa);
@@ -2478,4 +2478,7 @@ int main(int argc, char** argv){
     
     return 0;
 }
+
+
+
 #endif

@@ -25,6 +25,10 @@ class plane;
 class polygon{
 public:
     std::vector<myline*> lines;
+    
+    // 50 vertices for tesselation it is required to pass data as continuos
+    double vertices[50][3];
+    
     bool is_equal_to(polygon *);
     bool is_part_of(std::vector<polygon*> pvector);
     bool placed;
