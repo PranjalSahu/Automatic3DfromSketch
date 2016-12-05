@@ -195,7 +195,7 @@ std::vector<polygon*> polygon::get_adjacent_polygons_using_huffman(std::vector<p
                 if((lp == lpp || lp->reverse_line == lpp) && !this->is_equal_to(pp)){
                     
                     if(assign_axis){
-                        if(!pp->axis_assigned){ // flag to assign axis
+                        if(!pp->axis_assigned && !pp->placed){ // flag to assign axis
                             // calculate the rotation axis for this adjacent polygon
                             std::vector<glm::vec3> plane_points = get_plane_points(pp, lpp, corres_2d, corres_3d);
                             
@@ -260,6 +260,10 @@ std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost
     std::vector<glm::vec3> points_to_render_vec_global;
     std::vector<glm::vec3> points_to_render_vec;
     
+    float axis_alignment_cost_g = 0;
+    float parallelism_cost_g= 0 ;
+    float total_cost_g = 0;
+    
     plane *temp;
     plane *final_plane = NULL;
     
@@ -313,17 +317,21 @@ std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost
         
         if(min_cost > total_cost){
             
+            axis_alignment_cost_g = axis_alignment_cost;
+            parallelism_cost_g = parallelism_cost;
+            total_cost_g = total_cost;
+            
             min_cost  = total_cost;
             min_angle = angle_p;
             points_to_render_vec_global = points_to_render_vec;
             final_plane = temp;
         }
         
-        printf("angle is %f alignment, parallelism, total is %f, %f, %f\n",
-               angle_p, axis_alignment_cost, parallelism_cost, total_cost);
+        
     }
     
-    
+    printf("angle is %f alignment, parallelism, total is %f, %f, %f\n",
+           min_angle, axis_alignment_cost_g, parallelism_cost_g, total_cost_g);
     
     
     this->plane_to_project = final_plane;

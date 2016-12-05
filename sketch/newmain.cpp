@@ -672,35 +672,35 @@ plane* get_plane(polygon *pt){
         }
     }
     
+    // get all the points of adjacent polygon
+    twod_tempa = pt->adjacent_polygon->get_points_vec();
     
     // check for the third point
     // it should not come from the polygon from which axis of rotation was defined
-    // therefore iterate over all the polygons to find the 2nd placed polygon
-    std::vector<polygon*> adjacent_polygons = pt->get_adjacent_polygons_using_huffman(all_polygons, corres_2d, corres_3d, false);
+    // therefore iterate over all 2d points and check if it is lying in the adjacent polygon is yes then reject else accept
     
-    for(int i=0;i< adjacent_polygons.size();++i){
+    for(int ik=0;ik < corres_2d.size(); ++ik){
+        bool flag = true;
+        for(int j=0; j< twod_tempa.size();++j){
+            if(corres_2d[ik][0] == twod_tempa[j][0] && corres_2d[ik][1] == twod_tempa[j][1]){
+                flag = false;
+                break;
+            }
+        }
         
-        if(all_polygons[i]->placed && all_polygons[i] != pt->adjacent_polygon){
-            twod_tempa = all_polygons[i]->get_points_vec();
-            
-            for(int j=0; j< twod_tempa.size(); ++j){
-                for(int ik=0;ik < corres_2d.size(); ++ik){
-                    if(twod_tempa[j][0] == corres_2d[ik][0] && twod_tempa[j][1] == corres_2d[ik][1]){
-                        // there should be thress distinct points for a plane to form
-                        if(twod_tempa[j] != plane_points_2d[0] && twod_tempa[j] != plane_points_2d[1]){
-                            plane_points.push_back(corres_3d[ik]);
-                            plane_points_2d.push_back(corres_2d[ik]);
-                            
-                            // form the plane using these 3 points and return
-                            return new plane(plane_points);
-                        }
-                    }
+        if(flag){
+            // check if the point belongs to the polygon or not
+            for(int j=0;j<twod_temp.size();++j){
+                // form the plane using these 3 points and return
+                if(twod_temp[j][0] == corres_2d[ik][0] && twod_temp[j][1] == corres_2d[ik][1]){
+                    plane_points_2d.push_back(corres_2d[ik]);
+                    plane_points.push_back(corres_3d[ik]);
+                    return new plane(plane_points);
                 }
             }
-            
         }
     }
-    
+        
     return new plane(plane_points);
 }
 
