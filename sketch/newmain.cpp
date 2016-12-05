@@ -841,6 +841,7 @@ void TessError(GLenum err)
 
 void TessCombine(double coords[3],double* data[4],float weight[4],double** result)
 {
+    printf(">>>>> INSIDE TESS COMBINE CHECK IT <<<<< \n");
     *result = (double*) malloc(3 * sizeof(double));
     (*result)[0] = coords[0];
     (*result)[1] = coords[1];
@@ -859,16 +860,18 @@ void TesselatedStar(double points3d[][3], int size, plane *p)
     
     gluTessBeginPolygon(tess, NULL);
     glColor3f(0.4f, 0.4f, 0.4f);
-    
+    gluTessNormal(tess, 0, 0, 0);
     //gluTessNormal(tess, p->a, p->b, p->c);
     gluTessBeginContour(tess);
-    gluTessNormal(tess, 0, 0, 0);
-    printf("===============================\n");
+    
+    //printf("===============================\n");
     for(int k=0;k<size;++k){
-        printf("%f %f %f\n", points3d[k][0], points3d[k][1], points3d[k][2]);
+        if(abs(points3d[k][0]) > 100){
+            printf("%f %f %f\n", points3d[k][0], points3d[k][1], points3d[k][2]);
+        }
         gluTessVertex(tess, points3d[k], points3d[k]);
     }
-    printf("===============================\n");
+    //printf("===============================\n");
     gluTessEndContour(tess);
     gluTessEndPolygon(tess);
     //gluDeleteTess(tess);
@@ -1428,9 +1431,9 @@ void place_polygon(){
                 for(int k=0;k<points_to_render_vec_temp.size();++k){
                     glm::vec3 tp = glm::vec3(points_to_render_vec_temp[k][0], points_to_render_vec_temp[k][1], points_to_render_vec_temp[k][2]);
                     all_polygons[pl]->points_to_render_vec.push_back(tp);
-                    next_polygon_to_place->vertices[k][0] = tp[0]/render_scale;
-                    next_polygon_to_place->vertices[k][1] = tp[1]/render_scale;
-                    next_polygon_to_place->vertices[k][2] = tp[2]/render_scale;
+                    all_polygons[pl]->vertices[k][0] = tp[0]/render_scale;
+                    all_polygons[pl]->vertices[k][1] = tp[1]/render_scale;
+                    all_polygons[pl]->vertices[k][2] = tp[2]/render_scale;
                 }
             
                 all_polygons[pl]->placed = true;
@@ -1989,9 +1992,9 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman81.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman81.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman81.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
     bw   = imga > 160;
