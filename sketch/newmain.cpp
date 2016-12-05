@@ -848,19 +848,28 @@ void TessCombine(double coords[3],double* data[4],float weight[4],double** resul
     (*result)[2] = coords[2];
 }
 
+// use the normal of the polygon for all the tesselated smaller polygons
+void myglBegin(GLenum type, void *polygon_data){
+    glBegin(type);
+    double *ptr = (double*) polygon_data;
+    double a = *ptr;
+    double b = *(ptr+1);
+    double c = *(ptr+2);
+    glNormal3f(a, b, c);
+}
+
 void TesselatedStar(double points3d[][3], int size, plane *p)
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     gluTessProperty(tess,GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
-    gluTessCallback(tess, GLU_TESS_BEGIN, (void (CALLBACK *)())glBegin);
+    gluTessCallback(tess, GLU_TESS_BEGIN_DATA, (void (CALLBACK *)())myglBegin);
     gluTessCallback(tess,GLU_TESS_END    ,glEnd);
     gluTessCallback(tess,GLU_TESS_VERTEX , (void (CALLBACK *)())glVertex3dv);
     gluTessCallback(tess,GLU_TESS_COMBINE,(void (CALLBACK *)())TessCombine);
     gluTessCallback(tess,GLU_TESS_ERROR  ,(void (CALLBACK *)())TessError);
     
-    gluTessBeginPolygon(tess, NULL);
+    gluTessBeginPolygon(tess, p->normal_array);
     glColor3f(0.4f, 0.4f, 0.4f);
-    gluTessNormal(tess, 0, 0, 0);
     //gluTessNormal(tess, p->a, p->b, p->c);
     gluTessBeginContour(tess);
     
@@ -1992,12 +2001,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman18.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman18.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman18.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
 
     
-    bw   = imga > 100;
+    bw   = imga > 150;
     img  = bw > 120;
     
     // get corner points using harris detector

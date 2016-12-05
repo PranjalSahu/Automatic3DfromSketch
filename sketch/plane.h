@@ -17,6 +17,8 @@ class polygon;
 class plane{
 public:
     float a, b, c;
+    double normal_array[3];
+    
     mypoint* p;
     
     plane* rotate_it(float angle, float a_, float b_, float c_);

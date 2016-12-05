@@ -27,6 +27,10 @@ plane::plane(float _a, float _b, float _c, mypoint* _p){
     b = _b/mod;
     c = _c/mod;
     p = _p;
+    
+    normal_array[0] = a;
+    normal_array[1] = b;
+    normal_array[2] = c;
 }
 
 plane::plane(std::vector<glm::vec3> plane_points){
@@ -41,6 +45,10 @@ plane::plane(std::vector<glm::vec3> plane_points){
     b = tc[1];
     c = tc[2];
     p = new mypoint(plane_points[0][0], plane_points[0][1], plane_points[0][2]);
+    
+    normal_array[0] = a;
+    normal_array[1] = b;
+    normal_array[2] = c;
 }
 
 
