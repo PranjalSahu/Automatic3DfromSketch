@@ -87,7 +87,7 @@ int sa_height = 500;
 
 // Scale of the render
 // make it configurable in GUI
-int render_scale = 40;
+int render_scale = 60;
 
 //flags to be used by keyboard for three different operations
 int count     = 0;
@@ -804,7 +804,7 @@ polygon * get_next_polygon_to_render(std::vector<polygon*> polygons_to_place){
     for(std::vector<polygon*>::iterator it = polygons_to_place.begin(); it != polygons_to_place.end(); ++it){
         polygon *pp = *it;
         if(!pp->placed){
-            std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = pp->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
+            std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = pp->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj, render_scale);
             if(return_pair.second.first < mincost){
                 mincost         = return_pair.second.first;
                 mincost_polygon = pp;
@@ -1380,7 +1380,7 @@ void place_polygon(){
     
     polygon *next_polygon_to_place =  get_next_polygon_to_render(polygons_to_place);
     
-    std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = next_polygon_to_place->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj);
+    std::pair<std::vector<glm::vec3>, std::pair<float, float>> return_pair = next_polygon_to_place->get_min_cost_angle_points(corres_2d, corres_3d,edges_list,plane_to_project, cost_obj, render_scale);
     
     float minangle = return_pair.second.first;
     plane *temp    = next_polygon_to_place->get_plane_with_angle(minangle, plane_to_project);
@@ -1992,9 +1992,9 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
 
     
     bw   = imga > 160;

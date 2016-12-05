@@ -252,7 +252,8 @@ plane * polygon::get_plane_with_angle(float angle_p, plane *global_plane_to_proj
 std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost_angle_points(std::vector<glm::vec2> corres_2d,
                                   std::vector<glm::vec3> corres_3d,
                                   std::vector<std::pair<int, int>> edges_list,
-                                  plane *global_plane_to_project, cost* cost_obj){
+                                  plane *global_plane_to_project, cost* cost_obj,
+                                  int render_scale){
     
     polygon *current_polygon_p = this;
     
@@ -304,9 +305,9 @@ std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost
         
         points_to_render_vec       = temp->project_polygon(points_in_camera, -5, 5, 5);
         for(int ppl=0;ppl<points_to_render_vec.size();++ppl){
-            this->vertices[ppl][0] = points_to_render_vec[ppl][0]/40;
-            this->vertices[ppl][1] = points_to_render_vec[ppl][1]/40;
-            this->vertices[ppl][2] = points_to_render_vec[ppl][2]/40;
+            this->vertices[ppl][0] = points_to_render_vec[ppl][0]/render_scale;
+            this->vertices[ppl][1] = points_to_render_vec[ppl][1]/render_scale;
+            this->vertices[ppl][2] = points_to_render_vec[ppl][2]/render_scale;
         }
         
         std::vector<glm::vec2> p2d = current_polygon_p->get_points_vec();
