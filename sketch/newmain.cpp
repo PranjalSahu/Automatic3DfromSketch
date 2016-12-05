@@ -1992,12 +1992,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman18.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman18.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman18.jpeg");
 
     
-    bw   = imga > 160;
+    bw   = imga > 100;
     img  = bw > 120;
     
     // get corner points using harris detector

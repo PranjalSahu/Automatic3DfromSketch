@@ -335,6 +335,8 @@ std::pair<std::vector<glm::vec3>, std::pair<float, float>> polygon::get_min_cost
            min_angle, axis_alignment_cost_g, parallelism_cost_g, total_cost_g);
     
     
+    
+    // Assign the final onto which it was projected
     this->plane_to_project = final_plane;
     return std::make_pair(points_to_render_vec_global, std::make_pair(min_angle, min_cost));
 }
