@@ -21,6 +21,7 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
+#include <GL/glui.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <glm/vec3.hpp> // glm::vec3
@@ -31,7 +32,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/epsilon.hpp>
 #include <glm/gtc/constants.hpp>
-
 
 #else
 #include <GL/glut.h>
@@ -2334,6 +2334,54 @@ void merge_line_corners(){
 }
 
 
+
+int   wireframe = 0;
+int   segments = 8;
+int   main_window;
+
+
+void myGlutIdle( void )
+{
+    if ( glutGetWindow() != main_window )
+        glutSetWindow(main_window);
+    
+    glutPostRedisplay();
+}
+
+
+void testingfun(){
+    printf("HELLO TESTING METHOD\n");
+}
+
+void glu_setup(){
+    
+    GLUI *glui = GLUI_Master.create_glui( "GLUI" );
+    glui->add_checkbox( "Wireframe", &wireframe );
+    GLUI_Spinner *segment_spinner = glui->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
+    segment_spinner->set_int_limits( 3, 60 );
+    
+    
+    glui->set_main_gfx_window( main_window );
+    GLUI_Listbox *listbox = glui->add_listbox("A listbox");
+    listbox->add_item(1,"Red");
+    listbox->add_item(2,"Green");
+    listbox->add_item(3,"Blue");
+    
+    glui->add_statictext("Example 2");
+    glui->add_separator();
+    GLUI_Panel *obj_panel = glui->add_panel ("Test Panel");
+    glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
+    glui->add_button("TESTING", 1, (GLUI_Update_CB)testingfun);
+    GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(obj_panel);
+    glui->add_radiobutton_to_group(group1,"Option 1");
+    glui->add_radiobutton_to_group(group1,"Option 2");
+    GLUI_Rotation *arcball = glui->add_rotation("ball (doesn't do anything)");
+    
+    GLUI_Master.set_glutIdleFunc( myGlutIdle );
+    GLUI_Master.set_glutReshapeFunc( reshape );
+    
+}
+
 int main(int argc, char** argv){
     
 //    std::map<std::tuple<int, int>, int> mymap;
@@ -2442,10 +2490,6 @@ int main(int argc, char** argv){
     // we start with xy = 0  then rotate this plane till we get the best plane to project
     plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
     
-    
-    
-    
-    
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
     
@@ -2465,16 +2509,10 @@ int main(int argc, char** argv){
     glutKeyboardFunc(handleKeypressa);
     glutMouseFunc(mousemotion);
     glutTimerFunc(25, updatea, 0);
-    glutReshapeFunc(reshape);
-    initGL();                       // Our own OpenGL initialization
+    initGL();
+    glu_setup();
     glutMainLoop();
-    
-    
-    
-    
     return 0;
 }
-
-
 
 #endif
