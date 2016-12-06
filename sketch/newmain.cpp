@@ -196,9 +196,9 @@ glm::mat4 ViewI = glm::inverse(View);
 
 
 //Add positioned light
-GLfloat lightColors[][4] = {{1.f, 1.f, 1.f, 1.0f}, {0.5f, 0.2f, 0.2f, 1.0f}};
+GLfloat lightColors[][4] = {{1.f, 1.f, 1.f, 1.0f}, {0.8f, 0.8f, 0.8f, 1.0f}};
 //GLfloat lightPos[][4] = {{-5.0f, 5.0f, 5.0f, 1.0f}, {5.0f, 5.f, 5.f, 0.0f}};   // Positioned at (4, 0, 8)
-GLfloat lightPos[][4] = {{-5.0f, 5.0f, -5.0f, 1.0f}, {5.0f, 5.f, 0.f, 0.0f}};
+GLfloat lightPos[][4] = {{-5.0f, 5.0f, -2.0f, 1.0f}, {5.0f, 5.f, 0.5, 0.0f}};
 
 
 
@@ -858,7 +858,7 @@ void myglBegin(GLenum type, void *polygon_data){
     double b = *(ptr+1);
     double c = *(ptr+2);
     glNormal3f(a, b, c);
-    glColor3f(0.4f, 0.4f, 0.4f);
+    glColor3f(0.8f, 0.8f, 0.8f);
     //glCullFace(GL_FRONT);
     //glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
 }
@@ -986,13 +986,13 @@ void displayone() {
         
         for(int i =0;i<all_polygons.size();++i){
             if(all_polygons[i]->placed){
-//                glBegin(GL_LINE_LOOP);
-//                glLineWidth(105);
-//                glColor3f(1.0f, 0.0f, 0.0f);
-//                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
-//                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
-//                }
-//                glEnd();
+                glBegin(GL_LINE_LOOP);
+                glLineWidth(105);
+                glColor3f(0.0f, 0.0f, 0.0f);
+                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+                }
+                glEnd();
                 
                 TesselatedStar(all_polygons[i]->vertices, all_polygons[i]->points_to_render_vec.size(), all_polygons[i]->plane_to_project);
             }
@@ -2042,9 +2042,9 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman7.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman7.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman7.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
     bw   = imga > 140;
