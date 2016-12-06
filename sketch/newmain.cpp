@@ -114,6 +114,8 @@ std::vector<myline*> all_lines_to_merge;
 std::vector<myline*> all_lines_created;
 vector<i2tuple> points_vector;
 vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
+vector<int> num_of_lines;           // number of line occuring at ith corner point
+std::map<std::tuple<int, int>, int> map_num_of_lines;
 std::vector<myline*> valid_lines_undirected;  // all the valid lines finally obtained
 std::vector<myline*> valid_lines_directed;   // all the valid lines finally obtained
 
@@ -857,6 +859,8 @@ void myglBegin(GLenum type, void *polygon_data){
     double c = *(ptr+2);
     glNormal3f(a, b, c);
     glColor3f(0.4f, 0.4f, 0.4f);
+    //glCullFace(GL_FRONT);
+    //glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
 }
 
 void TesselatedStar(double points3d[][3], int size, plane *p)
@@ -894,6 +898,7 @@ void displayone() {
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
     
     
+    //glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
@@ -981,13 +986,13 @@ void displayone() {
         
         for(int i =0;i<all_polygons.size();++i){
             if(all_polygons[i]->placed){
-                glBegin(GL_LINE_LOOP);
-                glLineWidth(105);
-                glColor3f(1.0f, 0.0f, 0.0f);
-                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
-                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
-                }
-                glEnd();
+//                glBegin(GL_LINE_LOOP);
+//                glLineWidth(105);
+//                glColor3f(1.0f, 0.0f, 0.0f);
+//                for(int j=0;j<all_polygons[i]->points_to_render_vec.size();++j){
+//                    glVertex3f(all_polygons[i]->points_to_render_vec[j][0]/render_scale, all_polygons[i]->points_to_render_vec[j][1]/render_scale, all_polygons[i]->points_to_render_vec[j][2]/render_scale);
+//                }
+//                glEnd();
                 
                 TesselatedStar(all_polygons[i]->vertices, all_polygons[i]->points_to_render_vec.size(), all_polygons[i]->plane_to_project);
             }
@@ -1146,6 +1151,7 @@ int check_if_already_covered_point(int x, int y){
     return 0;
 }
 
+
 // merges if the sweep angles are 180 apart
 // we will check if the sum of slope of at two points is approx 180
 void mergelinesa(Mat &im){
@@ -1181,124 +1187,164 @@ void mergelinesa(Mat &im){
     return;
 }
 
+// get the number of corner points
+// and get the number of lines intersecting at each corner
+void get_num_corner_points(){
+    
+    corner_points.clear();
+    
+    // getting corner points
+    for(int ik=0;ik<all_mylines.size();++ik){
+        
+        bool flag1 = true;
+        bool flag2 = true;
+        
+        for(int jk=0;jk<corner_points.size();++jk){
+            
+            // if either of the point is already inserted then skip that corner
+            if(all_mylines[ik]->x1 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y1 == std::get<1>(corner_points[jk])){
+                flag1 = false;
+                if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
+                    printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
+                }
+            }
+            if(all_mylines[ik]->x2 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y2 == std::get<1>(corner_points[jk])){
+                flag2 = false;
+                if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
+                    printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
+                }
+            }
+        }
+        if(flag1){
+            if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
+                printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
+            }
+            
+            corner_points.push_back(i2tuple(all_mylines[ik]->x1, all_mylines[ik]->y1));
+        }
+        if(flag2){
+            if((all_mylines[ik]->x2 == 250 && all_mylines[ik]->y2 == 56)){
+                printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
+            }
+            
+            corner_points.push_back(i2tuple(all_mylines[ik]->x2, all_mylines[ik]->y2));
+        }
+    }
+    
+    
+    map_num_of_lines.clear();
+    // initialize map with 0
+    for(int ik=0; ik < corner_points.size();++ik){
+        int x = std::get<0>(corner_points[ik]);
+        int y = std::get<1>(corner_points[ik]);
+        map_num_of_lines[i2tuple(x, y)] = 0;
+    }
+    
+    
+    // get count of each corner point
+    for(int jk=0;jk<all_mylines.size();++jk){
+        map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)] = map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)]+1;
+        map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)] = map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)]+1;
+    }
+}
 
-// in iteration merges all the lines present in the all_lines_to_merge
-int mergelines(int force){
-    // In first iteration we only merge lines with same x or same y and adjacent to each other
-    int checkiter = 1;
-    int merged_count = 0;
-    merge_iteration++;
+
+// merges two lines if they share a corner point
+// and the point has only two lines passing through it
+void new_mergelines(){
     
-    //printf("LINES TO MERGE %d\n", all_lines_to_merge.size());
+    vector<i2tuple> corner_points_temp;
     
-    if(all_lines_to_merge.size() == 0){
-        checkiter = 0;
-        fill_merge_lines_data();
+    std::vector<myline *> all_mylinestemp(all_mylines);
+
+    // select points which have only two lines passing through it
+    
+    int count = 0;
+    int index[2];
+    bool flag = false;
+    
+    for(int i=0;i<corner_points.size();++i){
+        
+        flag = false;
+        
+        // if only two lines pass through this corner
+        int px1 = std::get<0>(corner_points[i]);
+        int py1 = std::get<1>(corner_points[i]);
+        
+        if(map_num_of_lines[i2tuple(px1, py1)] == 2){
+            
+            count = 0;
+            // get indices of line segments which are going to be merged
+            for(int j=0;j<all_mylines.size();++j){
+                if((all_mylines[j]->x1 == px1 && all_mylines[j]->y1 == py1) || (all_mylines[j]->x2 == px1 && all_mylines[j]->y2 == py1)){
+                    index[count] = j;
+                    ++count;
+                    
+                    if(count == 2){
+                        // no other line can use this now
+                        
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            
+        }
+
+        // check if the absolute difference of slope is below some threhold
+        if(flag){
+            if(abs(abs(all_mylines[index[0]]->m)-abs(all_mylines[index[1]]->m)) < 0.15){
+                printf("merging lines");
+                myline * addline;
+                
+                if((all_mylines[index[0]]->x1 == 250 && all_mylines[index[0]]->y1 == 56) || (all_mylines[index[0]]->x2 == 250 && all_mylines[index[0]]->y2 == 56)){
+                    printf("Testing pranjal hello\n");
+                }
+                
+                
+                if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x1) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y1)){
+                    addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x2, all_mylines[index[0]]->y2, all_mylines[index[1]]->y2);
+                }else if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y2)){
+                    addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x1, all_mylines[index[0]]->y2, all_mylines[index[1]]->y1);
+                }else if((all_mylines[index[0]]->x2 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y2 == all_mylines[index[1]]->y2)){
+                    addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x1, all_mylines[index[0]]->y1, all_mylines[index[1]]->y1);
+                }else{
+                    addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x2, all_mylines[index[0]]->y1, all_mylines[index[1]]->y2);
+                }
+                
+                all_mylinestemp[index[0]] = NULL;
+                all_mylinestemp[index[1]] = NULL;
+                all_mylinestemp.push_back(addline);
+                
+                map_num_of_lines[i2tuple(px1, py1)] = 0;
+                map_num_of_lines[i2tuple(addline->x1, addline->y1)] = 0;
+                map_num_of_lines[i2tuple(addline->x2, addline->y2)] = 0;
+                
+                printf("after merging lines");
+            }
+        }
     }
     
-    if(merge_iteration > 1){
-        std::list<myline*> temp{ std::begin(all_lines_to_merge), std::end(all_lines_to_merge) };
-        temp.sort(sortbylength());
-        std::vector<myline*> tempa{ std::begin(temp), std::end(temp) };
-        
-        // sort lines to merge by their length
-        all_lines_to_merge = tempa;
+    std::vector<myline*> all_mylines_a;
+    
+    for(int i=0;i<all_mylines.size();++i){
+        if(all_mylinestemp[i] != NULL){
+            all_mylines_a.push_back(all_mylines[i]);
+        }
+    }
+    int added = all_mylinestemp.size() - all_mylines.size();
+    
+    for(int i=all_mylinestemp.size()-1;i>=all_mylinestemp.size()-added;--i){
+        all_mylines_a.push_back(all_mylinestemp[i]);
     }
     
-    std::vector<myline*>::iterator iterator = all_lines_to_merge.begin();
     
-    for(std::vector<myline*>::iterator iter = iterator; iter != all_lines_to_merge.end();){
-        myline* current_line = *iter;
-        // only consider small lines when force merge
-        if(force == 1){
-            if(current_line->get_line_length() >= 2){
-                iter++;
-                continue;
-            }
-        }
-        
-        
-        //printf("%d %d %d %d \n", current_line->x1, current_line->y1, current_line->x2, current_line->y2);
-        
-        // temporary delete current line
-        iter  = all_lines_to_merge.erase(iter);
-        
-        // if the merge line is found then well and good else push it just behind current iterator
-        int index;
-        if(force == 0)
-            index = get_line_to_merge(current_line);
-        else
-            index = get_min_line_to_merge(current_line);
-        
-        if(index == -1){
-            iter = all_lines_to_merge.insert(iter, current_line);
-            iter++;
-            continue;
-        }
-        
-        std::vector<myline*>::iterator iterator_prev = all_lines_to_merge.begin();
-        iterator_prev = iterator_prev+index;
-        
-        // other line to be deleted
-        myline *prev_line = *iterator_prev;
-        
-        // create a new line
-        myline* line_to_insert;
-        
-        if (current_line->x2 == infvalue && prev_line->y2 == infvalue){
-            
-            int x1 = mymin(prev_line->x1, current_line->x1);
-            int x2 = mymax(prev_line->x1, current_line->x1);
-            int y1 = mymin(prev_line->y1, current_line->y1);
-            int y2 = mymax(prev_line->y1, current_line->y1);
-            
-            line_to_insert = new myline(x1, x2, y1, y2);
-        }
-        else{
-            // now 2 cases arrive
-            // one line is a point and other is line segment
-            //      OR
-            // both are line segment
-            int x1, y1, x2, y2;
-            
-            // one is a point
-            if(current_line->x2 == infvalue){
-                x1 = mymin(mymin(current_line->x1, prev_line->x1), prev_line->x2);
-                x2 = mymax(mymax(current_line->x1, prev_line->x1), prev_line->x2);
-                y1 = mymin(mymin(current_line->y1, prev_line->y1), prev_line->y2);
-                y2 = mymax(mymax(current_line->y1, prev_line->y1), prev_line->y2);
-            }
-            // two is a point
-            else if(prev_line->x2 == infvalue){
-                x1 = mymin(mymin(current_line->x1, prev_line->x1), current_line->x2);
-                x2 = mymax(mymax(current_line->x1, prev_line->x1), current_line->x2);
-                y1 = mymin(mymin(current_line->y1, prev_line->y1), current_line->y2);
-                y2 = mymax(mymax(current_line->y1, prev_line->y1), current_line->y2);
-            }
-            // both are line segment
-            else{
-                // create a new line
-                x1 = mymin(mymin(current_line->x1, prev_line->x1), mymin(current_line->x2, prev_line->x2));
-                x2 = mymax(mymax(current_line->x1, prev_line->x1), mymax(current_line->x2, prev_line->x2));
-                y1 = mymin(mymin(current_line->y1, prev_line->y1), mymin(current_line->y2, prev_line->y2));
-                y2 = mymax(mymax(current_line->y1, prev_line->y1), mymax(current_line->y2, prev_line->y2));
-            }
-            
-            // create a new line
-            line_to_insert = new myline(x1, x2, y1, y2);
-        }
-        
-        
-        // delete the two lines and insert a new one
-        all_lines_to_merge.erase(iterator_prev);
-        all_lines_to_merge.push_back(line_to_insert);
-        ++merged_count;
-        
-    }
-    
-    return merged_count;
+    all_mylines = all_mylines_a;
+    get_num_corner_points();
+    printf("after erasing lines\n");
     
 }
+
 
 
 
@@ -1476,12 +1522,6 @@ void place_polygon(){
 //Called when a key is pressed
 void handleKeypressa(unsigned char key, int x, int y) {
     switch (key) {
-        case 'i':
-            mergelines(0);
-            break;
-        case 'f':
-            mergelines(1);
-            break;
         //case 'a':
         //    mergelinesa(img);
         //    break;
@@ -1681,6 +1721,8 @@ void initGL() {
     glEnable(GL_LIGHT0); //Enable light #0
     glEnable(GL_LIGHT1); //Enable light #1
     glEnable(GL_NORMALIZE); //Automatically normalize normal
+    //glEnable(GL_CULL_FACE);
+    
 }
 
 
@@ -1749,11 +1791,11 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
         int y1 = pt->y1;
         int y2 = pt->y2;
         //line(dst_norm_scaled, Point(x1, y1), Point(x2, y2), Scalar(0, 255, 0), 1, 8, 0);
-        if(i == 17 || i == 31){
-            line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 10, 8, 0);
-        }else{
+        //if(i == 17 || i == 31){
+        //    line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 10, 8, 0);
+        //}else{
             line(dst_norm_scaled, Point(y1, x1), Point(y2, x2), Scalar(255, 255, 255), 1, 8, 0);
-        }
+        //}
         //printf("LINE (%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     
@@ -2000,12 +2042,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman2.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman2.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman2.jpeg");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman7.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman7.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman7.png");
 
     
-    bw   = imga > 150;
+    bw   = imga > 140;
     img  = bw > 120;
     
     // get corner points using harris detector
@@ -2058,6 +2100,8 @@ void remove_outer_polygon(){
 void get_lines_from_corners(){
     
 }
+
+
 
 void merge_line_corners(){
     
@@ -2305,31 +2349,8 @@ void merge_line_corners(){
             all_mylines.push_back(newline2);
         }
     
-        corner_points.clear();
         
-        
-        // getting corner points
-        for(int i=0;i<all_mylines.size();++i){
-            bool flag1 = true;
-            bool flag2 = true;
-            
-            for(int j=0;j<corner_points.size();++j){
-                
-                if(all_mylines[i]->x1 == std::get<0>(corner_points[j]) && all_mylines[i]->y1 == std::get<1>(corner_points[j])){
-                    flag1 = false;
-                }
-                if(all_mylines[i]->x2 == std::get<0>(corner_points[j]) && all_mylines[i]->y2 == std::get<1>(corner_points[j])){
-                    flag2 = false;
-                }
-            }
-            if(flag1){
-                corner_points.push_back(i2tuple(all_mylines[i]->x1, all_mylines[i]->y1));
-            }
-            if(flag2){
-                corner_points.push_back(i2tuple(all_mylines[i]->x2, all_mylines[i]->y2));
-            }
-        }
-        
+        get_num_corner_points();
         
 //        char buffer [1000];
 //        sprintf (buffer, "/Users/pranjal/Downloads/Graphics/checkit/corners_window_%d.jpg", iteration);
@@ -2344,11 +2365,25 @@ void merge_line_corners(){
 //        imwrite( buffer, dst_norm_scaled );
     }
     
+    printf("after connecting line segments\n");
     return ;
 }
 
 
 int main(int argc, char** argv){
+    
+//    std::map<std::tuple<int, int>, int> mymap;
+//    
+//    mymap[i2tuple(1, 1)] = 0;
+//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
+//    mymap[i2tuple(1, 1)] = 1;
+//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
+//    mymap[i2tuple(1, 1)] = 2;
+//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
+//    
+//    return 0;
+//    
+    
     
     init_values();
     
@@ -2368,13 +2403,14 @@ int main(int argc, char** argv){
         zero_the_line(img, m2, lines);
     }
 
-    merge_line_corners();
+    merge_line_corners();   // get connected lines
     
+    new_mergelines();       // merge lines with same slope
     
     int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0},  {155,155,0}, {0,155,155}};
 
     for(int i=0;i< all_mylines.size();++i){
-        int c = rand()%7;
+        int c = 1;//rand()%7;
         line(imgc, Point(all_mylines[i]->y1, all_mylines[i]->x1), Point(all_mylines[i]->y2, all_mylines[i]->x2), Scalar(colors[c][0],colors[c][1],colors[c][2]), 2, 8, 0);
     }
     
@@ -2390,26 +2426,24 @@ int main(int argc, char** argv){
     resizeWindow("corners_window", 600,600);
     //imshow( "corners_window", img );
     //cv::resize(img, img, Size(), 0.5, 0.5);
-    imshow( "corners_window", imgc);
+    imshow( "corners_window", dst_norm_scaled);
+    imwrite("/Users/Pranjal/Downloads/Graphics/test1.jpg", dst_norm_scaled);
     //imshow( "corners_window", bw );
-    waitKey(0);
+    //waitKey(0);
 
+    typedef std::map<tuple<int, int>, int>::iterator it_type;
+    for(it_type iterator = map_num_of_lines.begin(); iterator != map_num_of_lines.end(); iterator++) {
+        printf(">>>>>>>>> (%d, %d) %d\n", std::get<0>(iterator->first), std::get<1>(iterator->first) , iterator->second);
+    }
+    
+    
+    for(int i=0;i<all_mylines.size();++i){
+        printf("LINES ARE (%d, %d) -> (%d, %d)\n", all_mylines[i]->x1, all_mylines[i]->y1, all_mylines[i]->x2, all_mylines[i]->y2);
+    }
+    
     valid_lines_undirected = all_mylines;
     
-    printf("=====================================\n");
-
-    
-    for(int i=0;i<corner_points.size();++i){
-        printf("%d, %d\n", std::get<0>(corner_points[i]), std::get<1>(corner_points[i]));
-    }
-    
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
-    
-    printf("=====================================\n");
-    
-    for(int i=0;i<corner_points.size();++i){
-        printf("%d, %d\n", std::get<0>(corner_points[i]), std::get<1>(corner_points[i]));
-    }
     
     
     // write corner points and line segments to file for later use
@@ -2418,26 +2452,6 @@ int main(int argc, char** argv){
     
     int test1 = 0;
     int test2 = 0;
-    
-    for(int i=0;i<valid_lines_undirected.size();++i){
-        if(valid_lines_undirected[i]->x1 == -60 && valid_lines_undirected[i]->y1 == 76){
-            printf("test1");
-            ++test1;
-        }
-        if(valid_lines_undirected[i]->x2 == -60 && valid_lines_undirected[i]->y2 == 76){
-            printf("test2");
-            ++test1;
-        }
-        if(valid_lines_undirected[i]->x1 == -56 && valid_lines_undirected[i]->y1 == 83){
-            printf("test3");
-            ++test2;
-        }
-        if(valid_lines_undirected[i]->x2 == 83 && valid_lines_undirected[i]->y2 == -56){
-            printf("tes4");
-            ++test2;
-        }
-    }
-    
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     
