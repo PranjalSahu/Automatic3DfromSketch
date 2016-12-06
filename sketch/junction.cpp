@@ -10,6 +10,14 @@
 #include <stdlib.h>
 #include "junction.h"
 
+
+// taking 10 degree buffer
+bool check_if_parallel(float angle){
+    if(abs(angle) < 10 || (abs(angle) < 190 && abs(angle) > 170))
+       return true;
+    return false;
+}
+
 junction::junction(std::vector<myline*> linesa, int a,int b){
     x = a;
     y = b;
@@ -43,11 +51,35 @@ junction::junction(std::vector<myline*> linesa, int a,int b){
         
         // Ignoring T junction at present
         // REMEBER TO COMPLETE IT
+        //if(check_if_parallel(ang[0]) || )
         if(count >=2){
             junction_type = 2; // Y type junction
         }
         else{
             junction_type = 1; // A type junction
+        }
+        
+        
+        // in case of A junction label the middle line
+        if(junction_type == 1){
+            if(ang[0] > ang[1] && ang[0] > ang[2]){
+                if(l3->label.compare("nl") == 0){
+                    l3->label =  "green";
+                    l3->reverse_line->label = "green";
+                }
+            }else if(ang[1] > ang[0] && ang[1] > ang[2]){
+                if(l2->label.compare("nl") == 0){
+                    l2->label =  "green";
+                    l2->reverse_line->label =  "green";
+                }
+            }else if(ang[2] > ang[1] && ang[2] > ang[0]){
+                if(l1->label.compare("nl") == 0){
+                    l1->label =  "green";
+                    l1->reverse_line->label =  "green";
+                }
+            }
+            
+            printf("labelling junction A middle line");
         }
     }
 }

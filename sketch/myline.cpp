@@ -640,13 +640,13 @@ std::vector<int> get_line_labels(std::vector<myline*> all_lines){
     
     for(std::vector<myline*>::iterator iter = all_lines.begin(); iter != all_lines.end(); iter++){
         myline *t = *iter;
-        int color = 1;
-        if(t->label.compare("blue")){
+        int color = 0;
+        if(t->label.compare("blue") == 0){
             color = 2;
             b = b+1;
         }
-        else if(t->label.compare("green")){
-            color = 0;
+        else if(t->label.compare("green") == 0){
+            color = 1;
             g = g+1;
         }
         else{
@@ -654,7 +654,7 @@ std::vector<int> get_line_labels(std::vector<myline*> all_lines){
         }
         all_colors.push_back(color);
     }
-    //printf("R %d G %d B %d\n", r, g, b);
+    //printf("CHECKING COLORS R %d G %d B %d\n", r, g, b);
     
     return all_colors;
 }

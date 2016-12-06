@@ -560,7 +560,7 @@ void plot_line(std::vector<mypoint*> all_points, int color){
 void plot_line(myline *linet, int color){
     glBegin(GL_LINE_LOOP);
     glLineWidth(5);
-    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    GLfloat colors[][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f }, {0.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f } };
 
     int r = color;
     glColor3f(colors[r][0], colors[r][1], colors[r][2]);
@@ -578,7 +578,7 @@ void plot_line(myline *linet, int color){
 }
 
 void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
-    GLfloat colors[][3] = { { 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } ,{1.0f, 1.0f, 0.0f } };
+    GLfloat colors[][3] = { { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f }, {0.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } ,{1.0f, 1.0f, 0.0f } };
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 
@@ -946,42 +946,6 @@ void displayone() {
         glLightfv(GL_LIGHT0, GL_POSITION, lightPos[0]);
         glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColors[1]);
         glLightfv(GL_LIGHT1, GL_POSITION, lightPos[1]);
-
-//        std::vector<glm::vec3> points_to_render_vec;
-//
-//        polygon *current_polygon_p = get_next_polygon_to_render(polygons_to_place);
-//        
-//        
-//        // get the points projected onto the minimum cost plane
-//        std::pair<std::vector<glm::vec3>, float> return_pair   = current_polygon_p->get_min_cost_angle_points(corres_2d, corres_3d, edges_list, plane_to_project, cost_obj);
-//        points_to_render_vec = return_pair.first;
-//        float min_angle      = return_pair.second;
-//        plane *temp = current_polygon_p->get_plane_with_angle(min_angle, plane_to_project);
-//        
-//        
-//        points_to_render_vec_global = points_to_render_vec;
-//
-//        int render_scale = 60;
-//
-//        glBegin(GL_LINE_LOOP);
-//        glLineWidth(105);
-//        glColor3f(1.0f, 0.0f, 0.0f);
-//        glNormal3f(temp->a, temp->b, temp->c);
-//        for(int i=0;i<points_to_render_vec.size();++i){
-//            glVertex3f(points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
-//        }
-//        glEnd();
-//        
-//        
-//        
-//        glBegin(GL_QUADS);
-//        glColor3f(0.9f, 0.9f, 0.9f);
-//        glNormal3f(temp->a, temp->b, temp->c);
-//        for(int i=0;i<points_to_render_vec.size();++i){
-//            //printf("%d >> (%f, %f, %f)\n", i, points_to_render_vec[i][0], points_to_render_vec[i][1], points_to_render_vec[i][2]);
-//            glVertex3f( points_to_render_vec[i][0]/render_scale, points_to_render_vec[i][1]/render_scale, points_to_render_vec[i][2]/render_scale);
-//        }
-//        glEnd();
         
         
         for(int i =0;i<all_polygons.size();++i){
@@ -2042,12 +2006,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman6.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman8.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman8.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman8.png");
 
     
-    bw   = imga > 140;
+    bw   = imga > 160;
     img  = bw > 120;
     
     // get corner points using harris detector
@@ -2464,6 +2428,11 @@ int main(int argc, char** argv){
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
+    
+    
+    for(int i=0;i<all_mylines.size();++i){
+        printf("LINE LABEL > %d %s\n", i, all_mylines[i]->label.c_str());
+    }
     // remove the outer polygon which only contains occluding edges
     remove_outer_polygon();
     
