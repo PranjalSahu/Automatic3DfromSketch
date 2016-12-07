@@ -113,6 +113,7 @@ std::vector<myline*> all_lines_to_merge;
 std::vector<myline*> all_lines_created;
 vector<i2tuple> points_vector;
 vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
+vector<int> corner_points_colors;   // store the color of corner points to plot
 vector<int> num_of_lines;           // number of line occuring at ith corner point
 std::map<std::tuple<int, int>, int> map_num_of_lines;
 std::vector<myline*> valid_lines_undirected;  // all the valid lines finally obtained
@@ -528,6 +529,25 @@ void plot_line_3d(std::vector<mypoint*> all_points, int color){
     return;
 }
 
+// plots the corner points
+void plot_corner_points(){
+    float pointsize = 15.0;
+    
+    GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f },
+        {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f } };
+    
+    for(int i=0;i<corner_points.size();++i){
+        int x = std::get<0>(corner_points[i]);
+        int y = std::get<1>(corner_points[i]);
+        glPointSize(pointsize);
+        glBegin(GL_POINTS);
+        glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
+        glVertex2f(x*img_scale/sa_width, y*img_scale/sa_width);
+        glEnd();
+    }
+}
+
+
 void plot_line(std::vector<mypoint*> all_points, int color){
     glBegin(GL_LINE_LOOP);
     glLineWidth(5);
@@ -883,6 +903,7 @@ void displayone() {
     if(display_type == 0){
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
         plot_lines(valid_lines_undirected, line_colors);
+        plot_corner_points();
     }
     else if(display_type == 1){
         int index  = 0;
@@ -1040,13 +1061,15 @@ void get_num_corner_points(){
         }
     }
     
-    
     map_num_of_lines.clear();
+    corner_points_colors.clear();
+    
     // initialize map with 0
     for(int ik=0; ik < corner_points.size();++ik){
         int x = std::get<0>(corner_points[ik]);
         int y = std::get<1>(corner_points[ik]);
         map_num_of_lines[i2tuple(x, y)] = 0;
+        corner_points_colors.push_back(ik%7);
     }
     
     
@@ -1102,14 +1125,9 @@ void new_mergelines(){
 
         // check if the absolute difference of slope is below some threhold
         if(flag){
-            if(abs(abs(all_mylines[index[0]]->m)-abs(all_mylines[index[1]]->m)) < 0.15){
+            if(abs(abs(all_mylines[index[0]]->m)-abs(all_mylines[index[1]]->m)) < 0.05){
                 printf("merging lines");
                 myline * addline;
-                
-                if((all_mylines[index[0]]->x1 == 250 && all_mylines[index[0]]->y1 == 56) || (all_mylines[index[0]]->x2 == 250 && all_mylines[index[0]]->y2 == 56)){
-                    printf("Testing pranjal hello\n");
-                }
-                
                 
                 if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x1) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y1)){
                     addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x2, all_mylines[index[0]]->y2, all_mylines[index[1]]->y2);
