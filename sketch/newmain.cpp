@@ -112,7 +112,9 @@ std::map<i2tuple, int> map_slopes;
 std::vector<myline*> all_lines_to_merge;
 std::vector<myline*> all_lines_created;
 vector<i2tuple> points_vector;
-vector<i2tuple> corner_points;      // stores the corner points obtained from harris corner
+
+vector<i2tuple> original_corner_points; // this is required for point manipulation
+vector<i2tuple> corner_points;      // stores the corner points obtained
 vector<int> corner_points_colors;   // store the color of corner points to plot
 vector<int> num_of_lines;           // number of line occuring at ith corner point
 std::map<std::tuple<int, int>, int> map_num_of_lines;
@@ -128,6 +130,11 @@ int minpy = 100000;
 int maxpx = -1;
 int maxpy = -1;
 
+
+// for storing how much the vectorized image has moved
+// this is needed to manipulate points efficiently
+int trans_x = 0;
+int trans_y = 0;
 
 int win1;
 int win2 = -1;
@@ -480,22 +487,23 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
     int minx = 100000;
     int miny  = 100000;
     
-    for(std::vector<i2tuple>::iterator iterator = original_points.begin(); iterator != original_points.end(); iterator++) {
-        i2tuple mp = *iterator;
+    for(int i=0;i<original_points.size();++i){
+        i2tuple mp = original_points[i];
         int x = get<1>(mp);
         int y = sa_height-get<0>(mp);
         temp.push_back(i2tuple(x, y));
-        printf(">> %d, %d\n", x, y);
         if(miny > y){
             miny  = y;
             minx = x;
         }
+        
     }
     
     // shift the points so that the bottom most point is origin
-    for(std::vector<i2tuple>::iterator iterator = temp.begin(); iterator != temp.end(); iterator++) {
-        i2tuple mp = *iterator;
-        *iterator = i2tuple(get<0>(mp)-minx, get<1>(mp)-miny);
+    for(int i=0;i<temp.size();++i){
+        i2tuple mp = temp[i];
+        temp[i] = i2tuple(get<0>(mp)-minx, get<1>(mp)-miny);
+        original_corner_points[i] = temp[i];
     }
     
     get_correct_coord(valid_lines_undirected);
@@ -570,11 +578,11 @@ void plot_line(myline *linet, int color){
     int r = color;
     glColor3f(colors[r][0], colors[r][1], colors[r][2]);
     
-    GLfloat px = (linet->x1)*img_scale/sa_width;
-    GLfloat py = (linet->y1)*img_scale/sa_height;
+    GLfloat px = (linet->x1+trans_x)*img_scale/sa_width;
+    GLfloat py = (linet->y1+trans_y)*img_scale/sa_height;
     
-    GLfloat qx = (linet->x2)*img_scale/sa_width;
-    GLfloat qy = (linet->y2)*img_scale/sa_height;
+    GLfloat qx = (linet->x2+trans_x)*img_scale/sa_width;
+    GLfloat qy = (linet->y2+trans_y)*img_scale/sa_height;
     
     glVertex2f(px, py);
     glVertex2f(qx, qy);
@@ -872,9 +880,6 @@ void TesselationClass(double points3d[][3], int size, plane *p)
     
     //printf("===============================\n");
     for(int k=0;k<size;++k){
-        if(abs(points3d[k][0]) > 100){
-            printf("%f %f %f\n", points3d[k][0], points3d[k][1], points3d[k][2]);
-        }
         gluTessVertex(tess, points3d[k], points3d[k]);
     }
     //printf("===============================\n");
@@ -1070,6 +1075,7 @@ void get_num_corner_points(){
         int y = std::get<1>(corner_points[ik]);
         map_num_of_lines[i2tuple(x, y)] = 0;
         corner_points_colors.push_back(ik%7);
+        original_corner_points.push_back(corner_points[ik]);
     }
     
     
@@ -1514,21 +1520,21 @@ void mousemotion(int button, int state, int x, int y){
         if(axis_2d_points.size() == 4){
             cost_obj = new cost(axis_2d_points);
             
-            // placing all polygons
-//            while(1){
-//                bool flag = false;
-//                for(int i=0;i<polygons_to_place.size();++i){
-//                    if(!polygons_to_place[i]->placed){
-//                        flag = true;
-//                        break;
-//                    }
-//                }
-//                if(flag)
-//                    place_polygon();
-//                else{
-//                    break;
-//                }
-//            }
+            //placing all polygons
+            while(1){
+                bool flag = false;
+                for(int i=0;i<polygons_to_place.size();++i){
+                    if(!polygons_to_place[i]->placed){
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag)
+                    place_polygon();
+                else{
+                    break;
+                }
+            }
 
         }
     }
@@ -1735,12 +1741,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman4.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffmanpng.txt");
+    imga = imread("/Users/pranjal/Desktop/image/imge.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/imge.png");
 
     
-    bw   = imga > 100;
+    bw   = imga > 160;
     img  = bw > 120;
     
     bitwise_not(bw, img);
@@ -2062,13 +2068,56 @@ void myGlutIdle( void )
     
     glutPostRedisplay();
 }
+
+void move_points(){
+    for(int i=0;i<corner_points.size();++i){
+        std::get<0>(corner_points[i]) = std::get<0>(original_corner_points[i])+trans_x;
+        std::get<1>(corner_points[i]) = std::get<1>(original_corner_points[i])+trans_y;
+    }
+}
+
+int move_const = 5;
+
+void move_left(){
+    trans_x = trans_x-move_const;
+    move_points();
+    glFlush();
+    glutPostRedisplay();
+}
+void move_right(){
+    trans_x = trans_x+move_const;
+    move_points();
+    glFlush();
+    glutPostRedisplay();
+}
+void move_up(){
+    trans_y = trans_y+move_const;
+    move_points();
+    glFlush();
+    glutPostRedisplay();
+}
+void move_down(){
+    trans_y = trans_y-move_const;
+    move_points();
+    glFlush();
+    glutPostRedisplay();
+}
+
 void increase_scale(){
-    img_scale = img_scale+1;
+    if(display_type == 3){
+        render_scale = render_scale+5;
+    }else if(display_type == 0){
+        img_scale = img_scale+1;
+    }
     glFlush();
     glutPostRedisplay();
 }
 void decrease_scale(){
-    img_scale = img_scale-1;
+    if(display_type == 3){
+        render_scale = render_scale-5;
+    }else if(display_type == 0){
+        img_scale = img_scale-1;
+    }
     glFlush();
     glutPostRedisplay();
 }
@@ -2111,11 +2160,15 @@ void glui_setup(){
     // ADD BUTTONS
     glui_subwin->add_button("INCREASE SCALE", 0, (GLUI_Update_CB)increase_scale);
     glui_subwin->add_button("DECREASE SCALE", 1, (GLUI_Update_CB)decrease_scale);
-    glui_subwin->add_button("SHOW LINES", 2, (GLUI_Update_CB)show_lines);
-    glui_subwin->add_button("SHOW POLYGONS", 3, (GLUI_Update_CB)show_polygons);
-    glui_subwin->add_button("SHOW PROJECTED POLYGON", 4, (GLUI_Update_CB)show_projected_polygon);
-    glui_subwin->add_button("SHOW 3D", 5, (GLUI_Update_CB)show_3d);
-    glui_subwin->add_button("Quit", 6, (GLUI_Update_CB)exit);
+    glui_subwin->add_button("MOVE LEFT", 2, (GLUI_Update_CB)move_left);
+    glui_subwin->add_button("MOVE RIGHT", 3, (GLUI_Update_CB)move_right);
+    glui_subwin->add_button("MOVE UP", 4, (GLUI_Update_CB)move_up);
+    glui_subwin->add_button("MOVE DOWN", 5, (GLUI_Update_CB)move_down);
+    glui_subwin->add_button("SHOW LINES", 6, (GLUI_Update_CB)show_lines);
+    glui_subwin->add_button("SHOW POLYGONS", 7, (GLUI_Update_CB)show_polygons);
+    glui_subwin->add_button("SHOW PROJECTED POLYGON", 8, (GLUI_Update_CB)show_projected_polygon);
+    glui_subwin->add_button("SHOW 3D", 9, (GLUI_Update_CB)show_3d);
+    glui_subwin->add_button("Quit", 10, (GLUI_Update_CB)exit);
     
     
     
@@ -2129,6 +2182,29 @@ void glui_setup(){
     GLUI_Master.set_glutReshapeFunc( reshape );
     
 }
+
+
+
+int old_x = 0;
+int old_y = 0;
+bool valid;
+
+void mouse_func(int button, int state, int x, int y) {
+    old_x=x;
+    old_y=y;
+    valid = (state == GLUT_DOWN);
+}
+
+void motion_func (int x, int y) {
+    if (valid) {
+        int dx = old_x - x;
+        int dy = old_y - y;
+    }
+    old_x = x;
+    old_y = y;
+}
+
+
 
 int main(int argc, char** argv){
     
