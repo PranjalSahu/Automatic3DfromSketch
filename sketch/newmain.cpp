@@ -156,7 +156,13 @@ int polysize;						// for storing the size of the polygon
 std::queue<int> p1;					// for intersection points x coordinate
 
 // different display types for labelled lines, polygons, and projected polygon
-int display_type = 1;
+// start with only plotting lines
+int  display_type = 4;
+
+bool polygon_done = false;  // polygon extraction done or not
+bool work_3d_done = false;  // if it is true then don't do the 3d construction work again
+bool huffman_done = false;  // huffman labels work done
+
 
 // plane to project for demo
 plane* plane_to_project;
@@ -905,7 +911,11 @@ void displayone() {
     glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
 
     
-    if(display_type == 0){
+    if(display_type == 4){            // show original lines without calculating huffman labels
+        plot_lines(valid_lines_undirected, 0);
+        plot_corner_points();
+    }
+    else if(display_type == 0){       // calculate huffman labels and show lines
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
         plot_lines(valid_lines_undirected, line_colors);
         plot_corner_points();
@@ -1519,24 +1529,7 @@ void mousemotion(int button, int state, int x, int y){
         // instantiate cost object when 4 points have been clicked
         if(axis_2d_points.size() == 4){
             cost_obj = new cost(axis_2d_points);
-            
-            //placing all polygons
-            while(1){
-                bool flag = false;
-                for(int i=0;i<polygons_to_place.size();++i){
-                    if(!polygons_to_place[i]->placed){
-                        flag = true;
-                        break;
                     }
-                }
-                if(flag)
-                    place_polygon();
-                else{
-                    break;
-                }
-            }
-
-        }
     }
 }
 
@@ -1741,9 +1734,9 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffmanpng.txt");
-    imga = imread("/Users/pranjal/Desktop/image/imge.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/imge.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman4.png");
 
     
     bw   = imga > 160;
@@ -2127,6 +2120,15 @@ void show_projected_polygon(){
     glutPostRedisplay();
 }
 void show_lines(){
+    display_type = 4;
+    glFlush();
+    glutPostRedisplay();
+}
+void show_huffman_lines(){
+    if(!huffman_done){
+        get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
+        huffman_done = true;
+    }
     display_type = 0;
     glFlush();
     glutPostRedisplay();
@@ -2138,6 +2140,50 @@ void show_polygons(){
 }
 void show_3d(){
     display_type = 3;
+    
+    if(!work_3d_done){
+        
+        if(!huffman_done){
+            get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
+            huffman_done = true;
+        }
+        if(!polygon_done){
+            all_polygons = get_all_polygons(valid_lines_directed);
+            // remove the outer polygon which only contains occluding edges
+            remove_outer_polygon();
+            polygon_done= true;
+        }
+        
+        for(int i=0;i<all_mylines.size();++i){
+            printf("LINE LABEL > %d %s\n", i, all_mylines[i]->label.c_str());
+        }
+        
+        // insert the first polygon to place in the list
+        polygons_to_place.push_back(all_polygons[poly_seq[current_polygon]]);
+        
+        // we start with xy = 0  then rotate this plane till we get the best plane to project
+        plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
+        
+        
+        //placing all polygons
+        while(1){
+            bool flag = false;
+            for(int i=0;i<polygons_to_place.size();++i){
+                if(!polygons_to_place[i]->placed){
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag)
+            place_polygon();
+            else{
+                break;
+            }
+        }
+        
+        work_3d_done = true;
+    }
+    
     glFlush();
     glutPostRedisplay();
 }
@@ -2164,11 +2210,12 @@ void glui_setup(){
     glui_subwin->add_button("MOVE RIGHT", 3, (GLUI_Update_CB)move_right);
     glui_subwin->add_button("MOVE UP", 4, (GLUI_Update_CB)move_up);
     glui_subwin->add_button("MOVE DOWN", 5, (GLUI_Update_CB)move_down);
-    glui_subwin->add_button("SHOW LINES", 6, (GLUI_Update_CB)show_lines);
-    glui_subwin->add_button("SHOW POLYGONS", 7, (GLUI_Update_CB)show_polygons);
-    glui_subwin->add_button("SHOW PROJECTED POLYGON", 8, (GLUI_Update_CB)show_projected_polygon);
-    glui_subwin->add_button("SHOW 3D", 9, (GLUI_Update_CB)show_3d);
-    glui_subwin->add_button("Quit", 10, (GLUI_Update_CB)exit);
+    glui_subwin->add_button("SHOW LINES", 6, (GLUI_Update_CB)show_lines);               // simple lines
+    glui_subwin->add_button("SHOW HUFFMAN LINES", 7, (GLUI_Update_CB)show_huffman_lines);       // huffman lines
+    glui_subwin->add_button("SHOW POLYGONS", 8, (GLUI_Update_CB)show_polygons);         // show polygons
+    glui_subwin->add_button("SHOW PROJECTED POLYGON", 9, (GLUI_Update_CB)show_projected_polygon);
+    glui_subwin->add_button("SHOW 3D", 10, (GLUI_Update_CB)show_3d);                    // show 3d
+    glui_subwin->add_button("Quit", 11, (GLUI_Update_CB)exit);
     
     
     
@@ -2205,13 +2252,8 @@ void motion_func (int x, int y) {
 }
 
 
-
-int main(int argc, char** argv){
-    
-    init_values();
-    
+void get_all_lines_using_split_and_merge(){
     int iteration = 0;
-    
     
     while(get_non_zero(img)){
         iteration = iteration+1;
@@ -2225,10 +2267,16 @@ int main(int argc, char** argv){
         
         zero_the_line(img, m2, lines);
     }
-
-    merge_line_corners();   // get connected lines
     
+    merge_line_corners();   // get connected lines
     new_mergelines();       // merge lines with same slope
+    return;
+}
+
+int main(int argc, char** argv){
+    
+    init_values();
+    get_all_lines_using_split_and_merge();
     
     int colors[][3] = { { 0, 255, 0}, {255,0,0}, {0,0,255}, {0,255,255}, {255,255,0},  {155,155,0}, {0,155,155}};
 
@@ -2274,23 +2322,6 @@ int main(int argc, char** argv){
     // add the reverse edges for all edges
     valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
-    
-    all_polygons = get_all_polygons(valid_lines_directed);
-    
-    get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
-    
-    for(int i=0;i<all_mylines.size();++i){
-        printf("LINE LABEL > %d %s\n", i, all_mylines[i]->label.c_str());
-    }
-    
-    // remove the outer polygon which only contains occluding edges
-    remove_outer_polygon();
-    
-    // insert the first polygon to place in the list
-    polygons_to_place.push_back(all_polygons[poly_seq[current_polygon]]);
-    
-    // we start with xy = 0  then rotate this plane till we get the best plane to project
-    plane_to_project = new plane(0, 0, 1, new mypoint(0, 0, 0));
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
