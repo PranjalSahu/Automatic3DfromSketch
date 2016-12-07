@@ -234,6 +234,9 @@ std::vector<pair<int, int>> edges_list;
 
 
 
+GLUI *glui_subwin;
+
+
 
 void thinningIteration(cv::Mat& im, int iter)
 {
@@ -587,15 +590,15 @@ void plot_lines(std::vector<myline*> lines_to_plot, std::vector<int> color){
     for(std::vector<myline*>::iterator iterator = lines_to_plot.begin(); iterator != lines_to_plot.end(); iterator++) {
         myline * linet = *iterator;
         
-        if (linet->x2 == infvalue || linet->y2 ==infvalue){
-            glBegin( GL_POINTS );
-            glColor3f(1.0f, 0.0f, 0.0f);
-            GLfloat px = (linet->y1-100)*IMG_SCALE/sa_width;
-            GLfloat py = (linet->x1-100)*IMG_SCALE/sa_height;
-            glVertex2f(px, py);
-            glEnd();
-            continue;
-        }
+//        if (linet->x2 == infvalue || linet->y2 ==infvalue){
+//            glBegin( GL_POINTS );
+//            glColor3f(1.0f, 0.0f, 0.0f);
+//            GLfloat px = (linet->y1-100)*IMG_SCALE/sa_width;
+//            GLfloat py = (linet->x1-100)*IMG_SCALE/sa_height;
+//            glVertex2f(px, py);
+//            glEnd();
+//            continue;
+//        }
         
         plot_line(linet, color[index]);
         index = index+1;
@@ -1483,6 +1486,7 @@ void place_polygon(){
     return;
 }
 
+
 //Called when a key is pressed
 void handleKeypressa(unsigned char key, int x, int y) {
     switch (key) {
@@ -2348,34 +2352,62 @@ void myGlutIdle( void )
     glutPostRedisplay();
 }
 
-
-void testingfun(){
-    printf("HELLO TESTING METHOD\n");
+void show_projected_polygon(){
+    display_type = 2;
+    glFlush();
+    glutPostRedisplay();
+}
+void show_lines(){
+    display_type = 0;
+    glFlush();
+    glutPostRedisplay();
+}
+void show_polygons(){
+    display_type = 1;
+    glFlush();
+    glutPostRedisplay();
+}
+void show_3d(){
+    display_type = 3;
+    glFlush();
+    glutPostRedisplay();
 }
 
-void glu_setup(){
+void glui_setup(){
     
-    GLUI *glui = GLUI_Master.create_glui( "GLUI" );
-    glui->add_checkbox( "Wireframe", &wireframe );
-    GLUI_Spinner *segment_spinner = glui->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
+    GLUI *glui_subwin = GLUI_Master.create_glui_subwindow(main_window,
+                                            GLUI_SUBWINDOW_LEFT);
+    glui_subwin->add_checkbox( "Wireframe", &wireframe );
+    GLUI_Spinner *segment_spinner = glui_subwin->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
     segment_spinner->set_int_limits( 3, 60 );
     
     
-    glui->set_main_gfx_window( main_window );
-    GLUI_Listbox *listbox = glui->add_listbox("A listbox");
+    glui_subwin->set_main_gfx_window( main_window );
+    GLUI_Listbox *listbox = glui_subwin->add_listbox("A listbox");
     listbox->add_item(1,"Red");
     listbox->add_item(2,"Green");
     listbox->add_item(3,"Blue");
     
-    glui->add_statictext("Example 2");
-    glui->add_separator();
-    GLUI_Panel *obj_panel = glui->add_panel ("Test Panel");
-    glui->add_button("Quit", 0, (GLUI_Update_CB)exit);
-    glui->add_button("TESTING", 1, (GLUI_Update_CB)testingfun);
-    GLUI_RadioGroup *group1 = glui->add_radiogroup_to_panel(obj_panel);
-    glui->add_radiobutton_to_group(group1,"Option 1");
-    glui->add_radiobutton_to_group(group1,"Option 2");
-    GLUI_Rotation *arcball = glui->add_rotation("ball (doesn't do anything)");
+    glui_subwin->add_statictext("Example 2");
+    glui_subwin->add_separator();
+    GLUI_Panel *obj_panel = glui_subwin->add_panel ("Test Panel");
+    
+    
+    // ADD BUTTONS
+    glui_subwin->add_button("SHOW LINES", 0, (GLUI_Update_CB)show_lines);
+    glui_subwin->add_button("SHOW POLYGONS", 1, (GLUI_Update_CB)show_polygons);
+    glui_subwin->add_button("SHOW PROJECTED POLYGON", 2, (GLUI_Update_CB)show_projected_polygon);
+    glui_subwin->add_button("SHOW 3D", 3, (GLUI_Update_CB)show_3d);
+    glui_subwin->add_button("Quit", 4, (GLUI_Update_CB)exit);
+    
+    
+    
+    GLUI_RadioGroup *group1 = glui_subwin->add_radiogroup_to_panel(obj_panel);
+    glui_subwin->add_radiobutton_to_group(group1,"Option 1");
+    glui_subwin->add_radiobutton_to_group(group1,"Option 2");
+    GLUI_Rotation *arcball = glui_subwin->add_rotation("ball (doesn't do anything)");
+    
+    
     
     GLUI_Master.set_glutIdleFunc( myGlutIdle );
     GLUI_Master.set_glutReshapeFunc( reshape );
@@ -2383,19 +2415,6 @@ void glu_setup(){
 }
 
 int main(int argc, char** argv){
-    
-//    std::map<std::tuple<int, int>, int> mymap;
-//    
-//    mymap[i2tuple(1, 1)] = 0;
-//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
-//    mymap[i2tuple(1, 1)] = 1;
-//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
-//    mymap[i2tuple(1, 1)] = 2;
-//    printf("testing %d\n", mymap[i2tuple(1, 1)]);
-//    
-//    return 0;
-//    
-    
     
     init_values();
     
@@ -2476,11 +2495,10 @@ int main(int argc, char** argv){
     
     get_huffman_label(valid_lines_directed, valid_lines_undirected, corner_points);
     
-    
-    
     for(int i=0;i<all_mylines.size();++i){
         printf("LINE LABEL > %d %s\n", i, all_mylines[i]->label.c_str());
     }
+    
     // remove the outer polygon which only contains occluding edges
     remove_outer_polygon();
     
@@ -2495,11 +2513,7 @@ int main(int argc, char** argv){
     
     glutInitWindowSize(sa_width, sa_height);
     
-    //initRenderinga();
-    
-    glutCreateWindow("3D Model");  // Create a window with the given title
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glEnable( GL_BLEND );
+    main_window = glutCreateWindow("3D Model");  // Create a window with the given title
     
     printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
 
@@ -2510,9 +2524,11 @@ int main(int argc, char** argv){
     glutMouseFunc(mousemotion);
     glutTimerFunc(25, updatea, 0);
     initGL();
-    glu_setup();
+    glui_setup();
     glutMainLoop();
     return 0;
 }
+
+
 
 #endif
