@@ -72,32 +72,7 @@ plane* plane::rotate_it(float angle, float ka_, float kb_, float kc_){
 
     glm::vec3 vrot = x + sin(angle)*(glm::cross(n, x))+(1-cos(angle))*(glm::cross(n, temp));
     vrot = vrot/glm::length(vrot);
-    
-//    float v_a = a*cos(angle);
-//    float v_b = b*cos(angle);
-//    float v_c = c*cos(angle);
-//    
-//    float kdotv = ka_*a + kb_*b + kc_*c;
-//    kdotv = kdotv*(1-cos(angle));
-//    
-//    float kcrossv_a, kcrossv_b, kcrossv_c;
-//    kcrossv_a = (kb_*c-kc_*b)*sin(angle);
-//    kcrossv_b = (kc_*a-ka_*b)*sin(angle);
-//    kcrossv_c = (ka_*b-kb_*a)*sin(angle);
-//    
-//    float vrota, vrotb, vrotc;
-//    vrota = v_a + kcrossv_a + kdotv*ka_;
-//    vrotb = v_b + kcrossv_b + kdotv*kb_;
-//    vrotc = v_c + kcrossv_c + kdotv*kc_;
-//    
-//    mod = sqrt(vrota*vrota+vrotb*vrotb+vrotc*vrotc);
-    
-    // change the normal vector for the plane
-    //a = vrota/mod;
-    //b = vrotb/mod;
-    //c = vrotc/mod;
     return new plane(vrot[0], vrot[1], vrot[2], p);
-    //return new plane(vrota/mod, vrotb/mod, vrotc/mod, p);
 }
 
 // returns the points obtained after projecting x, y, z onto this plane along vector n1, n2, n3
@@ -185,17 +160,6 @@ std::vector<mypoint*> plane::project_polygon(std::vector<mypoint*> all_points){
 float plane::get_z(float x, float y){
     return -1*(a*x+b*y)/(c+0.000001);
 }
-
-
-// returns the projection of the polygon onto this plane
-//polygon *project_polygon(polygon *p){
-//    std::vector<myline*> all_lines = p->lines;
-//    
-//    
-//    for(std::vector<myline*>::iterator it = bt.begin(); it != bt.end(); ++it){
-//
-//    mypoint
-//}
 
 
 
