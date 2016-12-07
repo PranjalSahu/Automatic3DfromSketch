@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2597"
-            endingLineNumber = "2597">
+            startingLineNumber = "2593"
+            endingLineNumber = "2593">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -488,11 +488,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "424"
-            endingLineNumber = "424"
+            startingLineNumber = "423"
+            endingLineNumber = "423"
             landmarkName = "sweepline(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -504,11 +504,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1363"
-            endingLineNumber = "1363"
+            startingLineNumber = "1362"
+            endingLineNumber = "1362"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -520,11 +520,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1560"
-            endingLineNumber = "1560">
+            startingLineNumber = "1559"
+            endingLineNumber = "1559">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -534,7 +534,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1565"
+            endingLineNumber = "1565"
+            landmarkName = "get_corner_points(Mat &amp;imga)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1522"
+            endingLineNumber = "1522"
+            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1566"
@@ -550,23 +582,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1523"
-            endingLineNumber = "1523"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1567"
@@ -582,27 +598,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1568"
-            endingLineNumber = "1568"
-            landmarkName = "get_corner_points(Mat &amp;imga)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1502"
-            endingLineNumber = "1502"
+            startingLineNumber = "1501"
+            endingLineNumber = "1501"
             landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -614,11 +614,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1514"
-            endingLineNumber = "1514"
+            startingLineNumber = "1513"
+            endingLineNumber = "1513"
             landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -646,11 +646,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1574"
-            endingLineNumber = "1574"
+            startingLineNumber = "1573"
+            endingLineNumber = "1573"
             landmarkName = "get_corner_points(Mat &amp;imga)"
             landmarkType = "7">
          </BreakpointContent>
@@ -662,11 +662,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1349"
-            endingLineNumber = "1349"
+            startingLineNumber = "1348"
+            endingLineNumber = "1348"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -678,11 +678,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1492"
-            endingLineNumber = "1492"
+            startingLineNumber = "1491"
+            endingLineNumber = "1491"
             landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -694,11 +694,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1539"
-            endingLineNumber = "1539"
+            startingLineNumber = "1538"
+            endingLineNumber = "1538"
             landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -710,11 +710,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1392"
-            endingLineNumber = "1392"
+            startingLineNumber = "1391"
+            endingLineNumber = "1391"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -726,11 +726,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1371"
-            endingLineNumber = "1371"
+            startingLineNumber = "1370"
+            endingLineNumber = "1370"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -742,11 +742,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1364"
-            endingLineNumber = "1364"
+            startingLineNumber = "1363"
+            endingLineNumber = "1363"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -758,11 +758,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1488"
-            endingLineNumber = "1488">
+            startingLineNumber = "1487"
+            endingLineNumber = "1487">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -772,11 +772,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1412"
-            endingLineNumber = "1412"
+            startingLineNumber = "1411"
+            endingLineNumber = "1411"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -788,11 +788,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1342"
-            endingLineNumber = "1342"
+            startingLineNumber = "1341"
+            endingLineNumber = "1341"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -804,11 +804,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1347"
-            endingLineNumber = "1347"
+            startingLineNumber = "1346"
+            endingLineNumber = "1346"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -820,11 +820,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1336"
-            endingLineNumber = "1336"
+            startingLineNumber = "1335"
+            endingLineNumber = "1335"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -836,11 +836,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1326"
-            endingLineNumber = "1326"
+            startingLineNumber = "1325"
+            endingLineNumber = "1325"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -852,11 +852,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1324"
-            endingLineNumber = "1324"
+            startingLineNumber = "1323"
+            endingLineNumber = "1323"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -868,11 +868,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1320"
-            endingLineNumber = "1320"
+            startingLineNumber = "1319"
+            endingLineNumber = "1319"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -884,11 +884,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1316"
-            endingLineNumber = "1316">
+            startingLineNumber = "1315"
+            endingLineNumber = "1315">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -914,11 +914,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2626"
-            endingLineNumber = "2626">
+            startingLineNumber = "2622"
+            endingLineNumber = "2622">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -976,11 +976,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2639"
-            endingLineNumber = "2639">
+            startingLineNumber = "2635"
+            endingLineNumber = "2635">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -990,11 +990,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2676"
-            endingLineNumber = "2676">
+            startingLineNumber = "2672"
+            endingLineNumber = "2672">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1036,49 +1036,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2674"
-            endingLineNumber = "2674">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2671"
-            endingLineNumber = "2671">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2673"
-            endingLineNumber = "2673">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2670"
@@ -1092,11 +1050,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2675"
-            endingLineNumber = "2675">
+            startingLineNumber = "2667"
+            endingLineNumber = "2667">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1106,7 +1064,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2669"
@@ -1120,11 +1078,53 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2546"
-            endingLineNumber = "2546">
+            startingLineNumber = "2666"
+            endingLineNumber = "2666">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764148.089486"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2671"
+            endingLineNumber = "2671">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764148.089486"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2665"
+            endingLineNumber = "2665">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764148.089486"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2542"
+            endingLineNumber = "2542">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1230,11 +1230,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2668"
-            endingLineNumber = "2668">
+            startingLineNumber = "2664"
+            endingLineNumber = "2664">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1324,11 +1324,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1587"
-            endingLineNumber = "1587"
+            startingLineNumber = "1586"
+            endingLineNumber = "1586"
             landmarkName = "get_corner_points(Mat &amp;imga)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1340,11 +1340,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2492"
-            endingLineNumber = "2492"
+            startingLineNumber = "2488"
+            endingLineNumber = "2488"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1468,11 +1468,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2505"
-            endingLineNumber = "2505"
+            startingLineNumber = "2501"
+            endingLineNumber = "2501"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1484,11 +1484,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1625"
-            endingLineNumber = "1625"
+            startingLineNumber = "1624"
+            endingLineNumber = "1624"
             landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1500,11 +1500,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1629"
-            endingLineNumber = "1629"
+            startingLineNumber = "1628"
+            endingLineNumber = "1628"
             landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1516,11 +1516,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1641"
-            endingLineNumber = "1641"
+            startingLineNumber = "1640"
+            endingLineNumber = "1640"
             landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1532,11 +1532,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2510"
-            endingLineNumber = "2510"
+            startingLineNumber = "2506"
+            endingLineNumber = "2506"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1674,11 +1674,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "953"
-            endingLineNumber = "953"
+            startingLineNumber = "952"
+            endingLineNumber = "952"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1690,11 +1690,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "955"
-            endingLineNumber = "955"
+            startingLineNumber = "954"
+            endingLineNumber = "954"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1706,11 +1706,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "900"
-            endingLineNumber = "900"
+            startingLineNumber = "899"
+            endingLineNumber = "899"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1770,11 +1770,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1638"
-            endingLineNumber = "1638"
+            startingLineNumber = "1637"
+            endingLineNumber = "1637"
             landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1786,23 +1786,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1654"
-            endingLineNumber = "1654"
-            landmarkName = "get_all_valid_lines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1653"
@@ -1818,11 +1802,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1746"
-            endingLineNumber = "1746"
+            startingLineNumber = "1652"
+            endingLineNumber = "1652"
+            landmarkName = "get_all_valid_lines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1745"
+            endingLineNumber = "1745"
             landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1834,11 +1834,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1764"
-            endingLineNumber = "1764"
+            startingLineNumber = "1763"
+            endingLineNumber = "1763"
             landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1850,11 +1850,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1770"
-            endingLineNumber = "1770"
+            startingLineNumber = "1769"
+            endingLineNumber = "1769"
             landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1866,11 +1866,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "901"
-            endingLineNumber = "901"
+            startingLineNumber = "900"
+            endingLineNumber = "900"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1882,11 +1882,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "914"
-            endingLineNumber = "914"
+            startingLineNumber = "913"
+            endingLineNumber = "913"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1946,11 +1946,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2506"
-            endingLineNumber = "2506"
+            startingLineNumber = "2502"
+            endingLineNumber = "2502"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1978,11 +1978,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2493"
-            endingLineNumber = "2493"
+            startingLineNumber = "2489"
+            endingLineNumber = "2489"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1994,11 +1994,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2460"
-            endingLineNumber = "2460"
+            startingLineNumber = "2464"
+            endingLineNumber = "2464"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2010,11 +2010,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1583"
-            endingLineNumber = "1583"
+            startingLineNumber = "1582"
+            endingLineNumber = "1582"
             landmarkName = "get_corner_points(Mat &amp;imga)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2026,11 +2026,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1367"
-            endingLineNumber = "1367"
+            startingLineNumber = "1366"
+            endingLineNumber = "1366"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2042,11 +2042,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1385"
-            endingLineNumber = "1385"
+            startingLineNumber = "1384"
+            endingLineNumber = "1384"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2058,11 +2058,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1387"
-            endingLineNumber = "1387"
+            startingLineNumber = "1386"
+            endingLineNumber = "1386"
             landmarkName = "merge_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2074,11 +2074,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2511"
-            endingLineNumber = "2511"
+            startingLineNumber = "2507"
+            endingLineNumber = "2507"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2090,11 +2090,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1459"
-            endingLineNumber = "1459"
+            startingLineNumber = "1458"
+            endingLineNumber = "1458"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2106,11 +2106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1484"
-            endingLineNumber = "1484"
+            startingLineNumber = "1483"
+            endingLineNumber = "1483"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2122,11 +2122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1423"
-            endingLineNumber = "1423"
+            startingLineNumber = "1422"
+            endingLineNumber = "1422"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2218,11 +2218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "975"
-            endingLineNumber = "975"
+            startingLineNumber = "974"
+            endingLineNumber = "974"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2234,11 +2234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "833"
-            endingLineNumber = "833"
+            startingLineNumber = "832"
+            endingLineNumber = "832"
             landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2250,11 +2250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "838"
-            endingLineNumber = "838"
+            startingLineNumber = "837"
+            endingLineNumber = "837"
             landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2266,11 +2266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "828"
-            endingLineNumber = "828"
+            startingLineNumber = "827"
+            endingLineNumber = "827"
             landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2298,11 +2298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1411"
-            endingLineNumber = "1411"
+            startingLineNumber = "1410"
+            endingLineNumber = "1410"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2314,11 +2314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1414"
-            endingLineNumber = "1414"
+            startingLineNumber = "1413"
+            endingLineNumber = "1413"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2330,11 +2330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1486"
-            endingLineNumber = "1486"
+            startingLineNumber = "1485"
+            endingLineNumber = "1485"
             landmarkName = "place_polygon()"
             landmarkType = "7">
             <Locations>
@@ -2393,187 +2393,187 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1437"
-            endingLineNumber = "1437"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1446"
-            endingLineNumber = "1446"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1402"
-            endingLineNumber = "1402"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1479"
-            endingLineNumber = "1479"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1474"
-            endingLineNumber = "1474"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1441"
-            endingLineNumber = "1441"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1439"
-            endingLineNumber = "1439"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1452"
-            endingLineNumber = "1452"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "931"
-            endingLineNumber = "931"
-            landmarkName = "displayone()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "926"
-            endingLineNumber = "926"
-            landmarkName = "displayone()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "921"
-            endingLineNumber = "921"
-            landmarkName = "displayone()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1436"
             endingLineNumber = "1436"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1445"
+            endingLineNumber = "1445"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1401"
+            endingLineNumber = "1401"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1478"
+            endingLineNumber = "1478"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1473"
+            endingLineNumber = "1473"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1440"
+            endingLineNumber = "1440"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1438"
+            endingLineNumber = "1438"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1451"
+            endingLineNumber = "1451"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "930"
+            endingLineNumber = "930"
+            landmarkName = "displayone()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "925"
+            endingLineNumber = "925"
+            landmarkName = "displayone()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "920"
+            endingLineNumber = "920"
+            landmarkName = "displayone()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1435"
+            endingLineNumber = "1435"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2665,11 +2665,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "545"
-            endingLineNumber = "545"
+            startingLineNumber = "544"
+            endingLineNumber = "544"
             landmarkName = "plot_line_3d(std::vector&lt;mypoint*&gt; all_points, int color)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2841,11 +2841,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1409"
-            endingLineNumber = "1409"
+            startingLineNumber = "1408"
+            endingLineNumber = "1408"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2857,11 +2857,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1428"
-            endingLineNumber = "1428"
+            startingLineNumber = "1427"
+            endingLineNumber = "1427"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2873,11 +2873,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1461"
-            endingLineNumber = "1461"
+            startingLineNumber = "1460"
+            endingLineNumber = "1460"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2889,11 +2889,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1469"
-            endingLineNumber = "1469"
+            startingLineNumber = "1468"
+            endingLineNumber = "1468"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2905,39 +2905,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2058"
-            endingLineNumber = "2058"
-            landmarkName = "remove_outer_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2049"
-            endingLineNumber = "2049"
-            landmarkName = "remove_outer_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2057"
@@ -2953,11 +2921,43 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2063"
-            endingLineNumber = "2063"
+            startingLineNumber = "2048"
+            endingLineNumber = "2048"
+            landmarkName = "remove_outer_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2056"
+            endingLineNumber = "2056"
+            landmarkName = "remove_outer_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2062"
+            endingLineNumber = "2062"
             landmarkName = "remove_outer_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3033,11 +3033,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1911"
-            endingLineNumber = "1911"
+            startingLineNumber = "1910"
+            endingLineNumber = "1910"
             landmarkName = "split_and_merge(std::vector&lt;glm::vec2&gt; points)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3049,11 +3049,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1923"
-            endingLineNumber = "1923"
+            startingLineNumber = "1922"
+            endingLineNumber = "1922"
             landmarkName = "split_and_merge(std::vector&lt;glm::vec2&gt; points)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3065,11 +3065,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1960"
-            endingLineNumber = "1960"
+            startingLineNumber = "1959"
+            endingLineNumber = "1959"
             landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3081,7 +3081,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1964"
+            endingLineNumber = "1964"
+            landmarkName = "get_polylines(Mat&amp; im)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1965"
@@ -3097,11 +3113,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1966"
-            endingLineNumber = "1966"
+            startingLineNumber = "1971"
+            endingLineNumber = "1971"
             landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3113,11 +3129,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1972"
-            endingLineNumber = "1972"
+            startingLineNumber = "1977"
+            endingLineNumber = "1977"
             landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3129,11 +3145,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1978"
-            endingLineNumber = "1978"
+            startingLineNumber = "1984"
+            endingLineNumber = "1984"
             landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3145,27 +3161,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1985"
-            endingLineNumber = "1985"
-            landmarkName = "get_polylines(Mat&amp; im)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1991"
-            endingLineNumber = "1991"
+            startingLineNumber = "1990"
+            endingLineNumber = "1990"
             landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3273,11 +3273,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2504"
-            endingLineNumber = "2504"
+            startingLineNumber = "2500"
+            endingLineNumber = "2500"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3353,11 +3353,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2478"
-            endingLineNumber = "2478"
+            startingLineNumber = "2482"
+            endingLineNumber = "2482"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3449,11 +3449,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2494"
-            endingLineNumber = "2494"
+            startingLineNumber = "2490"
+            endingLineNumber = "2490"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3465,11 +3465,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "526"
-            endingLineNumber = "526"
+            startingLineNumber = "525"
+            endingLineNumber = "525"
             landmarkName = "get_correct_coord_point_and_line(std::vector&lt;i2tuple&gt; original_points, std::vector&lt;myline*&gt; valid_lines_undirected)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3481,11 +3481,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2187"
-            endingLineNumber = "2187"
+            startingLineNumber = "2186"
+            endingLineNumber = "2186"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3497,7 +3497,103 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2179"
+            endingLineNumber = "2179"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2240"
+            endingLineNumber = "2240"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2244"
+            endingLineNumber = "2244"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2136"
+            endingLineNumber = "2136"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2133"
+            endingLineNumber = "2133"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2206"
+            endingLineNumber = "2206"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2180"
@@ -3513,11 +3609,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2241"
-            endingLineNumber = "2241"
+            startingLineNumber = "2141"
+            endingLineNumber = "2141"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3529,11 +3625,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2245"
-            endingLineNumber = "2245"
+            startingLineNumber = "2256"
+            endingLineNumber = "2256"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3545,11 +3641,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2137"
-            endingLineNumber = "2137"
+            startingLineNumber = "2481"
+            endingLineNumber = "2481"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2104"
+            endingLineNumber = "2104"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3561,11 +3673,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2134"
-            endingLineNumber = "2134"
+            startingLineNumber = "2091"
+            endingLineNumber = "2091"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3577,7 +3689,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2207"
@@ -3593,11 +3705,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2181"
-            endingLineNumber = "2181"
+            startingLineNumber = "2223"
+            endingLineNumber = "2223"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3609,11 +3721,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2142"
-            endingLineNumber = "2142"
+            startingLineNumber = "2175"
+            endingLineNumber = "2175"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3625,27 +3737,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2257"
-            endingLineNumber = "2257"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2477"
-            endingLineNumber = "2477"
+            startingLineNumber = "2503"
+            endingLineNumber = "2503"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3657,107 +3753,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2105"
-            endingLineNumber = "2105"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2092"
-            endingLineNumber = "2092"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2208"
-            endingLineNumber = "2208"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2224"
-            endingLineNumber = "2224"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2176"
-            endingLineNumber = "2176"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2507"
-            endingLineNumber = "2507"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2512"
-            endingLineNumber = "2512"
+            startingLineNumber = "2508"
+            endingLineNumber = "2508"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3785,11 +3785,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2416"
-            endingLineNumber = "2416">
+            startingLineNumber = "2420"
+            endingLineNumber = "2420">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3799,11 +3799,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1407"
-            endingLineNumber = "1407"
+            startingLineNumber = "1406"
+            endingLineNumber = "1406"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3927,11 +3927,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1435"
-            endingLineNumber = "1435"
+            startingLineNumber = "1434"
+            endingLineNumber = "1434"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3943,11 +3943,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1447"
-            endingLineNumber = "1447"
+            startingLineNumber = "1446"
+            endingLineNumber = "1446"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3959,11 +3959,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "831"
-            endingLineNumber = "831"
+            startingLineNumber = "830"
+            endingLineNumber = "830"
             landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4087,11 +4087,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1473"
-            endingLineNumber = "1473"
+            startingLineNumber = "1472"
+            endingLineNumber = "1472"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4231,71 +4231,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1445"
-            endingLineNumber = "1445"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1449"
-            endingLineNumber = "1449"
-            landmarkName = "place_polygon()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "821"
-            endingLineNumber = "821"
-            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "820"
-            endingLineNumber = "820"
-            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1444"
@@ -4311,11 +4247,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1404"
-            endingLineNumber = "1404"
+            startingLineNumber = "1448"
+            endingLineNumber = "1448"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4327,11 +4263,75 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2031"
-            endingLineNumber = "2031"
+            startingLineNumber = "820"
+            endingLineNumber = "820"
+            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "819"
+            endingLineNumber = "819"
+            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1443"
+            endingLineNumber = "1443"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1403"
+            endingLineNumber = "1403"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2030"
+            endingLineNumber = "2030"
             landmarkName = "init_values()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4343,11 +4343,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2029"
-            endingLineNumber = "2029"
+            startingLineNumber = "2028"
+            endingLineNumber = "2028"
             landmarkName = "init_values()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4359,11 +4359,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1434"
-            endingLineNumber = "1434"
+            startingLineNumber = "1433"
+            endingLineNumber = "1433"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4375,11 +4375,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2192"
-            endingLineNumber = "2192"
+            startingLineNumber = "2191"
+            endingLineNumber = "2191"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4391,11 +4391,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2281"
-            endingLineNumber = "2281"
+            startingLineNumber = "2280"
+            endingLineNumber = "2280"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4407,11 +4407,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2283"
-            endingLineNumber = "2283"
+            startingLineNumber = "2282"
+            endingLineNumber = "2282"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4423,11 +4423,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2276"
-            endingLineNumber = "2276"
+            startingLineNumber = "2275"
+            endingLineNumber = "2275"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4439,11 +4439,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2186"
-            endingLineNumber = "2186"
+            startingLineNumber = "2185"
+            endingLineNumber = "2185"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4455,11 +4455,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2184"
-            endingLineNumber = "2184"
+            startingLineNumber = "2183"
+            endingLineNumber = "2183"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4471,27 +4471,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2480"
-            endingLineNumber = "2480"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2314"
-            endingLineNumber = "2314"
+            startingLineNumber = "2313"
+            endingLineNumber = "2313"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4503,11 +4487,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2290"
-            endingLineNumber = "2290"
+            startingLineNumber = "2289"
+            endingLineNumber = "2289"
             landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4519,11 +4503,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1431"
-            endingLineNumber = "1431"
+            startingLineNumber = "1430"
+            endingLineNumber = "1430"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4535,11 +4519,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "683"
-            endingLineNumber = "683"
+            startingLineNumber = "682"
+            endingLineNumber = "682"
             landmarkName = "get_plane(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4551,11 +4535,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "649"
-            endingLineNumber = "649"
+            startingLineNumber = "648"
+            endingLineNumber = "648"
             landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4567,11 +4551,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "645"
-            endingLineNumber = "645"
+            startingLineNumber = "644"
+            endingLineNumber = "644"
             landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4583,11 +4567,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "642"
-            endingLineNumber = "642"
+            startingLineNumber = "641"
+            endingLineNumber = "641"
             landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4631,11 +4615,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1471"
-            endingLineNumber = "1471"
+            startingLineNumber = "1470"
+            endingLineNumber = "1470"
             landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4647,11 +4631,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "905"
-            endingLineNumber = "905"
+            startingLineNumber = "904"
+            endingLineNumber = "904"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4663,11 +4647,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2521"
-            endingLineNumber = "2521"
+            startingLineNumber = "2517"
+            endingLineNumber = "2517"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4695,11 +4679,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "891"
-            endingLineNumber = "891"
+            startingLineNumber = "890"
+            endingLineNumber = "890"
             landmarkName = "TesselatedStar(double points3d[][3], int size, plane *p)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4711,11 +4695,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2013"
-            endingLineNumber = "2013"
+            startingLineNumber = "2012"
+            endingLineNumber = "2012"
             landmarkName = "init_values()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4727,11 +4711,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "964"
-            endingLineNumber = "964"
+            startingLineNumber = "963"
+            endingLineNumber = "963"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4743,11 +4727,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "670"
-            endingLineNumber = "670"
+            startingLineNumber = "669"
+            endingLineNumber = "669"
             landmarkName = "get_plane(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4775,11 +4759,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "708"
-            endingLineNumber = "708"
+            startingLineNumber = "707"
+            endingLineNumber = "707"
             landmarkName = "get_plane(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4791,23 +4775,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2437"
-            endingLineNumber = "2437"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2441"
@@ -4823,11 +4791,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2439"
-            endingLineNumber = "2439"
+            startingLineNumber = "2445"
+            endingLineNumber = "2445"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4839,87 +4807,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2336"
-            endingLineNumber = "2336"
-            landmarkName = "merge_line_corners()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1290"
-            endingLineNumber = "1290"
-            landmarkName = "new_mergelines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1264"
-            endingLineNumber = "1264"
-            landmarkName = "new_mergelines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1283"
-            endingLineNumber = "1283"
-            landmarkName = "new_mergelines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1283"
-            endingLineNumber = "1283"
-            landmarkName = "new_mergelines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2443"
@@ -4935,11 +4823,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1272"
-            endingLineNumber = "1272"
+            startingLineNumber = "2335"
+            endingLineNumber = "2335"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1289"
+            endingLineNumber = "1289"
             landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4951,7 +4855,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1263"
+            endingLineNumber = "1263"
+            landmarkName = "new_mergelines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1282"
@@ -4967,11 +4887,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1223"
-            endingLineNumber = "1223"
+            startingLineNumber = "1282"
+            endingLineNumber = "1282"
             landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -4983,27 +4903,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1311"
-            endingLineNumber = "1311"
-            landmarkName = "new_mergelines()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2475"
-            endingLineNumber = "2475"
+            startingLineNumber = "2447"
+            endingLineNumber = "2447"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -5015,27 +4919,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2451"
-            endingLineNumber = "2451"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1268"
-            endingLineNumber = "1268"
+            startingLineNumber = "1271"
+            endingLineNumber = "1271"
             landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5047,11 +4935,107 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1187"
-            endingLineNumber = "1187"
+            startingLineNumber = "1281"
+            endingLineNumber = "1281"
+            landmarkName = "new_mergelines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1222"
+            endingLineNumber = "1222"
+            landmarkName = "new_mergelines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1310"
+            endingLineNumber = "1310"
+            landmarkName = "new_mergelines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2479"
+            endingLineNumber = "2479"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2455"
+            endingLineNumber = "2455"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1267"
+            endingLineNumber = "1267"
+            landmarkName = "new_mergelines()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "sketch/newmain.cpp"
+            timestampString = "502764034.272438"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1186"
+            endingLineNumber = "1186"
             landmarkName = "get_num_corner_points()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5079,11 +5063,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "809"
-            endingLineNumber = "809"
+            startingLineNumber = "808"
+            endingLineNumber = "808"
             landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
             landmarkType = "7">
          </BreakpointContent>
@@ -5111,11 +5095,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2503"
-            endingLineNumber = "2503"
+            startingLineNumber = "2499"
+            endingLineNumber = "2499"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -5127,11 +5111,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764148.089486"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2496"
-            endingLineNumber = "2496"
+            startingLineNumber = "2492"
+            endingLineNumber = "2492"
             landmarkName = "main(int argc, char** argv)"
             landmarkType = "7">
          </BreakpointContent>
@@ -5239,11 +5223,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "918"
-            endingLineNumber = "918"
+            startingLineNumber = "917"
+            endingLineNumber = "917"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5255,11 +5239,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "913"
-            endingLineNumber = "913"
+            startingLineNumber = "912"
+            endingLineNumber = "912"
             landmarkName = "displayone()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5271,11 +5255,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "sketch/newmain.cpp"
-            timestampString = "502762100.200541"
+            timestampString = "502764034.272438"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "569"
-            endingLineNumber = "569"
+            startingLineNumber = "568"
+            endingLineNumber = "568"
             landmarkName = "plot_line(myline *linet, int color)"
             landmarkType = "7">
          </BreakpointContent>

@@ -9,6 +9,7 @@
  * 3. http://opencvexamples.blogspot.com/2013/10/harris-corner-detection.html
  * 4. Finding faces in a planar embedding of a graph
  * 5. Polygon tesselation http://www.songho.ca/opengl/gl_tessellation.html
+ * 6. http://www-h.eng.cam.ac.uk/help/tpl/graphics/using_glui.html
  * */
 
 #ifdef WIN32
@@ -78,16 +79,14 @@ void disp(void);
 
 int merge_iteration =0;
 
-static int winmenu;
-static int menuid;
-static int val = 0;
-
-int sa_width  = 500;
-int sa_height = 500;
+int sa_width  = 800;
+int sa_height = 800;
 
 // Scale of the render
 // make it configurable in GUI
 int render_scale = 60;
+float img_scale = 3.0;
+
 
 //flags to be used by keyboard for three different operations
 int count     = 0;
@@ -455,8 +454,8 @@ void plot_points(vector<i2tuple> points_to_plot){
         
         glBegin( GL_POINTS );
         glColor3f(0.0f, 1.0f, 0.0f);
-        GLfloat px = (get<0>(p)-100)*IMG_SCALE/sa_width;
-        GLfloat py = (get<1>(p)-100)*IMG_SCALE/sa_height;
+        GLfloat px = (get<0>(p)-100)*img_scale/sa_width;
+        GLfloat py = (get<1>(p)-100)*img_scale/sa_height;
         glVertex2f(px, py);
         glEnd();
     }
@@ -551,8 +550,8 @@ void plot_line(std::vector<mypoint*> all_points, int color){
     glLineWidth(5);
     for(std::vector<mypoint*>::iterator iterator = all_points.begin(); iterator != all_points.end(); iterator++) {
         mypoint *m = *iterator;
-        GLfloat px = (m->x)*IMG_SCALE/sa_width;
-        GLfloat py = (m->y)*IMG_SCALE/sa_height;
+        GLfloat px = (m->x)*img_scale/sa_width;
+        GLfloat py = (m->y)*img_scale/sa_height;
         glVertex2f(px, py);
     }
     glEnd();
@@ -568,11 +567,11 @@ void plot_line(myline *linet, int color){
     int r = color;
     glColor3f(colors[r][0], colors[r][1], colors[r][2]);
     
-    GLfloat px = (linet->x1)*IMG_SCALE/sa_width;
-    GLfloat py = (linet->y1)*IMG_SCALE/sa_height;
+    GLfloat px = (linet->x1)*img_scale/sa_width;
+    GLfloat py = (linet->y1)*img_scale/sa_height;
     
-    GLfloat qx = (linet->x2)*IMG_SCALE/sa_width;
-    GLfloat qy = (linet->y2)*IMG_SCALE/sa_height;
+    GLfloat qx = (linet->x2)*img_scale/sa_width;
+    GLfloat qy = (linet->y2)*img_scale/sa_height;
     
     glVertex2f(px, py);
     glVertex2f(qx, qy);
@@ -2010,12 +2009,12 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman8.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman8.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman8.png");
+    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
+    imga = imread("/Users/pranjal/Desktop/image/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman4.png");
 
     
-    bw   = imga > 160;
+    bw   = imga > 100;
     img  = bw > 120;
     
     // get corner points using harris detector
@@ -2351,7 +2350,16 @@ void myGlutIdle( void )
     
     glutPostRedisplay();
 }
-
+void increase_scale(){
+    img_scale = img_scale+1;
+    glFlush();
+    glutPostRedisplay();
+}
+void decrease_scale(){
+    img_scale = img_scale-1;
+    glFlush();
+    glutPostRedisplay();
+}
 void show_projected_polygon(){
     display_type = 2;
     glFlush();
@@ -2377,36 +2385,32 @@ void glui_setup(){
     
     GLUI *glui_subwin = GLUI_Master.create_glui_subwindow(main_window,
                                             GLUI_SUBWINDOW_LEFT);
-    glui_subwin->add_checkbox( "Wireframe", &wireframe );
-    GLUI_Spinner *segment_spinner = glui_subwin->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
-    segment_spinner->set_int_limits( 3, 60 );
+    
+    //GLUI_Spinner *segment_spinner = glui_subwin->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
+    //segment_spinner->set_int_limits( 3, 60 );
     
     
     glui_subwin->set_main_gfx_window( main_window );
-    GLUI_Listbox *listbox = glui_subwin->add_listbox("A listbox");
-    listbox->add_item(1,"Red");
-    listbox->add_item(2,"Green");
-    listbox->add_item(3,"Blue");
     
-    glui_subwin->add_statictext("Example 2");
     glui_subwin->add_separator();
-    GLUI_Panel *obj_panel = glui_subwin->add_panel ("Test Panel");
+    //GLUI_Panel *obj_panel = glui_subwin->add_panel ("Test Panel");
     
     
     // ADD BUTTONS
-    glui_subwin->add_button("SHOW LINES", 0, (GLUI_Update_CB)show_lines);
-    glui_subwin->add_button("SHOW POLYGONS", 1, (GLUI_Update_CB)show_polygons);
-    glui_subwin->add_button("SHOW PROJECTED POLYGON", 2, (GLUI_Update_CB)show_projected_polygon);
-    glui_subwin->add_button("SHOW 3D", 3, (GLUI_Update_CB)show_3d);
-    glui_subwin->add_button("Quit", 4, (GLUI_Update_CB)exit);
+    glui_subwin->add_button("INCREASE SCALE", 0, (GLUI_Update_CB)increase_scale);
+    glui_subwin->add_button("DECREASE SCALE", 1, (GLUI_Update_CB)decrease_scale);
+    glui_subwin->add_button("SHOW LINES", 2, (GLUI_Update_CB)show_lines);
+    glui_subwin->add_button("SHOW POLYGONS", 3, (GLUI_Update_CB)show_polygons);
+    glui_subwin->add_button("SHOW PROJECTED POLYGON", 4, (GLUI_Update_CB)show_projected_polygon);
+    glui_subwin->add_button("SHOW 3D", 5, (GLUI_Update_CB)show_3d);
+    glui_subwin->add_button("Quit", 6, (GLUI_Update_CB)exit);
     
     
     
-    GLUI_RadioGroup *group1 = glui_subwin->add_radiogroup_to_panel(obj_panel);
-    glui_subwin->add_radiobutton_to_group(group1,"Option 1");
-    glui_subwin->add_radiobutton_to_group(group1,"Option 2");
-    GLUI_Rotation *arcball = glui_subwin->add_rotation("ball (doesn't do anything)");
-    
+//    GLUI_RadioGroup *group1 = glui_subwin->add_radiogroup_to_panel(obj_panel);
+//    glui_subwin->add_radiobutton_to_group(group1,"Option 1");
+//    glui_subwin->add_radiobutton_to_group(group1,"Option 2");
+    //GLUI_Rotation *arcball = glui_subwin->add_rotation("ball (doesn't do anything)");
     
     
     GLUI_Master.set_glutIdleFunc( myGlutIdle );
@@ -2454,7 +2458,7 @@ int main(int argc, char** argv){
     img.copyTo(dst_norm_scaled);
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
-    resizeWindow("corners_window", 600,600);
+    resizeWindow("corners_window", 800,800);
     //imshow( "corners_window", img );
     //cv::resize(img, img, Size(), 0.5, 0.5);
     imshow( "corners_window", dst_norm_scaled);
@@ -2475,14 +2479,6 @@ int main(int argc, char** argv){
     valid_lines_undirected = all_mylines;
     
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
-    
-    
-    // write corner points and line segments to file for later use
-    write_to_file(corner_points, valid_lines_undirected);
-    myfile.close();
-    
-    int test1 = 0;
-    int test2 = 0;
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     

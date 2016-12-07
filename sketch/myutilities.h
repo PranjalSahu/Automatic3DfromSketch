@@ -34,7 +34,6 @@
 
 
 #define PI 3.14159265
-#define IMG_SCALE 3.0
 #define MY_GLM_EPS 0.001
 
 typedef std::tuple<int,int> i2tuple;
