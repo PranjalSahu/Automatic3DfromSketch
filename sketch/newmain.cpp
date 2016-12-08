@@ -1091,6 +1091,20 @@ struct sortfromlefttoright {
     }
 };
 
+// returns the dual edges for all lines
+std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
+    std::vector<myline*> reverse_lines;
+    for(std::vector<myline*>::iterator iterator = vl.begin(); iterator != vl.end(); ++iterator) {
+        myline *t  = *iterator;
+        myline *nt = new myline(t->x2, t->x1, t->y2, t->y1);
+        nt->reverse_line = t;
+        t->reverse_line   = nt;
+        reverse_lines.push_back(nt);
+    }
+    return reverse_lines;
+}
+
+
 void book_keeping(){
     map_num_of_lines.clear();
     corner_points_colors.clear();
@@ -1113,6 +1127,18 @@ void book_keeping(){
         map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)] = map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)]+1;
         map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)] = map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)]+1;
     }
+    
+    valid_lines_undirected = all_mylines;
+    
+    std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
+    
+    valid_lines_directed.clear();
+    
+    // add original eges and then
+    // add the reverse edges for all edges
+    valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
+    valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
+    
 }
 
 
@@ -1458,19 +1484,6 @@ void handleKeypressa(unsigned char key, int x, int y) {
     }
 }
 
-
-// returns the dual edges for all lines
-std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
-    std::vector<myline*> reverse_lines;
-    for(std::vector<myline*>::iterator iterator = vl.begin(); iterator != vl.end(); ++iterator) {
-        myline *t  = *iterator;
-        myline *nt = new myline(t->x2, t->x1, t->y2, t->y1);
-        nt->reverse_line = t;
-        t->reverse_line   = nt;
-        reverse_lines.push_back(nt);
-    }
-    return reverse_lines;
-}
 
 
 // this function will be changed later to incorporate sweeping line
@@ -1851,8 +1864,8 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
 
     
     bw   = imga > 120;
@@ -2478,12 +2491,7 @@ int main(int argc, char** argv){
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
     book_keeping();
     
-    std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     
-    // add original eges and then
-    // add the reverse edges for all edges
-    valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
-    valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
     glutInit(&argc, argv);                 // Initialize GLUT
     glutInitDisplayMode(GLUT_DOUBLE);
