@@ -191,8 +191,6 @@ std::vector<glm::vec2> axis_2d_points;
 
 cost* cost_obj;
 
-ofstream myfile;
-
 float xview = 0, yview = 0, zview = 0;
 
 // Camera matrix
@@ -514,14 +512,10 @@ std::vector<i2tuple> get_correct_coord_point_and_line(std::vector<i2tuple> origi
     
     get_correct_coord(valid_lines_undirected);
     for(int i=0;i< valid_lines_undirected.size();++i){
-        
         valid_lines_undirected[i]->x1 = valid_lines_undirected[i]->x1-minx;
         valid_lines_undirected[i]->x2 = valid_lines_undirected[i]->x2-minx;
         valid_lines_undirected[i]->y1 = valid_lines_undirected[i]->y1-miny;
         valid_lines_undirected[i]->y2 = valid_lines_undirected[i]->y2-miny;
-        if(valid_lines_undirected[i]->x1 == -60){
-            printf("teting as");
-        }
     }
     
     //printf("MINX IS %d and MINY IS %d\n", minx, miny);
@@ -559,6 +553,29 @@ void plot_corner_points(){
         glVertex2f(x*img_scale/sa_width, y*img_scale/sa_width);
         glEnd();
     }
+    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5+0, 0);
+//    glEnd();
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-1, -1);
+//    glEnd();
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-2.5, -2.5);
+//    glEnd();
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-3.0, -3.0);
+//    glEnd();
+//    glPointSize(pointsize);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(1.25, 0.5);
+//    glEnd();
 }
 
 
@@ -908,17 +925,19 @@ void displayone() {
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
     glLoadIdentity();                 // Reset the model-view matrix
+    
     glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
 
+    //glTranslatef(0.0f, 0.0f, -7.0f);
     
     if(display_type == 4){            // show original lines without calculating huffman labels
         plot_lines(valid_lines_undirected, 0);
-        plot_corner_points();
+        //plot_corner_points();
     }
     else if(display_type == 0){       // calculate huffman labels and show lines
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
         plot_lines(valid_lines_undirected, line_colors);
-        plot_corner_points();
+        //plot_corner_points();
     }
     else if(display_type == 1){
         int index  = 0;
@@ -1141,7 +1160,7 @@ void new_mergelines(){
 
         // check if the absolute difference of slope is below some threhold
         if(flag){
-            if(abs(abs(all_mylines[index[0]]->m)-abs(all_mylines[index[1]]->m)) < 0.05){
+            if(all_mylines[index[0]]->get_angle(all_mylines[index[1]], px1, py1) < 15){
                 printf("merging lines");
                 myline * addline;
                 
@@ -1311,7 +1330,6 @@ void handleKeypressa(unsigned char key, int x, int y) {
             break;
         case 'j':
             zglut = zglut-1;
-            printf("zglut is %f\n", zglut);
             break;
         case '1':
             xview = xview+0.5;
@@ -1529,7 +1547,7 @@ void mousemotion(int button, int state, int x, int y){
         // instantiate cost object when 4 points have been clicked
         if(axis_2d_points.size() == 4){
             cost_obj = new cost(axis_2d_points);
-                    }
+        }
     }
 }
 
@@ -1734,18 +1752,22 @@ void init_values(){
     
     tess = gluNewTess();
     
-    myfile.open ("/Users/pranjal/Downloads/Graphics/huffman4.txt");
-    imga = imread("/Users/pranjal/Desktop/image/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman4.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffmani7.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffmani7.png");
 
     
-    bw   = imga > 160;
+    bw   = imga > 180;
     img  = bw > 120;
     
+    imwrite("/Users/Pranjal/Downloads/Graphics/test15.jpg", img);
     bitwise_not(bw, img);
+    imwrite("/Users/Pranjal/Downloads/Graphics/test16.jpg", img);
+
     thinning(img);
     
     remove_noise(img);
+    
+    imwrite("/Users/Pranjal/Downloads/Graphics/test17.jpg", img);
 }
 
 
@@ -2121,6 +2143,11 @@ void show_projected_polygon(){
 }
 void show_lines(){
     display_type = 4;
+    
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(0, sa_width, sa_height, 0, 1, -1);
+    
     glFlush();
     glutPostRedisplay();
 }
@@ -2135,11 +2162,24 @@ void show_huffman_lines(){
 }
 void show_polygons(){
     display_type = 1;
+    if(!polygon_done){
+        all_polygons = get_all_polygons(valid_lines_directed);
+        // remove the outer polygon which only contains occluding edges
+        remove_outer_polygon();
+        polygon_done= true;
+    }
+    
     glFlush();
     glutPostRedisplay();
 }
 void show_3d(){
     display_type = 3;
+    
+    
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+    
     
     if(!work_3d_done){
         
@@ -2166,20 +2206,20 @@ void show_3d(){
         
         
         //placing all polygons
-        while(1){
-            bool flag = false;
-            for(int i=0;i<polygons_to_place.size();++i){
-                if(!polygons_to_place[i]->placed){
-                    flag = true;
-                    break;
-                }
-            }
-            if(flag)
-            place_polygon();
-            else{
-                break;
-            }
-        }
+//        while(1){
+//            bool flag = false;
+//            for(int i=0;i<polygons_to_place.size();++i){
+//                if(!polygons_to_place[i]->placed){
+//                    flag = true;
+//                    break;
+//                }
+//            }
+//            if(flag)
+//            place_polygon();
+//            else{
+//                break;
+//            }
+//        }
         
         work_3d_done = true;
     }
@@ -2190,8 +2230,12 @@ void show_3d(){
 
 void glui_setup(){
     
-    GLUI *glui_subwin = GLUI_Master.create_glui_subwindow(main_window,
-                                            GLUI_SUBWINDOW_LEFT);
+//    GLUI *glui_subwin = GLUI_Master.create_glui_subwindow(main_window,
+//                                            GLUI_SUBWINDOW_LEFT);
+//    
+
+        GLUI *glui_subwin = GLUI_Master.create_glui("test");
+
     
     //GLUI_Spinner *segment_spinner = glui_subwin->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
     //segment_spinner->set_int_limits( 3, 60 );
@@ -2275,6 +2319,12 @@ void get_all_lines_using_split_and_merge(){
 
 int main(int argc, char** argv){
     
+//    myline *a = new myline(0, 1, 0, 1);
+//    myline *b = new myline(0, -1, 0, -1);
+//    
+//    printf("angle is %f \n", a->get_angle(b, 0, 0));
+//    return 0;
+    
     init_values();
     get_all_lines_using_split_and_merge();
     
@@ -2295,10 +2345,10 @@ int main(int argc, char** argv){
     plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
     namedWindow( "corners_window", WINDOW_NORMAL );
     resizeWindow("corners_window", 800,800);
-    //imshow( "corners_window", img );
+    imshow( "corners_window", img );
     //cv::resize(img, img, Size(), 0.5, 0.5);
     imshow( "corners_window", dst_norm_scaled);
-    imwrite("/Users/Pranjal/Downloads/Graphics/test1.jpg", dst_norm_scaled);
+    imwrite("/Users/Pranjal/Downloads/Graphics/test1.jpg", img);
     //imshow( "corners_window", bw );
     //waitKey(0);
 

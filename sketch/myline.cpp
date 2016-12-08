@@ -547,14 +547,17 @@ float myline::get_angle(myline *a, int bx, int by){
         vy3 = a->y2-by;
     }
     
-    mod_1 = sqrt(vx1*vx1+vy1*vy1);
-    mod_3 = sqrt(vx3*vx3+vy3*vy3);
     
-    int   dot1 = vx1*vx3+vy1*vy3;
-    float den1 = mod_1*mod_3;
-    angle   = acos (dot1/den1) * 180.0 / PI;
+    glm::vec2 av = glm::vec2(vx1, vy1);
+    glm::vec2 bv = glm::vec2(vx3, vy3);
     
-    return angle;
+    av = glm::normalize(av);
+    bv = glm::normalize(bv);
+    
+    angle   = acos(glm::dot(av, bv)) * 180.0 / PI;
+    
+    
+    return fmin(angle, 180-angle);
 }
 
 
