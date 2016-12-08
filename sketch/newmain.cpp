@@ -1666,7 +1666,8 @@ void mousemotion(int button, int state, int x, int y){
             int px = std::get<0>(original_corner_points[point_selected]);
             int py = std::get<1>(original_corner_points[point_selected]);
             
-            axis_2d_points.push_back(glm::vec2(px, py));
+            axis_2d_points.push_back(glm::vec2(x, sa_height-y));
+            //axis_2d_points.push_back(glm::vec2(px, py));
             // instantiate cost object when 4 points have been clicked
             if(axis_2d_points.size() == 4){
                 cost_obj  = new cost(axis_2d_points);
@@ -1877,11 +1878,11 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffmani7.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffmani7.png");
 
     
-    bw   = imga > 120;
+    bw   = imga > 180;
     img  = bw > 120;
     
     imwrite("/Users/Pranjal/Downloads/Graphics/test15.jpg", img);
