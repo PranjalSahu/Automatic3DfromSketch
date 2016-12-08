@@ -509,7 +509,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1359"
             endingLineNumber = "1359"
-            landmarkName = "get_reverse_lines(std::vector&lt;myline*&gt; vl)"
+            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -589,7 +589,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1374"
             endingLineNumber = "1374"
-            landmarkName = "get_all_valid_lines()"
+            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -604,9 +604,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1330"
-            endingLineNumber = "1330"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
-            landmarkType = "7">
+            endingLineNumber = "1330">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1175,7 +1173,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1425"
             endingLineNumber = "1425"
-            landmarkName = "plotpoint(i2tuple pt)"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1191,7 +1189,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1429"
             endingLineNumber = "1429"
-            landmarkName = "initGL()"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1207,7 +1205,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1441"
             endingLineNumber = "1441"
-            landmarkName = "initGL()"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1222,7 +1220,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2417"
-            endingLineNumber = "2417">
+            endingLineNumber = "2417"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1363,8 +1363,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1016"
             endingLineNumber = "1016"
-            landmarkName = "class sorter_check"
-            landmarkType = "3">
+            landmarkName = "displayone()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1379,8 +1379,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1018"
             endingLineNumber = "1018"
-            landmarkName = "operator()(const int o1, const int o2)"
-            landmarkType = "5">
+            landmarkName = "displayone()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1459,7 +1459,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1438"
             endingLineNumber = "1438"
-            landmarkName = "initGL()"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1475,7 +1475,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1454"
             endingLineNumber = "1454"
-            landmarkName = "reshape(GLsizei width, GLsizei height)"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1491,7 +1491,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1453"
             endingLineNumber = "1453"
-            landmarkName = "reshape(GLsizei width, GLsizei height)"
+            landmarkName = "get_all_valid_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1506,7 +1506,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1514"
-            endingLineNumber = "1514">
+            endingLineNumber = "1514"
+            landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1521,7 +1523,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1532"
             endingLineNumber = "1532"
-            landmarkName = "remove_noise(Mat&amp; im)"
+            landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1537,7 +1539,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1538"
             endingLineNumber = "1538"
-            landmarkName = "remove_noise(Mat&amp; im)"
+            landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1648,7 +1650,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2393"
-            endingLineNumber = "2393">
+            endingLineNumber = "2393"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1662,7 +1666,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2419"
-            endingLineNumber = "2419">
+            endingLineNumber = "2419"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1677,7 +1683,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1301"
             endingLineNumber = "1301"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1693,7 +1699,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1326"
             endingLineNumber = "1326"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1804,7 +1810,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1038"
-            endingLineNumber = "1038">
+            endingLineNumber = "1038"
+            landmarkName = "displayone()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1818,7 +1826,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "878"
-            endingLineNumber = "878">
+            endingLineNumber = "878"
+            landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1833,7 +1843,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "883"
             endingLineNumber = "883"
-            landmarkName = "myglBegin(GLenum type, void *polygon_data)"
+            landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1849,7 +1859,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "873"
             endingLineNumber = "873"
-            landmarkName = "TessCombine(double coords[3],double* data[4],float weight[4],double** result)"
+            landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1913,7 +1923,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1328"
             endingLineNumber = "1328"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
             <Locations>
                <Location
@@ -2024,7 +2034,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1321"
             endingLineNumber = "1321"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2040,7 +2050,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1316"
             endingLineNumber = "1316"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2087,7 +2097,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1294"
-            endingLineNumber = "1294">
+            endingLineNumber = "1294"
+            landmarkName = "place_polygon()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2454,7 +2466,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1303"
             endingLineNumber = "1303"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2470,7 +2482,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1311"
             endingLineNumber = "1311"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2486,7 +2498,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1829"
             endingLineNumber = "1829"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "remove_outer_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2502,7 +2514,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1820"
             endingLineNumber = "1820"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "remove_outer_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2518,7 +2530,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1828"
             endingLineNumber = "1828"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "remove_outer_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2534,7 +2546,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1834"
             endingLineNumber = "1834"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "remove_outer_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2614,7 +2626,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1686"
             endingLineNumber = "1686"
-            landmarkName = "get_polylines(Mat&amp; im)"
+            landmarkName = "split_and_merge(std::vector&lt;glm::vec2&gt; points)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2630,7 +2642,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1698"
             endingLineNumber = "1698"
-            landmarkName = "get_polylines(Mat&amp; im)"
+            landmarkName = "split_and_merge(std::vector&lt;glm::vec2&gt; points)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2645,7 +2657,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1735"
-            endingLineNumber = "1735">
+            endingLineNumber = "1735"
+            landmarkName = "get_polylines(Mat&amp; im)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2660,7 +2674,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1740"
             endingLineNumber = "1740"
-            landmarkName = "remove_outer_polygon()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2676,7 +2690,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1741"
             endingLineNumber = "1741"
-            landmarkName = "remove_outer_polygon()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2692,7 +2706,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1747"
             endingLineNumber = "1747"
-            landmarkName = "remove_outer_polygon()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2708,7 +2722,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1753"
             endingLineNumber = "1753"
-            landmarkName = "remove_outer_polygon()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2724,7 +2738,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1760"
             endingLineNumber = "1760"
-            landmarkName = "remove_outer_polygon()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2740,7 +2754,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1766"
             endingLineNumber = "1766"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "get_polylines(Mat&amp; im)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3155,7 +3169,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2410"
-            endingLineNumber = "2410">
+            endingLineNumber = "2410"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3249,7 +3265,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2420"
-            endingLineNumber = "2420">
+            endingLineNumber = "2420"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3279,9 +3297,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2320"
-            endingLineNumber = "2320"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
+            endingLineNumber = "2320">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3456,7 +3472,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "876"
             endingLineNumber = "876"
-            landmarkName = "TessCombine(double coords[3],double* data[4],float weight[4],double** result)"
+            landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3584,7 +3600,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1315"
             endingLineNumber = "1315"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3760,7 +3776,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "866"
             endingLineNumber = "866"
-            landmarkName = "TessError(GLenum err)"
+            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3776,7 +3792,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "865"
             endingLineNumber = "865"
-            landmarkName = "TessError(GLenum err)"
+            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3824,7 +3840,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1802"
             endingLineNumber = "1802"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "init_values()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3840,7 +3856,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1799"
             endingLineNumber = "1799"
-            landmarkName = "merge_line_corners()"
+            landmarkName = "init_values()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3887,7 +3903,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2046"
-            endingLineNumber = "2046">
+            endingLineNumber = "2046"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3902,7 +3920,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2048"
             endingLineNumber = "2048"
-            landmarkName = "move_points()"
+            landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3918,7 +3936,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2041"
             endingLineNumber = "2041"
-            landmarkName = "myGlutIdle( void )"
+            landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3966,7 +3984,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2079"
             endingLineNumber = "2079"
-            landmarkName = "move_down()"
+            landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -3981,7 +3999,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2055"
-            endingLineNumber = "2055">
+            endingLineNumber = "2055"
+            landmarkName = "merge_line_corners()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4028,7 +4048,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "694"
             endingLineNumber = "694"
-            landmarkName = "get_plane(polygon *pt)"
+            landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4044,7 +4064,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "690"
             endingLineNumber = "690"
-            landmarkName = "get_plane(polygon *pt)"
+            landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4060,7 +4080,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "687"
             endingLineNumber = "687"
-            landmarkName = "get_plane(polygon *pt)"
+            landmarkName = "check_2_polygons_already_placed(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4108,7 +4128,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1313"
             endingLineNumber = "1313"
-            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
+            landmarkName = "place_polygon()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4123,7 +4143,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2429"
-            endingLineNumber = "2429">
+            endingLineNumber = "2429"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4154,7 +4176,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "933"
             endingLineNumber = "933"
-            landmarkName = "displayone()"
+            landmarkName = "TesselationClass(double points3d[][3], int size, plane *p)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4169,7 +4191,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1027"
-            endingLineNumber = "1027">
+            endingLineNumber = "1027"
+            landmarkName = "displayone()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4216,7 +4240,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "753"
             endingLineNumber = "753"
-            landmarkName = "insert_corres(std::vector&lt;glm::vec3&gt; threed, std::vector&lt;glm::vec2&gt; twod)"
+            landmarkName = "get_plane(polygon *pt)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4231,7 +4255,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2374"
-            endingLineNumber = "2374">
+            endingLineNumber = "2374"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4246,7 +4272,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2101"
             endingLineNumber = "2101"
-            landmarkName = "show_projected_polygon()"
+            landmarkName = "merge_line_corners()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4262,7 +4288,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1217"
             endingLineNumber = "1217"
-            landmarkName = "place_polygon()"
+            landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4294,7 +4320,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1210"
             endingLineNumber = "1210"
-            landmarkName = "place_polygon()"
+            landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4310,7 +4336,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1210"
             endingLineNumber = "1210"
-            landmarkName = "place_polygon()"
+            landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4325,7 +4351,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2376"
-            endingLineNumber = "2376">
+            endingLineNumber = "2376"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4356,7 +4384,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1209"
             endingLineNumber = "1209"
-            landmarkName = "place_polygon()"
+            landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4388,7 +4416,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1238"
             endingLineNumber = "1238"
-            landmarkName = "place_polygon()"
+            landmarkName = "new_mergelines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4403,7 +4431,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2408"
-            endingLineNumber = "2408">
+            endingLineNumber = "2408"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4417,7 +4447,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2384"
-            endingLineNumber = "2384">
+            endingLineNumber = "2384"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4432,7 +4464,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1116"
             endingLineNumber = "1116"
-            landmarkName = "new_mergelines()"
+            landmarkName = "get_num_corner_points()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4464,7 +4496,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "854"
             endingLineNumber = "854"
-            landmarkName = "insert_into_polygons_to_render_list(std::vector&lt;polygon*&gt; adjacent_polygons)"
+            landmarkName = "get_next_polygon_to_render(std::vector&lt;polygon*&gt; polygons_to_place)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4624,7 +4656,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "625"
             endingLineNumber = "625"
-            landmarkName = "plot_lines(std::vector&lt;myline*&gt; lines_to_plot, std::vector&lt;int&gt; color)"
+            landmarkName = "plot_line(myline *linet, int color)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4671,7 +4703,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2398"
-            endingLineNumber = "2398">
+            endingLineNumber = "2398"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4685,7 +4719,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2399"
-            endingLineNumber = "2399">
+            endingLineNumber = "2399"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4699,7 +4735,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2400"
-            endingLineNumber = "2400">
+            endingLineNumber = "2400"
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4714,7 +4752,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2214"
             endingLineNumber = "2214"
-            landmarkName = "glui_setup()"
+            landmarkName = "show_polygons()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4730,7 +4768,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1384"
             endingLineNumber = "1384"
-            landmarkName = "get_all_valid_lines()"
+            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4746,7 +4784,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1384"
             endingLineNumber = "1384"
-            landmarkName = "get_all_valid_lines()"
+            landmarkName = "handleKeypressa(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4777,7 +4815,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1550"
-            endingLineNumber = "1550">
+            endingLineNumber = "1550"
+            landmarkName = "get_nearest_point(int xa2, int ya2)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4792,7 +4832,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1554"
             endingLineNumber = "1554"
-            landmarkName = "get_min(Mat&amp; im)"
+            landmarkName = "get_nearest_point(int xa2, int ya2)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4808,7 +4848,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1491"
             endingLineNumber = "1491"
-            landmarkName = "plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector&lt;myline*&gt; valid_lines_undirected, vector&lt;i2tuple&gt; corner_points)"
+            landmarkName = "reshape(GLsizei width, GLsizei height)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4936,7 +4976,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2189"
             endingLineNumber = "2189"
-            landmarkName = "show_3d()"
+            landmarkName = "show_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

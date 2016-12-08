@@ -79,8 +79,8 @@ void disp(void);
 
 int merge_iteration =0;
 
-int sa_width  = 800;
-int sa_height = 800;
+int sa_width  = 600;
+int sa_height = 600;
 
 // Scale of the render
 // make it configurable in GUI
@@ -162,6 +162,7 @@ int  display_type = 4;
 bool polygon_done = false;  // polygon extraction done or not
 bool work_3d_done = false;  // if it is true then don't do the 3d construction work again
 bool huffman_done = false;  // huffman labels work done
+int point_selected = -1;
 
 
 // plane to project for demo
@@ -539,43 +540,65 @@ void plot_line_3d(std::vector<mypoint*> all_points, int color){
 
 // plots the corner points
 void plot_corner_points(){
-    float pointsize = 15.0;
+    float pointsize = 80.0;
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f },
         {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f } };
     
-    for(int i=0;i<corner_points.size();++i){
-        int x = std::get<0>(corner_points[i]);
-        int y = std::get<1>(corner_points[i]);
-        glPointSize(pointsize);
-        glBegin(GL_POINTS);
-        glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
-        glVertex2f(x*img_scale/sa_width, y*img_scale/sa_width);
-        glEnd();
-    }
+//    printf("POINTS START\n");
+//    for(int i=0;i<corner_points.size();++i){
+//        int x = std::get<0>(corner_points[i]);
+//        int y = std::get<1>(corner_points[i]);
+//        if(point_selected == i){
+//            glPointSize(pointsize+7);
+//        }
+//        else{
+//            glPointSize(pointsize);
+//        }
+//        glBegin(GL_POINTS);
+//        glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
+//        glVertex2f(x*img_scale/sa_width, y*img_scale/sa_height);
+//        printf("%f, %f\n", x*img_scale/sa_width, y*img_scale/sa_height);
+//        glEnd();
+//    }
+//    printf("POINTS END\n");
+
+    glPointSize(pointsize);
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(0.5, 0.5);
+    glEnd();
     
-//    glPointSize(pointsize);
-//    glBegin(GL_POINTS);
-//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-//    glVertex2f(-1.5+0, 0);
-//    glEnd();
-//    glPointSize(pointsize);
-//    glBegin(GL_POINTS);
-//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-//    glVertex2f(-1.5-1, -1);
-//    glEnd();
-//    glBegin(GL_POINTS);
-//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-//    glVertex2f(-1.5-2.5, -2.5);
-//    glEnd();
-//    glBegin(GL_POINTS);
-//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-//    glVertex2f(-1.5-3.0, -3.0);
-//    glEnd();
-//    glPointSize(pointsize);
-//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-//    glVertex2f(1.25, 0.5);
-//    glEnd();
+    
+    glPointSize(pointsize);
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(0, 0);
+    glEnd();
+    
+    glPointSize(pointsize);
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(-3, 3);
+    glEnd();
+    
+    glPointSize(pointsize);
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(-1.5-1, -1);
+    glEnd();
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(-1.5-2.5, -2.5);
+    glEnd();
+    glBegin(GL_POINTS);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(-1.5-3.0, -3.0);
+    glEnd();
+    glPointSize(pointsize);
+    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+    glVertex2f(0.75, 0.5);
+    glEnd();
 }
 
 
@@ -918,10 +941,24 @@ void displayone() {
     
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
+
     
+    if(display_type == 3){
+        GLfloat aspect = (GLfloat)sa_width / (GLfloat)sa_height;
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(45.0, aspect, 1.0, 100.0);
+        
+    }else{
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
+        //glOrtho(0, sa_width, sa_height, 0, -1, 1);
+    }
+        
     
     //glClear(GL_COLOR_BUFFER_BIT);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
     
     glLoadIdentity();                 // Reset the model-view matrix
@@ -936,14 +973,14 @@ void displayone() {
     
     
     if(display_type == 4){            // show original lines without calculating huffman labels
-        
-        plot_lines(valid_lines_undirected, 0);
+        glutWireCube(2);
+        //plot_lines(valid_lines_undirected, 0);
         //plot_corner_points();
     }
     else if(display_type == 0){       // calculate huffman labels and show lines
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
         plot_lines(valid_lines_undirected, line_colors);
-        //plot_corner_points();
+        plot_corner_points();
     }
     else if(display_type == 1){
         int index  = 0;
@@ -1458,7 +1495,13 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
     glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
     glLoadIdentity();             // Reset
     // Enable perspective projection with fovy, aspect, zNear and zFar
-    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+    if(display_type == 3){
+        gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+    }
+    else{
+        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
+        //glOrtho(0, sa_width, sa_height, 0, 0, 1);
+    }
 }
 
 void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> valid_lines_undirected, vector<i2tuple> corner_points){
@@ -1495,6 +1538,30 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
     return;
 }
 
+// get the nearest point to the point clicked
+int get_nearest_point(int xa2, int ya2){
+    
+    int index = -1;
+    float min = 100000;
+    
+    float x2 = (xa2+0.0-sa_width/2)/(sa_width/2);
+    float y2 = (ya2+0.0-sa_height/2)/(sa_height/2);
+    
+    for(int i=0; i< corner_points.size();++i){
+        float x1 = std::get<0>(corner_points[i])*(img_scale+0.0)/sa_width;
+        float y1 = std::get<1>(corner_points[i])*(img_scale+0.0)/sa_height;
+        
+        float dist =sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        
+        if(dist < min){
+            index = i;
+            min   = dist;
+        }
+    }
+    
+    return index;
+}
+
 
 
 // first is origin
@@ -1502,6 +1569,12 @@ void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> vali
 void mousemotion(int button, int state, int x, int y){
     if(state == GLUT_DOWN){
         printf("mouse >> %d %d\n", x, sa_height-y);
+        
+        int index = get_nearest_point(x, sa_height-y);
+        
+        point_selected = index;
+        
+        
         axis_2d_points.push_back(glm::vec2(x, sa_height-y));
         
         // instantiate cost object when 4 points have been clicked
@@ -1712,11 +1785,11 @@ void init_values(){
     
     tess = gluNewTess();
     
-    imga = imread("/Users/pranjal/Desktop/image/huffman11.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman11.jpeg");
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
-    bw   = imga > 180;
+    bw   = imga > 120;
     img  = bw > 120;
     
     imwrite("/Users/Pranjal/Downloads/Graphics/test15.jpg", img);
@@ -2077,11 +2150,22 @@ void move_down(){
     glFlush();
     glutPostRedisplay();
 }
-
+void reset_scale(){
+    if(display_type == 3){
+        render_scale = render_scale-5;
+    }else{
+        img_scale = 3;
+        trans_x = 0;
+        trans_y = 0;
+        move_points();
+    }
+    glFlush();
+    glutPostRedisplay();
+}
 void increase_scale(){
     if(display_type == 3){
         render_scale = render_scale+5;
-    }else if(display_type == 0){
+    }else{
         img_scale = img_scale+1;
     }
     glFlush();
@@ -2090,7 +2174,7 @@ void increase_scale(){
 void decrease_scale(){
     if(display_type == 3){
         render_scale = render_scale-5;
-    }else if(display_type == 0){
+    }else{
         img_scale = img_scale-1;
     }
     glFlush();
@@ -2104,10 +2188,7 @@ void show_projected_polygon(){
 void show_lines(){
     display_type = 4;
     
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    //glOrtho(0, sa_width, sa_height, 0, 1, -1);
-    glOrtho(0, sa_width, sa_height, 0, 0, sa_width);
+    
     
     glFlush();
     glutPostRedisplay();
@@ -2211,6 +2292,7 @@ void glui_setup(){
     // ADD BUTTONS
     glui_subwin->add_button("INCREASE SCALE", 0, (GLUI_Update_CB)increase_scale);
     glui_subwin->add_button("DECREASE SCALE", 1, (GLUI_Update_CB)decrease_scale);
+    glui_subwin->add_button("RESET", 1, (GLUI_Update_CB)reset_scale);
     glui_subwin->add_button("MOVE LEFT", 2, (GLUI_Update_CB)move_left);
     glui_subwin->add_button("MOVE RIGHT", 3, (GLUI_Update_CB)move_right);
     glui_subwin->add_button("MOVE UP", 4, (GLUI_Update_CB)move_up);
@@ -2231,7 +2313,7 @@ void glui_setup(){
     
     
     GLUI_Master.set_glutIdleFunc( myGlutIdle );
-    GLUI_Master.set_glutReshapeFunc( reshape );
+    GLUI_Master.set_glutReshapeFunc( reshape);
     
 }
 
@@ -2355,6 +2437,53 @@ int main(int argc, char** argv){
     return 0;
 }
 
+
+//
+//
+//
+//static int ortho = 0;
+//
+//static void display(void) {
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    glLoadIdentity();
+//    if (ortho) {
+//    } else {
+//        /* This only rotates and translates the world around to look like the camera moved. */
+//        gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+//    }
+//    glColor3f(1.0f, 1.0f, 1.0f);
+//    glutWireCube(2);
+//    glFlush();
+//}
+//
+//static void reshape(int w, int h) {
+//    glViewport(0, 0, w, h);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    if (ortho) {
+//        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
+//    } else {
+//        glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
+//    }
+//    glMatrixMode(GL_MODELVIEW);
+//}
+//
+//int main(int argc, char** argv) {
+//    glutInit(&argc, argv);
+//    if (argc > 1) {
+//        ortho = 1;
+//    }
+//    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+//    glutInitWindowSize(500, 500);
+//    glutInitWindowPosition(100, 100);
+//    glutCreateWindow(argv[0]);
+//    glClearColor(0.0, 0.0, 0.0, 0.0);
+//    glShadeModel(GL_FLAT);
+//    glutDisplayFunc(display);
+//    glutReshapeFunc(reshape);
+//    glutMainLoop();
+//    return EXIT_SUCCESS;
+//}
 
 
 #endif
