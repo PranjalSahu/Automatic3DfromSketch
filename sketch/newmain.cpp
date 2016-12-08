@@ -85,7 +85,7 @@ int sa_height = 600;
 // Scale of the render
 // make it configurable in GUI
 int render_scale = 60;
-float img_scale = 3.0;
+float img_scale = 5.0;
 
 
 //flags to be used by keyboard for three different operations
@@ -1549,8 +1549,8 @@ int get_nearest_point(int xa2, int ya2){
     int index = -1;
     float min = 100000;
     
-    float x2 = (xa2+0.0-sa_width/2)/(sa_width/2)*img_scale;
-    float y2 = (ya2+0.0-sa_height/2)/(sa_height/2)*img_scale;
+    float x2 = (xa2+0.0-sa_width/2)/(sa_width/2)*3;
+    float y2 = (ya2+0.0-sa_height/2)/(sa_height/2)*3;
     
     for(int i=0; i< corner_points.size();++i){
         float x1 = std::get<0>(corner_points[i])*(img_scale+0.0)/sa_width;
@@ -1790,8 +1790,8 @@ void init_values(){
     
     tess = gluNewTess();
     
-    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
 
     
     bw   = imga > 120;
