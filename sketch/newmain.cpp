@@ -162,6 +162,7 @@ int  display_type = 4;
 bool polygon_done = false;  // polygon extraction done or not
 bool work_3d_done = false;  // if it is true then don't do the 3d construction work again
 bool huffman_done = false;  // huffman labels work done
+bool draw_axis    = false;  // start drawing axis
 int point_selected = -1;
 
 
@@ -545,7 +546,6 @@ void plot_corner_points(){
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f },
         {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f } };
     
-    printf("POINTS START\n");
     for(int i=0;i<corner_points.size();++i){
         int x = std::get<0>(corner_points[i]);
         int y = std::get<1>(corner_points[i]);
@@ -558,10 +558,9 @@ void plot_corner_points(){
         glBegin(GL_POINTS);
         glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
         glVertex2f(x*img_scale/sa_width, y*img_scale/sa_height);
-        printf("%f, %f\n", x*img_scale/sa_width, y*img_scale/sa_height);
+        //printf("%f, %f\n", x*img_scale/sa_width, y*img_scale/sa_height);
         glEnd();
     }
-    printf("POINTS END\n");
 
 //    glPointSize(pointsize);
 //    glBegin(GL_POINTS);
@@ -1092,6 +1091,30 @@ struct sortfromlefttoright {
     }
 };
 
+void book_keeping(){
+    map_num_of_lines.clear();
+    corner_points_colors.clear();
+    
+    // initialize map with 0
+    for(int ik=0; ik < corner_points.size();++ik){
+        int x = std::get<0>(corner_points[ik]);
+        int y = std::get<1>(corner_points[ik]);
+        map_num_of_lines[i2tuple(x, y)] = 0;
+        corner_points_colors.push_back(ik%7);
+        original_corner_points.push_back(corner_points[ik]);
+    }
+    
+    
+    // get count of each corner point
+    for(int jk=0;jk<all_mylines.size();++jk){
+        if(all_mylines[jk]->x1 == -15){
+            printf("testing");
+        }
+        map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)] = map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)]+1;
+        map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)] = map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)]+1;
+    }
+}
+
 
 // get the number of corner points
 // and get the number of lines intersecting at each corner
@@ -1110,51 +1133,109 @@ void get_num_corner_points(){
             // if either of the point is already inserted then skip that corner
             if(all_mylines[ik]->x1 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y1 == std::get<1>(corner_points[jk])){
                 flag1 = false;
-                if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
-                    printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
-                }
             }
             if(all_mylines[ik]->x2 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y2 == std::get<1>(corner_points[jk])){
                 flag2 = false;
-                if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
-                    printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
-                }
             }
         }
         if(flag1){
-            if((all_mylines[ik]->x1 == 250 && all_mylines[ik]->y1 == 56)){
-                printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
-            }
-            
             corner_points.push_back(i2tuple(all_mylines[ik]->x1, all_mylines[ik]->y1));
         }
         if(flag2){
-            if((all_mylines[ik]->x2 == 250 && all_mylines[ik]->y2 == 56)){
-                printf(" <<<<<<<<<<<<<<<<  (%d, %d) (%d, %d)\n", all_mylines[ik]->x1, all_mylines[ik]->y1, all_mylines[ik]->x2, all_mylines[ik]->y2);
-            }
-            
             corner_points.push_back(i2tuple(all_mylines[ik]->x2, all_mylines[ik]->y2));
         }
     }
     
-    map_num_of_lines.clear();
-    corner_points_colors.clear();
+    book_keeping();
     
-    // initialize map with 0
-    for(int ik=0; ik < corner_points.size();++ik){
-        int x = std::get<0>(corner_points[ik]);
-        int y = std::get<1>(corner_points[ik]);
-        map_num_of_lines[i2tuple(x, y)] = 0;
-        corner_points_colors.push_back(ik%7);
-        original_corner_points.push_back(corner_points[ik]);
+}
+
+// returns the lines coming on that corner
+std::pair<std::vector<int>, bool> get_lines_of_corner(int i){
+    int count = 0;
+    std::vector<int> pp;
+    bool flag = false;
+    
+    // if only two lines pass through this corner
+    int px1 = std::get<0>(corner_points[i]);
+    int py1 = std::get<1>(corner_points[i]);
+    
+    // get indices of line segments which are going to be merged
+    for(int j=0;j<all_mylines.size();++j){
+        if((all_mylines[j]->x1 == px1 && all_mylines[j]->y1 == py1) || (all_mylines[j]->x2 == px1 && all_mylines[j]->y2 == py1)){
+            pp.push_back(j);
+            ++count;
+            
+            if(count == 2){
+                // no other line can use this now
+                flag = true;
+                break;
+            }
+        }
     }
     
+    return make_pair(pp, flag);
+
+}
+
+myline * get_new_line(int index[]){
+    myline * addline;
     
-    // get count of each corner point
-    for(int jk=0;jk<all_mylines.size();++jk){
-        map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)] = map_num_of_lines[i2tuple(all_mylines[jk]->x1, all_mylines[jk]->y1)]+1;
-        map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)] = map_num_of_lines[i2tuple(all_mylines[jk]->x2, all_mylines[jk]->y2)]+1;
+    if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x1) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y1)){
+        addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x2, all_mylines[index[0]]->y2, all_mylines[index[1]]->y2);
+    }else if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y2)){
+        addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x1, all_mylines[index[0]]->y2, all_mylines[index[1]]->y1);
+    }else if((all_mylines[index[0]]->x2 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y2 == all_mylines[index[1]]->y2)){
+        addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x1, all_mylines[index[0]]->y1, all_mylines[index[1]]->y1);
+    }else{
+        addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x2, all_mylines[index[0]]->y1, all_mylines[index[1]]->y2);
     }
+    return addline;
+}
+
+
+// deletes the selected point from the list of corners
+void delete_point_from_corners_and_lines(int i){
+    int index[2];
+    bool flag = false;
+    std::vector<myline *> all_mylinestemp(all_mylines);
+
+    // if only two lines pass through this corner
+    int px1 = std::get<0>(corner_points[i]);
+    int py1 = std::get<1>(corner_points[i]);
+    
+    // return if more than 2 lines are present on that corner
+    int nump = map_num_of_lines[i2tuple(px1, py1)];
+    if(nump != 2){
+        return;
+    }
+    
+    std::pair<std::vector<int>, bool> temp =  get_lines_of_corner(i);
+    index[0] = temp.first[0];
+    index[1] = temp.first[1];
+    flag  = temp.second;
+    
+    myline * addline = get_new_line(index);
+    
+    all_mylinestemp[index[0]] = NULL;
+    all_mylinestemp[index[1]] = NULL;
+    all_mylinestemp.push_back(addline);
+    
+    std::vector<myline*> all_mylines_a;
+    
+    for(int i=0;i<all_mylines.size();++i){
+        if(all_mylinestemp[i] != NULL){
+            all_mylines_a.push_back(all_mylines[i]);
+        }
+    }
+    int added = all_mylinestemp.size() - all_mylines.size();
+    
+    for(int i=all_mylinestemp.size()-1;i>=all_mylinestemp.size()-added;--i){
+        all_mylines_a.push_back(all_mylinestemp[i]);
+    }
+    
+    all_mylines = all_mylines_a;
+    get_num_corner_points();
 }
 
 
@@ -1181,40 +1262,18 @@ void new_mergelines(){
         int py1 = std::get<1>(corner_points[i]);
         
         if(map_num_of_lines[i2tuple(px1, py1)] == 2){
-            
-            count = 0;
-            // get indices of line segments which are going to be merged
-            for(int j=0;j<all_mylines.size();++j){
-                if((all_mylines[j]->x1 == px1 && all_mylines[j]->y1 == py1) || (all_mylines[j]->x2 == px1 && all_mylines[j]->y2 == py1)){
-                    index[count] = j;
-                    ++count;
-                    
-                    if(count == 2){
-                        // no other line can use this now
-                        
-                        flag = true;
-                        break;
-                    }
-                }
-            }
-            
+            std::pair<std::vector<int>, bool> temp =  get_lines_of_corner(i);
+            index[0] = temp.first[0];
+            index[1] = temp.first[1];
+            flag  = temp.second;
         }
 
         // check if the absolute difference of slope is below some threhold
         if(flag){
             if(all_mylines[index[0]]->get_angle(all_mylines[index[1]], px1, py1) < 15){
                 printf("merging lines");
-                myline * addline;
                 
-                if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x1) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y1)){
-                    addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x2, all_mylines[index[0]]->y2, all_mylines[index[1]]->y2);
-                }else if((all_mylines[index[0]]->x1 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y1 == all_mylines[index[1]]->y2)){
-                    addline = new myline(all_mylines[index[0]]->x2, all_mylines[index[1]]->x1, all_mylines[index[0]]->y2, all_mylines[index[1]]->y1);
-                }else if((all_mylines[index[0]]->x2 == all_mylines[index[1]]->x2) && (all_mylines[index[0]]->y2 == all_mylines[index[1]]->y2)){
-                    addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x1, all_mylines[index[0]]->y1, all_mylines[index[1]]->y1);
-                }else{
-                    addline = new myline(all_mylines[index[0]]->x1, all_mylines[index[1]]->x2, all_mylines[index[0]]->y1, all_mylines[index[1]]->y2);
-                }
+                myline * addline = get_new_line(index);
                 
                 all_mylinestemp[index[0]] = NULL;
                 all_mylinestemp[index[1]] = NULL;
@@ -1569,6 +1628,7 @@ int get_nearest_point(int xa2, int ya2){
 
 
 
+
 // first is origin
 // then x, y, z
 void mousemotion(int button, int state, int x, int y){
@@ -1579,12 +1639,13 @@ void mousemotion(int button, int state, int x, int y){
         
         point_selected = index;
         
-        
-        axis_2d_points.push_back(glm::vec2(x, sa_height-y));
-        
-        // instantiate cost object when 4 points have been clicked
-        if(axis_2d_points.size() == 4){
-            cost_obj = new cost(axis_2d_points);
+        if(draw_axis){
+            axis_2d_points.push_back(glm::vec2(x, sa_height-y));
+            // instantiate cost object when 4 points have been clicked
+            if(axis_2d_points.size() == 4){
+                cost_obj  = new cost(axis_2d_points);
+                draw_axis =  false;
+            }
         }
     }
 }
@@ -1789,9 +1850,9 @@ void init_values(){
     poly_seq[2] = 4;
     
     tess = gluNewTess();
-    
-    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
+
+    imga = imread("/Users/pranjal/Desktop/image/huffman6.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman6.png");
 
     
     bw   = imga > 120;
@@ -2185,6 +2246,21 @@ void decrease_scale(){
     glFlush();
     glutPostRedisplay();
 }
+
+void delete_point_button(){
+    if(point_selected < 0){
+        return;
+    }
+    draw_axis = false;
+    delete_point_from_corners_and_lines(point_selected);
+    point_selected = -1;
+    glFlush();
+    glutPostRedisplay();
+    return;
+}
+void draw_axis_button(){
+    draw_axis = true;
+}
 void show_projected_polygon(){
     display_type = 2;
     glFlush();
@@ -2192,9 +2268,6 @@ void show_projected_polygon(){
 }
 void show_lines(){
     display_type = 4;
-    
-    
-    
     glFlush();
     glutPostRedisplay();
 }
@@ -2300,8 +2373,10 @@ void glui_setup(){
     glui_subwin->add_button("SHOW HUFFMAN LINES", 7, (GLUI_Update_CB)show_huffman_lines);       // huffman lines
     glui_subwin->add_button("SHOW POLYGONS", 8, (GLUI_Update_CB)show_polygons);         // show polygons
     glui_subwin->add_button("SHOW PROJECTED POLYGON", 9, (GLUI_Update_CB)show_projected_polygon);
-    glui_subwin->add_button("SHOW 3D", 10, (GLUI_Update_CB)show_3d);                    // show 3d
-    glui_subwin->add_button("Quit", 11, (GLUI_Update_CB)exit);
+    glui_subwin->add_button("DRAW AXIS", 10, (GLUI_Update_CB)draw_axis_button);
+    glui_subwin->add_button("DELETE POINT", 11, (GLUI_Update_CB)delete_point_button);
+    glui_subwin->add_button("SHOW 3D", 12, (GLUI_Update_CB)show_3d);                    // show 3d
+    glui_subwin->add_button("Quit", 13, (GLUI_Update_CB)exit);
     
     
     
@@ -2361,12 +2436,6 @@ void get_all_lines_using_split_and_merge(){
 
 int main(int argc, char** argv){
     
-//    myline *a = new myline(0, 1, 0, 1);
-//    myline *b = new myline(0, -1, 0, -1);
-//    
-//    printf("angle is %f \n", a->get_angle(b, 0, 0));
-//    return 0;
-    
     init_values();
     get_all_lines_using_split_and_merge();
     
@@ -2407,6 +2476,7 @@ int main(int argc, char** argv){
     valid_lines_undirected = all_mylines;
     
     corner_points = get_correct_coord_point_and_line(corner_points, valid_lines_undirected);
+    book_keeping();
     
     std::vector<myline*> rv = get_reverse_lines(valid_lines_undirected);
     
