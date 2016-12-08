@@ -1105,17 +1105,25 @@ std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
 }
 
 
+void move_points(){
+    for(int i=0;i<corner_points.size();++i){
+        std::get<0>(corner_points[i]) = std::get<0>(original_corner_points[i])+trans_x;
+        std::get<1>(corner_points[i]) = std::get<1>(original_corner_points[i])+trans_y;
+    }
+}
+
 void book_keeping(){
     map_num_of_lines.clear();
     corner_points_colors.clear();
+    corner_points.clear();
     
     // initialize map with 0
-    for(int ik=0; ik < corner_points.size();++ik){
-        int x = std::get<0>(corner_points[ik]);
-        int y = std::get<1>(corner_points[ik]);
+    for(int ik=0; ik < original_corner_points.size();++ik){
+        int x = std::get<0>(original_corner_points[ik]);
+        int y = std::get<1>(original_corner_points[ik]);
         map_num_of_lines[i2tuple(x, y)] = 0;
+        corner_points.push_back(original_corner_points[ik]);
         corner_points_colors.push_back(ik%7);
-        original_corner_points.push_back(corner_points[ik]);
     }
     
     
@@ -1139,6 +1147,8 @@ void book_keeping(){
     valid_lines_directed.insert(valid_lines_directed.end(), valid_lines_undirected.begin(), valid_lines_undirected.end());
     valid_lines_directed.insert(valid_lines_directed.end(), rv.begin(), rv.end());
     
+    move_points();
+    
 }
 
 
@@ -1146,7 +1156,7 @@ void book_keeping(){
 // and get the number of lines intersecting at each corner
 void get_num_corner_points(){
     
-    corner_points.clear();
+    original_corner_points.clear();
     
     // getting corner points
     for(int ik=0;ik<all_mylines.size();++ik){
@@ -1154,21 +1164,21 @@ void get_num_corner_points(){
         bool flag1 = true;
         bool flag2 = true;
         
-        for(int jk=0;jk<corner_points.size();++jk){
+        for(int jk=0;jk<original_corner_points.size();++jk){
             
             // if either of the point is already inserted then skip that corner
-            if(all_mylines[ik]->x1 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y1 == std::get<1>(corner_points[jk])){
+            if(all_mylines[ik]->x1 == std::get<0>(original_corner_points[jk]) && all_mylines[ik]->y1 == std::get<1>(original_corner_points[jk])){
                 flag1 = false;
             }
-            if(all_mylines[ik]->x2 == std::get<0>(corner_points[jk]) && all_mylines[ik]->y2 == std::get<1>(corner_points[jk])){
+            if(all_mylines[ik]->x2 == std::get<0>(original_corner_points[jk]) && all_mylines[ik]->y2 == std::get<1>(original_corner_points[jk])){
                 flag2 = false;
             }
         }
         if(flag1){
-            corner_points.push_back(i2tuple(all_mylines[ik]->x1, all_mylines[ik]->y1));
+            original_corner_points.push_back(i2tuple(all_mylines[ik]->x1, all_mylines[ik]->y1));
         }
         if(flag2){
-            corner_points.push_back(i2tuple(all_mylines[ik]->x2, all_mylines[ik]->y2));
+            original_corner_points.push_back(i2tuple(all_mylines[ik]->x2, all_mylines[ik]->y2));
         }
     }
     
@@ -1183,8 +1193,8 @@ std::pair<std::vector<int>, bool> get_lines_of_corner(int i){
     bool flag = false;
     
     // if only two lines pass through this corner
-    int px1 = std::get<0>(corner_points[i]);
-    int py1 = std::get<1>(corner_points[i]);
+    int px1 = std::get<0>(original_corner_points[i]);
+    int py1 = std::get<1>(original_corner_points[i]);
     
     // get indices of line segments which are going to be merged
     for(int j=0;j<all_mylines.size();++j){
@@ -1227,8 +1237,8 @@ void delete_point_from_corners_and_lines(int i){
     std::vector<myline *> all_mylinestemp(all_mylines);
 
     // if only two lines pass through this corner
-    int px1 = std::get<0>(corner_points[i]);
-    int py1 = std::get<1>(corner_points[i]);
+    int px1 = std::get<0>(original_corner_points[i]);
+    int py1 = std::get<1>(original_corner_points[i]);
     
     // return if more than 2 lines are present on that corner
     int nump = map_num_of_lines[i2tuple(px1, py1)];
@@ -1864,8 +1874,8 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman11.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman11.jpeg");
 
     
     bw   = imga > 120;
@@ -2196,12 +2206,6 @@ void myGlutIdle( void )
     glutPostRedisplay();
 }
 
-void move_points(){
-    for(int i=0;i<corner_points.size();++i){
-        std::get<0>(corner_points[i]) = std::get<0>(original_corner_points[i])+trans_x;
-        std::get<1>(corner_points[i]) = std::get<1>(original_corner_points[i])+trans_y;
-    }
-}
 
 int move_const = 5;
 
