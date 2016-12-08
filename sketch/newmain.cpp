@@ -85,7 +85,7 @@ int sa_height = 600;
 // Scale of the render
 // make it configurable in GUI
 int render_scale = 60;
-float img_scale = 5.0;
+float img_scale = 3.0;
 
 
 //flags to be used by keyboard for three different operations
@@ -1663,7 +1663,10 @@ void mousemotion(int button, int state, int x, int y){
         point_selected = index;
         
         if(draw_axis){
-            axis_2d_points.push_back(glm::vec2(x, sa_height-y));
+            int px = std::get<0>(original_corner_points[point_selected]);
+            int py = std::get<1>(original_corner_points[point_selected]);
+            
+            axis_2d_points.push_back(glm::vec2(px, py));
             // instantiate cost object when 4 points have been clicked
             if(axis_2d_points.size() == 4){
                 cost_obj  = new cost(axis_2d_points);
@@ -1874,8 +1877,8 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffman11.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman11.jpeg");
+    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
 
     
     bw   = imga > 120;
@@ -2234,13 +2237,14 @@ void move_down(){
     glutPostRedisplay();
 }
 void reset_scale(){
+    trans_x = 0;
+    trans_y = 0;
+    move_points();
+    
     if(display_type == 3){
         render_scale = render_scale-5;
     }else{
         img_scale = 3;
-        trans_x = 0;
-        trans_y = 0;
-        move_points();
     }
     glFlush();
     glutPostRedisplay();
