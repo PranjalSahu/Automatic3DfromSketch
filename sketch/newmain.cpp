@@ -540,65 +540,89 @@ void plot_line_3d(std::vector<mypoint*> all_points, int color){
 
 // plots the corner points
 void plot_corner_points(){
-    float pointsize = 80.0;
+    float pointsize = 10.0;
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f },
         {1.0f, 0.0f, 0.0f }, {1.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 1.0f }, {1.0f, 1.0f, 1.0f } };
     
-//    printf("POINTS START\n");
-//    for(int i=0;i<corner_points.size();++i){
-//        int x = std::get<0>(corner_points[i]);
-//        int y = std::get<1>(corner_points[i]);
-//        if(point_selected == i){
-//            glPointSize(pointsize+7);
-//        }
-//        else{
-//            glPointSize(pointsize);
-//        }
-//        glBegin(GL_POINTS);
-//        glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
-//        glVertex2f(x*img_scale/sa_width, y*img_scale/sa_height);
-//        printf("%f, %f\n", x*img_scale/sa_width, y*img_scale/sa_height);
-//        glEnd();
-//    }
-//    printf("POINTS END\n");
+    printf("POINTS START\n");
+    for(int i=0;i<corner_points.size();++i){
+        int x = std::get<0>(corner_points[i]);
+        int y = std::get<1>(corner_points[i]);
+        if(point_selected == i){
+            glPointSize(pointsize+7);
+        }
+        else{
+            glPointSize(pointsize);
+        }
+        glBegin(GL_POINTS);
+        glColor3f(colors[corner_points_colors[i]][0], colors[corner_points_colors[i]][1], colors[corner_points_colors[i]][2]);
+        glVertex2f(x*img_scale/sa_width, y*img_scale/sa_height);
+        printf("%f, %f\n", x*img_scale/sa_width, y*img_scale/sa_height);
+        glEnd();
+    }
+    printf("POINTS END\n");
 
-    glPointSize(pointsize);
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(0.5, 0.5);
-    glEnd();
-    
-    
-    glPointSize(pointsize);
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(0, 0);
-    glEnd();
-    
-    glPointSize(pointsize);
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(-3, 3);
-    glEnd();
-    
-    glPointSize(pointsize);
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(-1.5-1, -1);
-    glEnd();
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(-1.5-2.5, -2.5);
-    glEnd();
-    glBegin(GL_POINTS);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(-1.5-3.0, -3.0);
-    glEnd();
-    glPointSize(pointsize);
-    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-    glVertex2f(0.75, 0.5);
-    glEnd();
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(1, 1);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(1.5, 1.5);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(2.5, 2.5);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(3, 3);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(0.5, 0.5);
+//    glEnd();
+//    
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(0, 0);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-3, 3);
+//    glEnd();
+//    
+//    glPointSize(pointsize);
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-1, -1);
+//    glEnd();
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-2.5, -2.5);
+//    glEnd();
+//    glBegin(GL_POINTS);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(-1.5-3.0, -3.0);
+//    glEnd();
+//    glPointSize(pointsize);
+//    glColor3f(colors[0][0], colors[0][1], colors[0][2]);
+//    glVertex2f(0.75, 0.5);
+//    glEnd();
 }
 
 
@@ -941,26 +965,12 @@ void displayone() {
     
     
     GLfloat colors[][3] = { { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f }, {1.0f, 0.0f, 0.0f } };
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
-
     
-    if(display_type == 3){
-        GLfloat aspect = (GLfloat)sa_width / (GLfloat)sa_height;
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(45.0, aspect, 1.0, 100.0);
-        
-    }else{
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
-        //glOrtho(0, sa_width, sa_height, 0, -1, 1);
-    }
-        
+
     
     //glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
-    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
     glLoadIdentity();                 // Reset the model-view matrix
     
     
@@ -973,9 +983,9 @@ void displayone() {
     
     
     if(display_type == 4){            // show original lines without calculating huffman labels
-        glutWireCube(2);
-        //plot_lines(valid_lines_undirected, 0);
-        //plot_corner_points();
+        //glutWireCube(2);
+        plot_lines(valid_lines_undirected, 0);
+        plot_corner_points();
     }
     else if(display_type == 0){       // calculate huffman labels and show lines
         std::vector<int> line_colors = get_line_labels(valid_lines_undirected);
@@ -1495,13 +1505,8 @@ void reshape(GLsizei width, GLsizei height) {  // GLsizei for non-negative integ
     glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
     glLoadIdentity();             // Reset
     // Enable perspective projection with fovy, aspect, zNear and zFar
-    if(display_type == 3){
-        gluPerspective(45.0f, aspect, 0.1f, 100.0f);
-    }
-    else{
-        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
-        //glOrtho(0, sa_width, sa_height, 0, 0, 1);
-    }
+    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+    
 }
 
 void plot_corner_points_and_lines(Mat dst_norm_scaled, std::vector<myline*> valid_lines_undirected, vector<i2tuple> corner_points){
@@ -1544,8 +1549,8 @@ int get_nearest_point(int xa2, int ya2){
     int index = -1;
     float min = 100000;
     
-    float x2 = (xa2+0.0-sa_width/2)/(sa_width/2);
-    float y2 = (ya2+0.0-sa_height/2)/(sa_height/2);
+    float x2 = (xa2+0.0-sa_width/2)/(sa_width/2)*img_scale;
+    float y2 = (ya2+0.0-sa_height/2)/(sa_height/2)*img_scale;
     
     for(int i=0; i< corner_points.size();++i){
         float x1 = std::get<0>(corner_points[i])*(img_scale+0.0)/sa_width;
@@ -2217,12 +2222,6 @@ void show_polygons(){
 void show_3d(){
     display_type = 3;
     
-    GLfloat aspect = (GLfloat)sa_width / (GLfloat)sa_height;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, aspect, 1.0, 100.0);
-    
-    
     if(!work_3d_done){
         
         if(!huffman_done){
@@ -2436,54 +2435,6 @@ int main(int argc, char** argv){
     glutMainLoop();
     return 0;
 }
-
-
-//
-//
-//
-//static int ortho = 0;
-//
-//static void display(void) {
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    glLoadIdentity();
-//    if (ortho) {
-//    } else {
-//        /* This only rotates and translates the world around to look like the camera moved. */
-//        gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-//    }
-//    glColor3f(1.0f, 1.0f, 1.0f);
-//    glutWireCube(2);
-//    glFlush();
-//}
-//
-//static void reshape(int w, int h) {
-//    glViewport(0, 0, w, h);
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    if (ortho) {
-//        glOrtho(-2.0, 2.0, -2.0, 2.0, -1.5, 1.5);
-//    } else {
-//        glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
-//    }
-//    glMatrixMode(GL_MODELVIEW);
-//}
-//
-//int main(int argc, char** argv) {
-//    glutInit(&argc, argv);
-//    if (argc > 1) {
-//        ortho = 1;
-//    }
-//    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-//    glutInitWindowSize(500, 500);
-//    glutInitWindowPosition(100, 100);
-//    glutCreateWindow(argv[0]);
-//    glClearColor(0.0, 0.0, 0.0, 0.0);
-//    glShadeModel(GL_FLAT);
-//    glutDisplayFunc(display);
-//    glutReshapeFunc(reshape);
-//    glutMainLoop();
-//    return EXIT_SUCCESS;
-//}
 
 
 #endif
