@@ -926,11 +926,17 @@ void displayone() {
     
     glLoadIdentity();                 // Reset the model-view matrix
     
-    glTranslatef(1.5f, 0.0f, -7.0f);  // Move right and into the screen
+    
 
-    //glTranslatef(0.0f, 0.0f, -7.0f);
+    if(display_type == 3){
+        glTranslatef(1.5f, 0.0f, -7.0f);
+    }else{
+        glTranslatef(0, 0.0f, -7.0f);
+    }
+    
     
     if(display_type == 4){            // show original lines without calculating huffman labels
+        
         plot_lines(valid_lines_undirected, 0);
         //plot_corner_points();
     }
@@ -953,6 +959,7 @@ void displayone() {
         plot_lines(p->lines, 0);
     }
     else if(display_type == 3){
+        
         
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
@@ -1001,18 +1008,6 @@ void displayone() {
     glutSwapBuffers();
 }
 
-//Called when the window is resized
-void handleResize(int w, int h) {
-    //s_width  = w;
-    //s_height = h;
-    
-    glViewport(0, 0, w, h);
-    glEnable(GL_TEXTURE_2D);
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
-}
 
 
 class sorter_check {
@@ -1357,41 +1352,6 @@ void handleKeypressa(unsigned char key, int x, int y) {
     }
 }
 
-
-
-// gets the corner points using the harris detector
-// and clubs the points which are nearby into one
-// These points will be used to
-void get_corner_points(Mat &imga){
-    Mat dst, dst_norm;
-    dst = Mat::zeros( imga.size(), CV_32FC1 );
-    
-    cornerHarris( imga, dst, 9, 9, 0.05, BORDER_DEFAULT );
-    normalize( dst, dst_norm, 0, 255, NORM_MINMAX, CV_32FC1, Mat() );
-    convertScaleAbs( dst_norm, dst_norm_scaled );
-    
-    
-    int minv = 1000000;
-    int maxv = -1;
-    // store it in corner points
-    for( int j = 0; j < dst_norm.rows ; j++ ){
-        for( int i = 0; i < dst_norm.cols; i++ ){
-            if( (int) dst_norm.at<float>(j,i) > HARRIS_THRESH ){
-                if(minv > dst_norm.at<float>(j,i)){
-                    minv = dst_norm.at<float>(j,i);
-                }
-                if(maxv < dst_norm.at<float>(j,i)){
-                    maxv =dst_norm.at<float>(j,i);
-                }
-                corner_points.push_back(i2tuple(j, i));
-            }
-        }
-    }
-    
-    //printf("MINIMUM values is %d\n", minv);
-    //printf("MAXIMUM values is %d\n", maxv);
-    return;
-}
 
 // returns the dual edges for all lines
 std::vector<myline*> get_reverse_lines(std::vector<myline*> vl){
@@ -1752,8 +1712,8 @@ void init_values(){
     
     tess = gluNewTess();
     
-    imga = imread("/Users/pranjal/Desktop/image/huffmani7.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffmani7.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman11.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman11.jpeg");
 
     
     bw   = imga > 180;
@@ -2144,9 +2104,10 @@ void show_projected_polygon(){
 void show_lines(){
     display_type = 4;
     
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glOrtho(0, sa_width, sa_height, 0, 1, -1);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    //glOrtho(0, sa_width, sa_height, 0, 1, -1);
+    glOrtho(0, sa_width, sa_height, 0, 0, sa_width);
     
     glFlush();
     glutPostRedisplay();
@@ -2175,10 +2136,10 @@ void show_polygons(){
 void show_3d(){
     display_type = 3;
     
-    
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+    GLfloat aspect = (GLfloat)sa_width / (GLfloat)sa_height;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, aspect, 1.0, 100.0);
     
     
     if(!work_3d_done){
