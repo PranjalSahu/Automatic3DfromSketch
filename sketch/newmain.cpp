@@ -1878,10 +1878,10 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffmani7.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffmani7.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman7.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman7.png");
     
-    bw   = imga > 180;
+    bw   = imga > 160;
     img  = bw > 120;
     
     imwrite("/Users/Pranjal/Downloads/Graphics/test15.jpg", img);
