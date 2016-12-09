@@ -1876,8 +1876,8 @@ void init_values(){
     
     tess = gluNewTess();
 
-    imga = imread("/Users/pranjal/Desktop/image/huffman99.png", CV_LOAD_IMAGE_GRAYSCALE);
-    imgc = imread("/Users/pranjal/Desktop/image/huffman99.png");
+    imga = imread("/Users/pranjal/Desktop/image/huffman4.png", CV_LOAD_IMAGE_GRAYSCALE);
+    imgc = imread("/Users/pranjal/Desktop/image/huffman4.png");
 
     
     bw   = imga > 120;
