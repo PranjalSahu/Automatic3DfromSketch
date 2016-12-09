@@ -2340,20 +2340,20 @@ void show_3d(){
         
         
         //placing all polygons
-//        while(1){
-//            bool flag = false;
-//            for(int i=0;i<polygons_to_place.size();++i){
-//                if(!polygons_to_place[i]->placed){
-//                    flag = true;
-//                    break;
-//                }
-//            }
-//            if(flag)
-//            place_polygon();
-//            else{
-//                break;
-//            }
-//        }
+        while(1){
+            bool flag = false;
+            for(int i=0;i<polygons_to_place.size();++i){
+                if(!polygons_to_place[i]->placed){
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag)
+            place_polygon();
+            else{
+                break;
+            }
+        }
         
         work_3d_done = true;
     }
@@ -2368,7 +2368,7 @@ void glui_setup(){
 //                                            GLUI_SUBWINDOW_LEFT);
 //    
 
-        GLUI *glui_subwin = GLUI_Master.create_glui("test");
+        GLUI *glui_subwin = GLUI_Master.create_glui("GUI Controls");
 
     
     //GLUI_Spinner *segment_spinner = glui_subwin->add_spinner( "Segments:", GLUI_SPINNER_INT, &segments );
@@ -2472,15 +2472,15 @@ int main(int argc, char** argv){
     valid_lines_undirected = all_mylines;
     
     // showing the result of line detection
-    img.copyTo(dst_norm_scaled);
-    plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
-    namedWindow( "corners_window", WINDOW_NORMAL );
-    resizeWindow("corners_window", 800,800);
-    imshow( "corners_window", img );
-    //cv::resize(img, img, Size(), 0.5, 0.5);
-    imshow( "corners_window", dst_norm_scaled);
-    imwrite("/Users/Pranjal/Downloads/Graphics/test1.jpg", img);
-    //imshow( "corners_window", bw );
+//    img.copyTo(dst_norm_scaled);
+//    plot_corner_points_and_lines(dst_norm_scaled, valid_lines_undirected, corner_points);
+//    namedWindow( "corners_window", WINDOW_NORMAL );
+//    resizeWindow("corners_window", 800,800);
+//    imshow( "corners_window", img );
+//    //cv::resize(img, img, Size(), 0.5, 0.5);
+//    imshow( "corners_window", dst_norm_scaled);
+//    imwrite("/Users/Pranjal/Downloads/Graphics/test1.jpg", img);
+//    //imshow( "corners_window", bw );
     //waitKey(0);
 
     typedef std::map<tuple<int, int>, int>::iterator it_type;

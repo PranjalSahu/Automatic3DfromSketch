@@ -4404,22 +4404,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "sketch/newmain.cpp"
-            timestampString = "502943256.731034"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2476"
-            endingLineNumber = "2476"
-            landmarkName = "main(int argc, char** argv)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "sketch/polygon.cpp"
             timestampString = "502742601.865683"
             startingColumnNumber = "9223372036854775807"
@@ -4858,7 +4842,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2294"
             endingLineNumber = "2294"
-            landmarkName = "show_lines()"
+            landmarkName = "show_huffman_lines()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
