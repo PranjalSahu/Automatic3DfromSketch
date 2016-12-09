@@ -1663,8 +1663,8 @@ void mousemotion(int button, int state, int x, int y){
         point_selected = index;
         
         if(draw_axis){
-            int px = std::get<0>(original_corner_points[point_selected]);
-            int py = std::get<1>(original_corner_points[point_selected]);
+//            int px = std::get<0>(original_corner_points[point_selected]);
+//            int py = std::get<1>(original_corner_points[point_selected]);
             
             axis_2d_points.push_back(glm::vec2(x, sa_height-y));
             //axis_2d_points.push_back(glm::vec2(px, py));
