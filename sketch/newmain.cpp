@@ -6,7 +6,6 @@
  * Refer
  * 1. http://felix.abecassis.me/2011/09/opencv-morphological-skeleton/
  * 2. https://web.archive.org/web/20160322113207/http://opencv-code.com/quick-tips/implementation-of-thinning-algorithm-in-opencv/
- * 3. http://opencvexamples.blogspot.com/2013/10/harris-corner-detection.html
  * 4. Finding faces in a planar embedding of a graph
  * 5. Polygon tesselation http://www.songho.ca/opengl/gl_tessellation.html
  * 6. http://www-h.eng.cam.ac.uk/help/tpl/graphics/using_glui.html
