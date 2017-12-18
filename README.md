@@ -7,6 +7,4 @@ Automatic Construction of 3D Models from Architectural Line Drawings
 <img src="https://cloud.githubusercontent.com/assets/1044135/21379336/3c39db16-c71b-11e6-83cd-2353d3915e64.png" alt="alt text" width="300" height="300">
 <img src="https://cloud.githubusercontent.com/assets/1044135/21379588/2acb85d0-c71d-11e6-8ff1-1c1bbd8458e1.png" alt="alt text" width="300" height="225">
 <img src="https://cloud.githubusercontent.com/assets/1044135/21379359/5f93a880-c71b-11e6-9639-4b7094fb04a6.png" alt="alt text" width="300" height="225">
-![ScreenShot](https://cloud.githubusercontent.com/assets/1044135/21379360/6383c358-c71b-11e6-8b58-a300f95f7c90.png)
-
-
+<img src="https://cloud.githubusercontent.com/assets/1044135/21379360/6383c358-c71b-11e6-8b58-a300f95f7c90.png" alt="alt text" width="300" height="225">
