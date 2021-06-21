@@ -1,6 +1,6 @@
 # Automatic3DfromSketch
 Automatic Construction of 3D Models from Architectural Line Drawings.<br>
-Checkout the paper at for the full description of the algorithm:<br>
+Checkout the follwing paper for the full description of the algorithm:<br>
 https://dl.acm.org/doi/10.1145/1342250.1342269
 
 <img src="https://cloud.githubusercontent.com/assets/1044135/21379319/1c95cb08-c71b-11e6-91c1-1186fa8ac194.png" alt="alt text" width="330" height="390">
